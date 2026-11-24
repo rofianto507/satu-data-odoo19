@@ -29,9 +29,11 @@ class SatuDataKesehatanSasaran(models.Model):
     """
     _name        = 'satu_data.kesehatan.sasaran'
     _description = 'Sasaran Program Kesehatan per Desa/Kelurahan'
+    # Mixin kesehatan didahulukan agar _sd_domain_terisi miliknya mengalahkan bawaan mixin inti.
     # Desa, kecamatan & puskesmas (snapshot), company, sumber: satu_data.kesehatan.wilayah.mixin
-    _inherit     = ['mail.thread', 'satu_data.rekap.mixin', 'satu_data.kesehatan.wilayah.mixin']
+    _inherit     = ['mail.thread', 'satu_data.kesehatan.wilayah.mixin', 'satu_data.rekap.mixin']
     _sd_sektor   = 'kesehatan_sasaran'
+    _sd_field_angka = tuple(f'sasaran_{f}' for f, _l, _s in SASARAN)
     _order       = 'periode_id, kecamatan_id, desa_id'
     _rec_name    = 'desa_id'
 

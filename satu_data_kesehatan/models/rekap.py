@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 # Layanan SPM bidang kesehatan (Permenkes 6/2024): jumlah orang yang mendapat
 # pelayanan sesuai standar pada bulan itu. Pasangan sasarannya ada di model sasaran.
@@ -35,8 +35,9 @@ class SatuDataKesehatanRekap(models.Model):
     """
     _name        = 'satu_data.kesehatan.rekap'
     _description = 'Rekap Layanan Kesehatan Bulanan per Desa/Kelurahan'
-    _inherit     = ['mail.thread', 'satu_data.rekap.mixin', 'satu_data.kesehatan.wilayah.mixin']
+    _inherit     = ['mail.thread', 'satu_data.kesehatan.wilayah.mixin', 'satu_data.rekap.mixin']
     _sd_sektor   = 'kesehatan'
+    _sd_field_angka = tuple(FIELD_ANGKA)
     _order       = 'periode_id, kecamatan_id, desa_id'
     _rec_name    = 'desa_id'
 
@@ -100,49 +101,3 @@ class SatuDataKesehatanRekap(models.Model):
                 raise ValidationError(self.env._(
                     '%(desa)s: kematian DBD tidak boleh melebihi kasus DBD.',
                     desa=rec.desa_id.name))
-
-
-class SatuDataKesehatanRekapWizard(models.TransientModel):
-    """Siapkan baris rekap bulanan (kosong) untuk desa wilayah kerja puskesmas."""
-    _name        = 'satu_data.kesehatan.rekap.wizard'
-    _description = 'Siapkan Rekap Kesehatan Bulanan'
-
-    periode_id   = fields.Many2one(
-        'satu_data.periode', string='Bulan', required=True,
-        domain="[('frekuensi', '=', 'bulanan')]",
-        default=lambda self: self.env['satu_data.periode']._periode_bawaan('bulanan'))
-    puskesmas_id = fields.Many2one(
-        'satu_data.faskes', string='Puskesmas',
-        domain="[('jenis', '=', 'puskesmas'), ('company_id', '=', company_id)]",
-        help='Kosongkan untuk semua desa/kelurahan di wilayah ini.')
-    company_id   = fields.Many2one('res.company', required=True,
-                                   default=lambda self: self.env.company)
-
-    def _desa_sasaran(self):
-        if self.puskesmas_id:
-            return self.puskesmas_id.wilayah_kerja_ids
-        return self.env['satu_data.desa'].search([('company_id', '=', self.company_id.id)])
-
-    def action_siapkan(self):
-        self.ensure_one()
-        Rekap = self.env['satu_data.kesehatan.rekap']
-        desa = self._desa_sasaran()
-        if not desa:
-            raise UserError(self.env._('Puskesmas ini belum punya wilayah kerja.'))
-        ada = Rekap.search([('periode_id', '=', self.periode_id.id),
-                            ('desa_id', 'in', desa.ids)]).desa_id
-        baru = Rekap.create([{'desa_id': d.id, 'periode_id': self.periode_id.id}
-                             for d in desa - ada])
-        domain = [('periode_id', '=', self.periode_id.id), ('desa_id', 'in', desa.ids)]
-        return {
-            'type': 'ir.actions.act_window',
-            'name': self.env._('Rekap %(bulan)s', bulan=self.periode_id.name),
-            'res_model': 'satu_data.kesehatan.rekap',
-            'view_mode': 'list,form',
-            'views': [(self.env.ref('satu_data_kesehatan.view_rekap_list_isian').id, 'list'),
-                      (False, 'form')],
-            'domain': domain,
-            'context': {'default_periode_id': self.periode_id.id,
-                        'sd_baris_baru': len(baru)},
-            'target': 'current',
-        }

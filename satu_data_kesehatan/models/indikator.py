@@ -274,7 +274,8 @@ class SatuDataKesehatanDashboard(models.AbstractModel):
         Rekap = self.env['satu_data.kesehatan.rekap']
         Sasaran = self.env['satu_data.kesehatan.sasaran']
         dom_company = [('company_id', '=', company.id)]
-        bulan_terbit = Rekap._sd_domain_terbit(company)
+        # Hanya baris yang sudah diisi petugas; baris kosong di laporan dianggap belum ada data.
+        bulan_terbit = Rekap._sd_domain_terbit(company) + Rekap._sd_domain_terisi()
         dasar = defaultdict(lambda: defaultdict(int))
 
         # Pembilang
@@ -319,7 +320,7 @@ class SatuDataKesehatanDashboard(models.AbstractModel):
         if tahun:
             field_sasaran = [f for f in Sasaran._fields if f.startswith('sasaran_')]
             for kec, desa, *jumlah in Sasaran._read_group(
-                    dom_company + [('periode_id', 'in', tahun[:1].ids)],
+                    dom_company + Sasaran._sd_domain_terisi() + [('periode_id', 'in', tahun[:1].ids)],
                     ['kecamatan_id', 'desa_id'], [f'{f}:sum' for f in field_sasaran]):
                 angka = dasar[(kec.id, desa.id)]
                 for f, v in zip(field_sasaran, jumlah):

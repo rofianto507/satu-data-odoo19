@@ -3,12 +3,18 @@
 
     <menuitem id="menu_satu_data_kesehatan" name="Kesehatan"
               parent="satu_data.menu_satu_data_data" sequence="20"/>
-    <menuitem id="menu_satu_data_rekap_kesehatan" name="Rekap Bulanan"
-              parent="menu_satu_data_kesehatan" action="action_rekap"
+    <menuitem id="menu_satu_data_rekap_kesehatan" name="Laporan Bulanan"
+              parent="menu_satu_data_kesehatan" action="action_laporan_kesehatan"
               groups="satu_data.group_satu_data_pengguna" sequence="5"/>
-    <menuitem id="menu_satu_data_sasaran" name="Sasaran Tahunan"
-              parent="menu_satu_data_kesehatan" action="action_sasaran"
+    <menuitem id="menu_satu_data_sasaran" name="Laporan Sasaran Tahunan"
+              parent="menu_satu_data_kesehatan" action="action_laporan_sasaran"
               groups="satu_data.group_satu_data_pengguna" sequence="10"/>
+    <menuitem id="menu_satu_data_analisis_bulanan" name="Analisis Bulanan"
+              parent="menu_satu_data_kesehatan" action="action_rekap"
+              groups="satu_data.group_satu_data_pengguna" sequence="30"/>
+    <menuitem id="menu_satu_data_analisis_sasaran" name="Analisis Sasaran"
+              parent="menu_satu_data_kesehatan" action="action_sasaran"
+              groups="satu_data.group_satu_data_pengguna" sequence="31"/>
     <menuitem id="menu_satu_data_faskes" name="Fasilitas Kesehatan"
               parent="menu_satu_data_kesehatan" action="action_faskes"
               groups="satu_data.group_satu_data_pengguna" sequence="90"/>

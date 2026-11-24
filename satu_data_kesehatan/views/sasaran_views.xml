@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Ajukan tahun ke Walidata (wizard generik modul inti) -->
-    <record id="action_ajukan_sasaran" model="ir.actions.act_window">
-        <field name="name">Ajukan ke Walidata</field>
-        <field name="res_model">satu_data.pengajuan.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="context">{'default_sektor': 'kesehatan_sasaran'}</field>
-        <field name="group_ids" eval="[(4, ref('group_produsen_kesehatan'))]"/>
-    </record>
-
     <record id="view_sasaran_list" model="ir.ui.view">
         <field name="name">satu_data.kesehatan.sasaran.list</field>
         <field name="model">satu_data.kesehatan.sasaran</field>
         <field name="arch" type="xml">
-            <list string="Sasaran Program Kesehatan">
-                <header>
-                    <button name="%(action_ajukan_sasaran)d" type="action" string="Ajukan ke Walidata"
-                            class="btn-secondary" display="always"
-                            groups="satu_data_kesehatan.group_produsen_kesehatan"/>
-                </header>
+            <list string="Sasaran Program Kesehatan" create="0">
                 <field name="periode_id"/>
                 <field name="kecamatan_id"/>
                 <field name="desa_id"/>
@@ -39,9 +24,37 @@
                 <field name="sasaran_terduga_tbc" string="Terduga TBC" sum="Total" optional="show"/>
                 <field name="sasaran_risiko_hiv" string="Berisiko HIV" sum="Total" optional="show"/>
                 <field name="sumber" optional="hide"/>
+                <field name="terisi" optional="show"/>
                 <field name="sd_status" widget="badge" optional="show"
                        decoration-info="sd_status == 'diajukan'" decoration-success="sd_status == 'terbit'"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Isian cepat per puskesmas (tombol "Isi per Puskesmas" di laporan sasaran). -->
+    <record id="view_sasaran_list_isian" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.sasaran.list.isian</field>
+        <field name="model">satu_data.kesehatan.sasaran</field>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <list string="Isian Sasaran Kesehatan" editable="bottom" create="0">
+                <field name="terisi" readonly="1" string="Terisi"/>
+                <field name="desa_id" readonly="1"/>
+                <field name="puskesmas_id" optional="hide"/>
+                <field name="sasaran_ibu_hamil" string="Ibu Hamil" sum="Total"/>
+                <field name="sasaran_ibu_bersalin" string="Bersalin" sum="Total"/>
+                <field name="sasaran_bayi_baru_lahir" string="BBL" sum="Total"/>
+                <field name="sasaran_bayi" string="Bayi" sum="Total"/>
+                <field name="sasaran_balita" string="Balita" sum="Total"/>
+                <field name="sasaran_usia_dasar" string="Usia Dasar" sum="Total"/>
+                <field name="sasaran_usia_produktif" string="Produktif" sum="Total"/>
+                <field name="sasaran_usia_lanjut" string="Lansia" sum="Total"/>
+                <field name="sasaran_hipertensi" string="HT" sum="Total"/>
+                <field name="sasaran_diabetes" string="DM" sum="Total"/>
+                <field name="sasaran_odgj_berat" string="ODGJ" sum="Total"/>
+                <field name="sasaran_terduga_tbc" string="TBC" sum="Total"/>
+                <field name="sasaran_risiko_hiv" string="HIV" sum="Total"/>
             </list>
         </field>
     </record>
@@ -50,7 +63,7 @@
         <field name="name">satu_data.kesehatan.sasaran.form</field>
         <field name="model">satu_data.kesehatan.sasaran</field>
         <field name="arch" type="xml">
-            <form string="Sasaran Program Kesehatan">
+            <form string="Sasaran Program Kesehatan" create="0">
                 <header>
                     <field name="sd_status" widget="statusbar" statusbar_visible="draf,diajukan,terbit"/>
                 </header>
@@ -144,9 +157,8 @@
         <field name="context">{'search_default_group_periode': 1, 'search_default_group_puskesmas': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Tambahkan sasaran program kesehatan</p>
-            <p>Sasaran tahunan per desa/kelurahan (penyebut capaian SPM kesehatan). Atur dulu wilayah
-               kerja puskesmas agar puskesmas terisi otomatis, dan buat periode tahunan di
-               Konfigurasi &gt; Periode Data.</p>
+            <p>Sasaran tahunan per desa/kelurahan (penyebut capaian SPM kesehatan) diisi lewat
+               Laporan Sasaran Tahunan. Menu ini untuk menganalisis data semua tahun.</p>
         </field>
     </record>
 

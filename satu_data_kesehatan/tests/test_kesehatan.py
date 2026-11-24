@@ -184,24 +184,103 @@ class TestKesehatan(SatuDataCase):
         with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             Rekap.create({'desa_id': self.desa_1.id, 'periode_id': jan.id})
 
-    def test_siapkan_rekap_bulan(self):
+    def _buka_laporan(self, sektor, periode, user=None):
+        """Buka laporan lewat wizard seperti petugas (membuat baris semua desa bila baru)."""
+        Wizard = self.env['satu_data.pengajuan.wizard']
+        if user:
+            Wizard = Wizard.with_user(user)
+        aksi = Wizard.create({'sektor': sektor, 'periode_id': periode.id,
+                              'instansi_id': self.dinkes_a.id,
+                              'company_id': self.company_a.id}).action_buka()
+        return self.env['satu_data.pengajuan'].browse(aksi['res_id'])
+
+    def test_laporan_bulanan(self):
         jan = self._bulan(1)
-        Wizard = self.env['satu_data.kesehatan.rekap.wizard'].with_user(self.user_produsen)
         Rekap = self.env['satu_data.kesehatan.rekap']
-        Rekap.create({'desa_id': self.desa_1.id, 'periode_id': jan.id, 'layanan_balita': 9})
-        aksi = Wizard.create({'periode_id': jan.id, 'puskesmas_id': self.pkm_1.id}).action_siapkan()
-        rekap = Rekap.search(aksi['domain'])
-        self.assertEqual(rekap.desa_id, self.desa_1 | self.desa_2)
-        self.assertEqual(aksi['context']['sd_baris_baru'], 1)
-        self.assertEqual(rekap.filtered(lambda r: r.desa_id == self.desa_1).layanan_balita, 9,
-                         'Baris yang sudah ada tidak diubah')
-        # Tanpa puskesmas: semua desa wilayah ini (tidak termasuk wilayah lain).
-        aksi = Wizard.create({'periode_id': jan.id}).action_siapkan()
-        self.assertEqual(Rekap.search(aksi['domain']).desa_id,
-                         self.desa_1 | self.desa_2 | self.desa_3)
-        self.assertEqual(jan.jumlah_rekap_kesehatan, 3)
+        lap = self._buka_laporan('kesehatan', jan, self.user_produsen)
+        # Baris semua desa wilayah A dibuat kosong; wilayah B tidak ikut.
+        self.assertEqual(lap.kesehatan_ids.desa_id, self.desa_1 | self.desa_2 | self.desa_3)
+        self.assertEqual((lap.jumlah_record, lap.jumlah_terisi, lap.jumlah_kosong), (3, 0, 3))
+        self.assertEqual(lap.kesehatan_ids.filtered(lambda r: r.desa_id == self.desa_1).puskesmas_id,
+                         self.pkm_1, 'Puskesmas terisi dari wilayah kerja')
         with self.assertRaises(UserError):
-            Wizard.create({'periode_id': jan.id, 'puskesmas_id': self.pkm_2.id}).action_siapkan()
+            lap.with_user(self.user_produsen).action_ajukan()       # belum ada yang terisi
+        # Membuka lagi tidak menggandakan baris.
+        self.assertEqual(self._buka_laporan('kesehatan', jan, self.user_produsen), lap)
+        self.assertEqual(Rekap.search_count([('periode_id', '=', jan.id)]), 3)
+
+        # Isi dari form laporan; angka nol yang diketik tetap dianggap terisi.
+        baris = {r.desa_id: r for r in lap.kesehatan_ids}
+        lap.with_user(self.user_produsen).write({'kesehatan_ids': [
+            (1, baris[self.desa_1].id, {'layanan_ibu_hamil': 8, 'kasus_dbd': 2}),
+            (1, baris[self.desa_2].id, {'kasus_dbd': 0}),
+        ]})
+        self.assertEqual((lap.jumlah_terisi, lap.jumlah_kosong), (2, 1))
+        self.assertTrue(baris[self.desa_2].terisi)
+        self.assertFalse(baris[self.desa_3].terisi)
+
+        # Boleh dikirim walau ada desa kosong; baris kosong tidak ikut ke dashboard.
+        lap.with_user(self.user_produsen).action_ajukan()
+        lap.with_user(self.user_walidata).action_terbitkan()
+        d = self._dash(indikator='kasus_dbd', periode_id=jan.id, mode='bulan')
+        self.assertEqual(d['ringkasan']['nilai'], 2)
+        self.assertEqual(d['ringkasan']['lapor'], 2)
+        # Dikembalikan: kembali ke Diisi dengan penanda; desa kosong bisa dilengkapi.
+        lap.with_user(self.user_walidata).write({'catatan': 'Lengkapi Desa Tiga.'})
+        lap.with_user(self.user_walidata).action_kembalikan()
+        self.assertEqual((lap.state, lap.perlu_perbaikan), ('draf', True))
+        baris[self.desa_3].with_user(self.user_produsen).kasus_dbd = 1
+        self.assertEqual(lap.jumlah_terisi, 3)
+        lap.with_user(self.user_produsen).action_ajukan()
+        self.assertFalse(lap.perlu_perbaikan)
+
+    def test_laporan_sasaran_tahunan(self):
+        lap = self._buka_laporan('kesehatan_sasaran', self.tahun, self.user_produsen)
+        self.assertEqual(lap.sasaran_kesehatan_ids.desa_id, self.desa_1 | self.desa_2 | self.desa_3)
+        self.assertEqual((lap.jumlah_terisi, lap.jumlah_kosong), (0, 3))
+        baris = lap.sasaran_kesehatan_ids.filtered(lambda r: r.desa_id == self.desa_1)
+        lap.with_user(self.user_produsen).write({'sasaran_kesehatan_ids': [
+            (1, baris.id, {'sasaran_ibu_hamil': 40, 'sasaran_balita': 300})]})
+        self.assertEqual((lap.jumlah_terisi, lap.jumlah_kosong), (1, 2))
+        # Sasaran kosong tidak ikut menjadi penyebut dashboard.
+        lap.with_user(self.user_produsen).action_ajukan()
+        lap.with_user(self.user_walidata).action_terbitkan()
+        bulan = self._bulan(1)
+        self.env['satu_data.kesehatan.rekap'].create(
+            {'desa_id': self.desa_1.id, 'periode_id': bulan.id, 'layanan_ibu_hamil': 10})
+        self.env['satu_data.pengajuan'].sd_siapkan(
+            'kesehatan', bulan, self.company_a, self.dinkes_a).sudo().write({'state': 'terbit'})
+        d = self._dash(indikator='spm_ibu_hamil', periode_id=bulan.id)
+        self.assertEqual((d['ringkasan']['pembilang'], d['ringkasan']['penyebut']), (10, 40))
+
+    def test_laporan_menyusul_baris_lama(self):
+        """Baris yang dibuat sebelum laporannya ada ikut masuk ke laporan baru."""
+        jan = self._bulan(1)
+        r = self.env['satu_data.kesehatan.rekap'].create(
+            {'desa_id': self.desa_1.id, 'periode_id': jan.id, 'kasus_dbd': 1})
+        self.assertFalse(r.pengajuan_id)
+        lap = self._buka_laporan('kesehatan', jan)
+        self.assertEqual(r.pengajuan_id, lap)
+        self.assertEqual(lap.jumlah_terisi, 1)
+        # Desa baru muncul belakangan: bisa ditambahkan ke laporan yang masih Diisi.
+        desa_baru = self.env['satu_data.desa'].create({
+            'kode': 'D7', 'name': 'Desa Baru', 'kecamatan_id': self.kec_1.id,
+            'company_id': self.company_a.id})
+        lap.with_user(self.user_produsen).action_lengkapi_baris()
+        self.assertIn(desa_baru, lap.kesehatan_ids.desa_id)
+        lap.with_user(self.user_produsen).action_ajukan()
+        with self.assertRaises(UserError):
+            lap.with_user(self.user_produsen).kesehatan_ids[:1].kasus_dbd = 9
+        with self.assertRaises(AccessError):
+            lap.with_user(self.user_pengguna).action_lengkapi_baris()
+
+    def test_aksi_lihat_data_per_puskesmas(self):
+        lap = self._buka_laporan('kesehatan', self._bulan(1))
+        aksi = lap.action_lihat_data()
+        self.assertEqual(aksi['res_model'], 'satu_data.kesehatan.rekap')
+        self.assertEqual(aksi['views'][0][0], self.env.ref('satu_data_kesehatan.view_rekap_list_isian').id)
+        self.assertEqual(aksi['context']['search_default_group_puskesmas'], 1)
+        self.assertEqual(self.env['satu_data.kesehatan.rekap'].search_count(aksi['domain']), 3)
 
     def test_alur_pengajuan_rekap_bulanan(self):
         jan, feb = self._bulan(1), self._bulan(2)

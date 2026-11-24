@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Laporan Bulanan dan Laporan Sasaran Tahunan: satu layar untuk mengisi, mengirim, dan
+         memeriksa, memakai model pengajuan modul inti (lihat Laporan Semester di kependudukan). -->
+
+    <record id="action_buka_laporan_kesehatan" model="ir.actions.act_window">
+        <field name="name">Buka Laporan</field>
+        <field name="res_model">satu_data.pengajuan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_sektor': 'kesehatan'}</field>
+        <field name="group_ids" eval="[(4, ref('group_produsen_kesehatan'))]"/>
+    </record>
+
+    <record id="action_buka_laporan_sasaran" model="ir.actions.act_window">
+        <field name="name">Buka Laporan</field>
+        <field name="res_model">satu_data.pengajuan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_sektor': 'kesehatan_sasaran'}</field>
+        <field name="group_ids" eval="[(4, ref('group_produsen_kesehatan'))]"/>
+    </record>
+
+    <record id="view_laporan_kesehatan_list" model="ir.ui.view">
+        <field name="name">satu_data.pengajuan.list.view_laporan_kesehatan_list</field>
+        <field name="model">satu_data.pengajuan</field>
+        <field name="priority">41</field>
+        <field name="arch" type="xml">
+            <list string="Laporan Bulanan" create="0" delete="0">
+                <header>
+                    <button name="%(action_buka_laporan_kesehatan)d" type="action" string="Buka Laporan Bulanan"
+                            class="btn-primary" display="always"
+                            groups="satu_data_kesehatan.group_produsen_kesehatan"/>
+                </header>
+                <field name="periode_id" string="Bulan"/>
+                <field name="jumlah_terisi"/>
+                <field name="jumlah_kosong"/>
+                <field name="batas_pengajuan" optional="show"/>
+                <field name="ketepatan" widget="badge" optional="show"
+                       decoration-success="ketepatan == 'tepat'" decoration-danger="ketepatan == 'terlambat'"/>
+                <field name="perlu_perbaikan" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'diajukan'"
+                       decoration-success="state == 'terbit'"
+                       decoration-warning="state == 'draf' and perlu_perbaikan"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_laporan_sasaran_list" model="ir.ui.view">
+        <field name="name">satu_data.pengajuan.list.view_laporan_sasaran_list</field>
+        <field name="model">satu_data.pengajuan</field>
+        <field name="priority">41</field>
+        <field name="arch" type="xml">
+            <list string="Laporan Sasaran Tahunan" create="0" delete="0">
+                <header>
+                    <button name="%(action_buka_laporan_sasaran)d" type="action" string="Buka Laporan Sasaran Tahunan"
+                            class="btn-primary" display="always"
+                            groups="satu_data_kesehatan.group_produsen_kesehatan"/>
+                </header>
+                <field name="periode_id" string="Tahun"/>
+                <field name="jumlah_terisi"/>
+                <field name="jumlah_kosong"/>
+                <field name="batas_pengajuan" optional="show"/>
+                <field name="ketepatan" widget="badge" optional="show"
+                       decoration-success="ketepatan == 'tepat'" decoration-danger="ketepatan == 'terlambat'"/>
+                <field name="perlu_perbaikan" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'diajukan'"
+                       decoration-success="state == 'terbit'"
+                       decoration-warning="state == 'draf' and perlu_perbaikan"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Tabel isian per desa langsung di form laporan -->
+    <record id="view_pengajuan_form_kesehatan" model="ir.ui.view">
+        <field name="name">satu_data.pengajuan.form.kesehatan</field>
+        <field name="model">satu_data.pengajuan</field>
+        <field name="inherit_id" ref="satu_data.view_pengajuan_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='catatan']" position="after">
+                <div invisible="sektor != 'kesehatan'" class="mb-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h5 class="m-0">Data per Desa/Kelurahan</h5>
+                        <button name="action_lihat_data" type="object" class="btn btn-secondary btn-sm"
+                                icon="fa-hospital-o" string="Isi per Puskesmas"/>
+                    </div>
+                    <field name="kesehatan_ids" nolabel="1" readonly="state != 'draf'">
+                        <list editable="bottom" create="0" delete="0" limit="500">
+                            <field name="terisi" readonly="1" string="Terisi"/>
+                            <field name="kecamatan_id" readonly="1" optional="show"/>
+                            <field name="puskesmas_id" readonly="1" optional="hide"/>
+                            <field name="desa_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="layanan_ibu_hamil" string="Bumil" sum="Total"/>
+                            <field name="layanan_ibu_bersalin" string="Bersalin" sum="Total"/>
+                            <field name="layanan_bayi_baru_lahir" string="BBL" sum="Total"/>
+                            <field name="layanan_balita" string="Balita" sum="Total"/>
+                            <field name="layanan_usia_dasar" string="Usia Dasar" sum="Total"/>
+                            <field name="layanan_usia_produktif" string="Produktif" sum="Total"/>
+                            <field name="layanan_usia_lanjut" string="Lansia" sum="Total"/>
+                            <field name="layanan_hipertensi" string="HT" sum="Total"/>
+                            <field name="layanan_diabetes" string="DM" sum="Total"/>
+                            <field name="layanan_odgj_berat" string="ODGJ" sum="Total"/>
+                            <field name="layanan_terduga_tbc" string="TBC" sum="Total"/>
+                            <field name="layanan_risiko_hiv" string="HIV" sum="Total"/>
+                            <field name="bayi_idl" string="IDL" sum="Total"/>
+                            <field name="balita_diukur" string="Diukur" sum="Total"/>
+                            <field name="balita_stunting" string="Stunting" sum="Total"/>
+                            <field name="lahir_hidup" string="Lahir Hidup" sum="Total"/>
+                            <field name="kematian_ibu" string="Kem. Ibu" sum="Total"/>
+                            <field name="kematian_bayi" string="Kem. Bayi" sum="Total"/>
+                            <field name="kasus_dbd" string="DBD" sum="Total"/>
+                            <field name="kematian_dbd" string="Kem. DBD" sum="Total"/>
+                        </list>
+                    </field>
+                </div>
+                <div invisible="sektor != 'kesehatan_sasaran'" class="mb-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h5 class="m-0">Data per Desa/Kelurahan</h5>
+                        <button name="action_lihat_data" type="object" class="btn btn-secondary btn-sm"
+                                icon="fa-hospital-o" string="Isi per Puskesmas"/>
+                    </div>
+                    <field name="sasaran_kesehatan_ids" nolabel="1" readonly="state != 'draf'">
+                        <list editable="bottom" create="0" delete="0" limit="500">
+                            <field name="terisi" readonly="1" string="Terisi"/>
+                            <field name="kecamatan_id" readonly="1" optional="show"/>
+                            <field name="puskesmas_id" readonly="1" optional="hide"/>
+                            <field name="desa_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="sasaran_ibu_hamil" string="Ibu Hamil" sum="Total"/>
+                            <field name="sasaran_ibu_bersalin" string="Bersalin" sum="Total"/>
+                            <field name="sasaran_bayi_baru_lahir" string="BBL" sum="Total"/>
+                            <field name="sasaran_bayi" string="Bayi" sum="Total"/>
+                            <field name="sasaran_balita" string="Balita" sum="Total"/>
+                            <field name="sasaran_usia_dasar" string="Usia Dasar" sum="Total"/>
+                            <field name="sasaran_usia_produktif" string="Produktif" sum="Total"/>
+                            <field name="sasaran_usia_lanjut" string="Lansia" sum="Total"/>
+                            <field name="sasaran_hipertensi" string="HT" sum="Total"/>
+                            <field name="sasaran_diabetes" string="DM" sum="Total"/>
+                            <field name="sasaran_odgj_berat" string="ODGJ" sum="Total"/>
+                            <field name="sasaran_terduga_tbc" string="TBC" sum="Total"/>
+                            <field name="sasaran_risiko_hiv" string="HIV" sum="Total"/>
+                        </list>
+                    </field>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_laporan_kesehatan" model="ir.actions.act_window">
+        <field name="name">Laporan Bulanan</field>
+        <field name="res_model">satu_data.pengajuan</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_laporan_kesehatan_list"/>
+        <field name="domain">[('sektor', '=', 'kesehatan')]</field>
+        <field name="context">{'default_sektor': 'kesehatan'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada laporan</p>
+            <p>Tekan "Buka Laporan Bulanan", pilih bulan, lalu isi tabel desa/kelurahan dan kirim ke Walidata dari layar yang sama.</p>
+        </field>
+    </record>
+
+    <record id="action_laporan_sasaran" model="ir.actions.act_window">
+        <field name="name">Laporan Sasaran Tahunan</field>
+        <field name="res_model">satu_data.pengajuan</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_laporan_sasaran_list"/>
+        <field name="domain">[('sektor', '=', 'kesehatan_sasaran')]</field>
+        <field name="context">{'default_sektor': 'kesehatan_sasaran'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada laporan</p>
+            <p>Tekan "Buka Laporan Sasaran Tahunan", pilih tahun, lalu isi sasaran per desa/kelurahan dan kirim ke Walidata.</p>
+        </field>
+    </record>
+
+</odoo>

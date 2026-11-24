@@ -5,4 +5,3 @@ access_sasaran_pengguna,sasaran pengguna,model_satu_data_kesehatan_sasaran,satu_
 access_sasaran_produsen,sasaran produsen kesehatan,model_satu_data_kesehatan_sasaran,group_produsen_kesehatan,1,1,1,1
 access_rekap_pengguna,rekap kesehatan pengguna,model_satu_data_kesehatan_rekap,satu_data.group_satu_data_pengguna,1,0,0,0
 access_rekap_produsen,rekap kesehatan produsen,model_satu_data_kesehatan_rekap,group_produsen_kesehatan,1,1,1,1
-access_rekap_wizard_produsen,siapkan rekap kesehatan,model_satu_data_kesehatan_rekap_wizard,group_produsen_kesehatan,1,1,1,0
