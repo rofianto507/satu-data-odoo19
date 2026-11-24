@@ -112,6 +112,7 @@
                     teksNilai="teksNilai"
                     titik="titikPuskesmas"
                     judulTitik="'Puskesmas'"
+                    onDetailTitik.bind="bukaDataPuskesmas"
                     onKlik.bind="klikWilayah"/>
                 <div class="sd-peta-dasar sd-kes-lapisan">
                     <label class="sd-kes-cek" title="Tampilkan lokasi puskesmas">

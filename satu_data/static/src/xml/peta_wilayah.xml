@@ -25,7 +25,11 @@
                     <span>Belum ada data</span>
                 </div>
                 <div t-if="props.titik and props.titik.length" class="sd-legenda-baris">
-                    <span class="sd-legenda-titik"/>
+                    <svg class="sd-legenda-ikon" viewBox="0 0 32 32" aria-hidden="true">
+                        <circle cx="16" cy="16" r="13.5" fill="#fff" stroke="#5b21b6" stroke-width="3"/>
+                        <rect x="13" y="8" width="6" height="16" rx="1.5" fill="#ff005c"/>
+                        <rect x="8" y="13" width="16" height="6" rx="1.5" fill="#ff005c"/>
+                    </svg>
                     <span t-esc="props.judulTitik or 'Titik'"/>
                 </div>
             </div>

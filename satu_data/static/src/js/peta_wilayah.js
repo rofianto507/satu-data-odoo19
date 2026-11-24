@@ -11,6 +11,15 @@ const fmtAngka = new Intl.NumberFormat("id-ID");
 const TEBAL_SOROT = 2;
 // Warna garis batas antarwilayah (abu-abu, terbaca di atas semua warna kelas).
 const WARNA_BATAS = "#8b93a1";
+// Penanda titik (mis. puskesmas): lencana putih berpinggir ungu dengan salib merah.
+// Putih dan ungu tetap terbaca di atas semua warna kelas peta.
+const UKURAN_TITIK = 20;
+const IKON_TITIK =
+    '<svg viewBox="0 0 32 32" width="100%" height="100%" aria-hidden="true">' +
+    '<circle cx="16" cy="16" r="13.5" fill="#fff" stroke="#5b21b6" stroke-width="3"/>' +
+    '<rect x="13" y="8" width="6" height="16" rx="1.5" fill="#ff005c"/>' +
+    '<rect x="8" y="13" width="16" height="6" rx="1.5" fill="#ff005c"/>' +
+    "</svg>";
 
 /**
  * Peta choropleth wilayah (Leaflet).
@@ -35,6 +44,8 @@ export class SatuDataPeta extends Component {
         // Titik di atas wilayah (mis. puskesmas): [{id, nama, lat, lng, keterangan: [string]}]
         titik:          { type: Array, optional: true },
         judulTitik:     { type: String, optional: true },
+        // Bila ada, jendela info titik memuat tombol "Lihat detail data" yang memanggil (id titik).
+        onDetailTitik:  { type: Function, optional: true },
     };
 
     setup() {
@@ -162,25 +173,46 @@ export class SatuDataPeta extends Component {
         if (!titik.length) {
             return;
         }
-        // Pane penanda selalu di atas pane wilayah, jadi titik tidak tertutup saat
-        // wilayah digambar ulang atau disorot.
+        // Penanda HTML (bukan circleMarker) agar bisa bergambar; pane markerPane selalu di
+        // atas pane wilayah, jadi titik tidak tertutup saat wilayah digambar ulang atau disorot.
+        const ikon = L.divIcon({
+            className: "sd-marker-titik",
+            html: IKON_TITIK,
+            iconSize: [UKURAN_TITIK, UKURAN_TITIK],
+            iconAnchor: [UKURAN_TITIK / 2, UKURAN_TITIK / 2],
+            popupAnchor: [0, -UKURAN_TITIK / 2],
+        });
+        const adaDetail = Boolean(this.props.onDetailTitik);
+        // Info titik tampil di jendela info setelah diklik (bukan saat hover).
         this._lapisanTitik = L.layerGroup(
-            titik.map((t) =>
-                L.circleMarker([t.lat, t.lng], {
-                    pane: "markerPane",
-                    radius: 5,
-                    weight: 2,
-                    color: "#111827",
-                    fillColor: "#ffffff",
-                    fillOpacity: 1,
-                }).bindTooltip(
-                    `<div class="sd-tooltip-nama">${escape(t.nama)}</div>` +
-                        (t.keterangan || [])
-                            .map((k) => `<div class="sd-tooltip-angka">${escape(k)}</div>`)
-                            .join(""),
-                    { direction: "top", className: "sd-tooltip", offset: [0, -4] }
-                )
-            )
+            titik.map((t) => {
+                const isi =
+                    `<div class="sd-popup-nama">${escape(t.nama)}</div>` +
+                    (t.keterangan || [])
+                        .map((k) => `<div class="sd-popup-baris">${escape(k)}</div>`)
+                        .join("") +
+                    (adaDetail
+                        ? '<button type="button" class="btn btn-sm btn-primary sd-popup-detail">' +
+                          '<i class="fa fa-table" aria-hidden="true"></i> Lihat detail data</button>'
+                        : "");
+                const marker = L.marker([t.lat, t.lng], {
+                    icon: ikon,
+                    keyboard: false,
+                    riseOnHover: true,
+                }).bindPopup(isi, { className: "sd-popup", minWidth: 190, maxWidth: 280, autoPanPadding: [24, 24] });
+                // Tombol ada di dalam jendela info (Leaflet menghentikan perambatan klik di sana),
+                // jadi pasang langsung saat dibuka; onclick menimpa, tidak menumpuk.
+                marker.on("popupopen", (e) => {
+                    const tombol = e.popup.getElement()?.querySelector(".sd-popup-detail");
+                    if (tombol) {
+                        tombol.onclick = () => {
+                            this._map.closePopup();
+                            this.props.onDetailTitik(t.id);
+                        };
+                    }
+                });
+                return marker;
+            })
         ).addTo(this._map);
     }
 

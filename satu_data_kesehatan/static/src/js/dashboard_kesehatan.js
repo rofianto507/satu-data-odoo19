@@ -203,6 +203,20 @@ export class DashboardKesehatan extends Component {
         });
     }
 
+    /** Tombol "Lihat detail data" di jendela info puskesmas: rekap bulan yang sedang dihitung. */
+    bukaDataPuskesmas(id) {
+        const d = this.state.data;
+        const p = d.puskesmas.find((x) => x.id === id);
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            name: `Rekap Kesehatan · ${p ? p.nama : "Puskesmas"}`,
+            res_model: "satu_data.kesehatan.rekap",
+            views: [[false, "list"], [false, "form"]],
+            domain: [["puskesmas_id", "=", id], ["periode_id", "in", d.periode_ids]],
+            context: { search_default_group_periode: 1 },
+        });
+    }
+
     bukaRekap() {
         this.action.doAction("satu_data_kesehatan.action_rekap");
     }

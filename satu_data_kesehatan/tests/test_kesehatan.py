@@ -356,6 +356,9 @@ class TestKesehatan(SatuDataCase):
         # Tren kumulatif per bulan
         self.assertEqual([t['nilai'] for t in d['tren']], [10.0, 20.0])
 
+        # Bulan yang dipakai menghitung (untuk tombol "Lihat detail data" puskesmas).
+        self.assertEqual(set(d['periode_ids']), {jan.id, feb.id})
+        self.assertEqual(self._dash(mode='bulan')['periode_ids'], [feb.id])
         # Mode bulan: Februari saja = 15 / 150
         self.assertEqual(self._dash(mode='bulan')['ringkasan']['nilai'], 10.0)
         # Bulan Januari

@@ -185,6 +185,16 @@ class SatuDataKesehatanDashboard(models.AbstractModel):
             'peta_dasar': self._sd_peta_dasar(),
         }
 
+        # Bulan yang dipakai menghitung angka saat ini (untuk tombol "Lihat detail data").
+        if not periode:
+            hasil['periode_ids'] = []
+        elif mode == 'bulan':
+            hasil['periode_ids'] = periode.ids
+        else:
+            hasil['periode_ids'] = bulan_terbit.filtered(
+                lambda p: p.tanggal_mulai.year == periode.tanggal_mulai.year
+                and p.tanggal_mulai <= periode.tanggal_mulai).ids
+
         dasar = self._sd_angka_dasar(periode, mode, company) if periode else {}
         Kecamatan = self.env['satu_data.kecamatan'].with_context(active_test=False)
         Desa = self.env['satu_data.desa'].with_context(active_test=False)
