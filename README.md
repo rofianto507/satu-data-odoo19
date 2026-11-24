@@ -127,7 +127,9 @@ Seluruh data demo bersifat **fiktif** dan hanya contoh, bukan data resmi:
 
 ## Rencana pengembangan
 
-- Impor Excel dan penanda angka yang tidak wajar
+- Integrasi API: sistem tiap OPD mengirim angka rekap langsung ke Satu Data, dengan kode wilayah
+  Kemendagri sebagai kunci desa dan tetap melewati pemeriksaan Walidata
+- Penanda angka yang tidak wajar untuk membantu pemeriksaan Walidata
 - Portal publik: katalog Daftar Data, unduhan CSV/XLSX/JSON beserta metadata, dan permintaan data
 - Modul pendidikan
 
