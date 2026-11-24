@@ -9,6 +9,8 @@ const ZOOM_AWAL = 5;
 const fmtAngka = new Intl.NumberFormat("id-ID");
 // Tebal garis batas wilayah saat disorot (hover) atau dipilih, dalam piksel.
 const TEBAL_SOROT = 2;
+// Warna garis batas antarwilayah (abu-abu, terbaca di atas semua warna kelas).
+const WARNA_BATAS = "#8b93a1";
 
 /**
  * Peta choropleth wilayah (Leaflet).
@@ -200,7 +202,7 @@ export class SatuDataPeta extends Component {
         const terpilih = id === this.props.terpilihId;
         const adaData = w && w.kelas >= 0;
         return {
-            color: terpilih ? "#111827" : "#ffffff",
+            color: terpilih ? "#111827" : WARNA_BATAS,
             weight: terpilih ? TEBAL_SOROT : 1.2,
             dashArray: adaData ? null : "4 3",
             fillColor: adaData ? kelas[w.kelas].warna : this.props.warnaTanpaData,

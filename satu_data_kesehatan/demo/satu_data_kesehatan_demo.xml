@@ -73,8 +73,8 @@
         <field name="jenis">puskesmas</field>
         <field name="kategori">rawat_inap</field>
         <field name="desa_id" ref="satu_data.jember_desa_3509082004"/>
-        <field name="latitude">-8.477716</field>
-        <field name="longitude">113.335926</field>
+        <field name="latitude">-8.367301</field>
+        <field name="longitude">113.471219</field>
         <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509082001'), ref('satu_data.jember_desa_3509082002'), ref('satu_data.jember_desa_3509082003'), ref('satu_data.jember_desa_3509082004'), ref('satu_data.jember_desa_3509082005'), ref('satu_data.jember_desa_3509082006')])]"/>
     </record>
     <record id="faskes_3509082010" model="satu_data.faskes">
