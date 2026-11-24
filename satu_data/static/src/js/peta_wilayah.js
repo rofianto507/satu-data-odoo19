@@ -94,7 +94,7 @@ export class SatuDataPeta extends Component {
             this.state.tanpaLeaflet = true;
             return;
         }
-        this._map = L.map(el, { zoomSnap: 0.25, zoomControl: true }).setView(PUSAT_AWAL, ZOOM_AWAL);
+        this._map = L.map(el, { zoomSnap: 0.25, zoomControl: true, maxZoom: 19 }).setView(PUSAT_AWAL, ZOOM_AWAL);
         // Ukuran kontainer berubah saat layar penuh, rotasi ponsel, atau panel dilipat.
         this._resizeObs = new ResizeObserver(() => this._map && this._map.invalidateSize());
         this._resizeObs.observe(el);
