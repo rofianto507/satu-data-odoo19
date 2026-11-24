@@ -1,6 +1,6 @@
 {
     'name': 'Satu Data',
-    'version': '19.0.3.4.0',
+    'version': '19.0.3.4.1',
     'summary': 'Inti Satu Data: wilayah kabupaten/kota, kecamatan, desa, periode, dan peta',
     'description': """
 Satu Data
@@ -56,6 +56,10 @@ Hanya menyimpan angka rekap per wilayah, tidak menyimpan data per orang.
             'satu_data/static/lib/leaflet_guard/before.js',
             'satu_data/static/lib/leaflet/leaflet.js',
             'satu_data/static/lib/leaflet_guard/after.js',
+            # Pengelompokan titik berdekatan (plugin markercluster, MIT)
+            'satu_data/static/lib/leaflet-markercluster/MarkerCluster.css',
+            'satu_data/static/lib/leaflet-markercluster/MarkerCluster.Default.css',
+            'satu_data/static/lib/leaflet-markercluster/leaflet.markercluster.js',
             # Gaya dashboard dan komponen peta bersama (dipakai modul sektor)
             'satu_data/static/src/css/dashboard_peta.css',
             'satu_data/static/src/xml/peta_wilayah.xml',

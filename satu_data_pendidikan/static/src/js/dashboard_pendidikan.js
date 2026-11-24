@@ -330,7 +330,8 @@ export class DashboardPendidikan extends Component {
     }
 
     get judulLegenda() {
-        return `${this.ind.singkat} (${this.ind.satuan})`;
+        // Hindari pengulangan, mis. "Sekolah (Sekolah)".
+        return this.ind.satuan === this.ind.singkat ? this.ind.singkat : `${this.ind.singkat} (${this.ind.satuan})`;
     }
 
     get judulCakupan() {
@@ -377,7 +378,8 @@ export class DashboardPendidikan extends Component {
             series: [
                 { ...bar("APK", "apk", "#2c7fb8"),
                   markLine: { silent: true, symbol: "none", lineStyle: { color: "#9ca3af", type: "dashed" },
-                              label: { formatter: "100%", color: WARNA_TEKS_2 }, data: [{ yAxis: 100 }] } },
+                              label: { formatter: "Target 100%", color: WARNA_TEKS_2, position: "insideEndTop" },
+                              data: [{ yAxis: 100 }] } },
                 bar("APM", "apm", "#f59e0b"),
             ],
         };
@@ -400,7 +402,8 @@ export class DashboardPendidikan extends Component {
             },
             xAxis: {
                 type: "category", data: tren.map((t) => t.label), boundaryGap: false,
-                axisLabel: { color: WARNA_TEKS_2, hideOverlap: true },
+                // Label pertama dan terakhir diratakan ke dalam agar tidak terpotong di tepi kartu.
+                axisLabel: { color: WARNA_TEKS_2, hideOverlap: true, alignMinLabel: "left", alignMaxLabel: "right" },
                 axisLine: { lineStyle: { color: "#cfd5de" } },
             },
             yAxis: {

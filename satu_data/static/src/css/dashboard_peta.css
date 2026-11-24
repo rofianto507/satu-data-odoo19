@@ -374,6 +374,27 @@
     width: 100%;
 }
 
+/* Gabungan titik berdekatan (markercluster): lingkaran berangka */
+.o_satu_data .sd-cluster {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85em;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+.o_satu_data .sd-cluster--sekolah {
+    background: #1d4ed8;
+}
+
+.o_satu_data .sd-cluster--puskesmas {
+    background: #5b21b6;
+}
+
 .o_satu_data .sd-legenda-ikon {
     width: 1.3em;
     height: 1.3em;

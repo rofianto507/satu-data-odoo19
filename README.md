@@ -47,12 +47,34 @@ Capaian 12 Standar Pelayanan Minimal dan tren bulanan indikator yang dipilih.
 
 <img src="docs/screenshots/dashboard-kesehatan-grafik.png" alt="Grafik capaian 12 SPM kesehatan dan tren bulanan" width="100%">
 
+### Dashboard Pendidikan
+Pilih indikator (ketersediaan, mutu layanan, partisipasi, keberlanjutan), semester, dan jenjang. Peta
+memberi warna wilayah menurut nilai indikator. Saat masuk ke satu kecamatan, satuan pendidikannya tampil
+sebagai titik yang digabung otomatis bila berdekatan; klik titik untuk melihat info sekolah. Grafik
+menampilkan APK dan APM per jenjang serta tren antarsemester.
+
+<img src="docs/screenshots/dashboard-pendidikan-peta.png" alt="Dashboard Pendidikan: peta jumlah peserta didik per kecamatan dengan panel detail dan daftar kecamatan" width="100%">
+
+Di dalam satu kecamatan, satuan pendidikan tampil sebagai titik yang digabung menjadi lingkaran berangka
+bila berdekatan.
+
+<img src="docs/screenshots/dashboard-pendidikan-sekolah.png" alt="Peta kecamatan dengan titik satuan pendidikan yang digabung dalam lingkaran berangka" width="100%">
+
+Klik sebuah titik untuk melihat info sekolah, lalu **Lihat detail data** untuk membukanya.
+
+<img src="docs/screenshots/dashboard-pendidikan-info-sekolah.png" alt="Jendela info satuan pendidikan di peta dengan tombol Lihat detail data" width="100%">
+
+Angka partisipasi kasar (APK) dan murni (APM) per jenjang, serta tren jumlah peserta didik per semester.
+
+<img src="docs/screenshots/dashboard-pendidikan-grafik.png" alt="Grafik APK dan APM per jenjang dan tren jumlah peserta didik per semester" width="100%">
+
 ## Fitur utama
 
 - **Alur Satu Data yang sederhana.** Produsen Data mengisi laporan, Walidata memeriksa, dan hanya
   data yang sudah diterbitkan yang tampil di dashboard. Data yang sedang diperiksa atau sudah terbit dikunci.
 - **Dashboard peta per sektor.** Peta choropleth kabupaten → kecamatan → desa/kelurahan, kartu ringkasan,
-  grafik, dan titik fasilitas dengan jendela info, dengan sidebar untuk berpindah antarsektor.
+  grafik, dan titik fasilitas yang digabung otomatis bila berdekatan dengan jendela info, dengan sidebar
+  untuk berpindah antarsektor.
 - **Tata kelola data.** Daftar Data dengan metadata selaras data.go.id, urusan pemerintahan,
   Forum Satu Data, jadwal pemutakhiran, dan penilaian ketepatan waktu Produsen Data.
 - **Editor batas wilayah.** Geser, tambah, dan hapus titik batas desa/kecamatan langsung di peta.
@@ -66,6 +88,7 @@ Capaian 12 Standar Pelayanan Minimal dan tren bulanan indikator yang dipilih.
 | `satu_data` | Modul inti: wilayah (kecamatan, desa/kelurahan, batas peta GeoJSON dan editornya), periode data, instansi, Daftar Data berikut metadata, Forum Satu Data, laporan dan pemeriksaan Walidata, peran akses, kerangka dashboard dengan sidebar per sektor |
 | `satu_data_kependudukan` | Laporan semester penduduk per desa (laki-laki, perempuan, KK, kepadatan), dashboard peta penduduk dengan grafik laki-laki/perempuan |
 | `satu_data_kesehatan` | Fasilitas kesehatan dan wilayah kerja puskesmas, laporan bulanan dan laporan sasaran tahunan per desa, 21 indikator (12 SPM, imunisasi dasar lengkap, stunting, kematian ibu/bayi, DBD), dashboard peta dengan titik puskesmas |
+| `satu_data_pendidikan` | Master satuan pendidikan (NPSN, jenjang, status, akreditasi, koordinat), penduduk usia sekolah tahunan, laporan semester per desa dan jenjang (PAUD/TK, SD/MI, SMP/MTs, SMA/SMK/MA; madrasah dihimpun bersama dengan Kemenag sebagai Produsen Data vertikal), 18 indikator (jumlah sekolah/siswa/guru, rasio murid per guru, kondisi ruang kelas, kualifikasi dan sertifikasi guru, APK/APM, putus sekolah, melanjutkan), dashboard peta dengan titik satuan pendidikan |
 
 Modul sektor bergantung pada `satu_data`. Modul inti bisa dipasang tanpa modul sektor.
 
@@ -98,16 +121,18 @@ Setiap sektor memakai satu pola: **satu laporan per periode** dengan tiga status
 
 ## Pemasangan
 
-1. Salin ketiga folder modul ke folder `addons` Odoo 19.
+1. Salin keempat folder modul ke folder `addons` Odoo 19.
 2. Aktifkan mode pengembang, perbarui daftar aplikasi, lalu pasang **Satu Data - Kependudukan**
-   dan/atau **Satu Data - Kesehatan** (modul inti ikut terpasang).
-3. Untuk mencoba, buat database dengan *data demo* (wilayah, penduduk, dan data kesehatan Jember).
+   **Satu Data - Kesehatan**, dan/atau **Satu Data - Pendidikan** (modul inti ikut terpasang).
+3. Untuk mencoba, buat database dengan *data demo* (wilayah, penduduk, data kesehatan, dan data
+   pendidikan Jember). Bila konfigurasi Odoo memakai `with_demo = False`, tambahkan `--with-demo`
+   saat memasang.
 4. Atur nama, logo, dan kode wilayah di **Konfigurasi › Identitas Wilayah**.
 
 Menjalankan tes:
 
 ```
-odoo-bin -c odoo.conf -d <database> --test-enable --test-tags /satu_data,/satu_data_kependudukan,/satu_data_kesehatan --stop-after-init
+odoo-bin -c odoo.conf -d <database> --test-enable --test-tags /satu_data,/satu_data_kependudukan,/satu_data_kesehatan,/satu_data_pendidikan --stop-after-init
 ```
 
 ### Peta dasar
@@ -123,7 +148,8 @@ Seluruh data demo bersifat **fiktif** dan hanya contoh, bukan data resmi:
   [cahyadsn/wilayah](https://github.com/cahyadsn/wilayah) (MIT),
   [pararawendy/border-desa-indonesia-geojson](https://github.com/pararawendy/border-desa-indonesia-geojson),
   dan [cahyadsn/wilayah_boundaries](https://github.com/cahyadsn/wilayah_boundaries) (MIT).
-- Angka penduduk dan data kesehatan dibangkitkan secara acak dengan pola yang masuk akal.
+- Angka penduduk, data kesehatan, dan data pendidikan dibangkitkan secara acak dengan pola yang masuk akal.
+- Nama sekolah dan NPSN pada data demo pendidikan adalah rekaan (NPSN berawalan 9), bukan sekolah sungguhan.
 
 ## Rencana pengembangan
 
@@ -131,9 +157,9 @@ Seluruh data demo bersifat **fiktif** dan hanya contoh, bukan data resmi:
   Kemendagri sebagai kunci desa dan tetap melewati pemeriksaan Walidata
 - Penanda angka yang tidak wajar untuk membantu pemeriksaan Walidata
 - Portal publik: katalog Daftar Data, unduhan CSV/XLSX/JSON beserta metadata, dan permintaan data
-- Modul pendidikan
+- Modul sektor lain (OPD berikutnya)
 
 ## Lisensi
 
-LGPL-3.0, sesuai Odoo. Leaflet dan ECharts memiliki lisensinya sendiri
+LGPL-3.0, sesuai Odoo. Leaflet, plugin markercluster, dan ECharts memiliki lisensinya sendiri
 (lihat `satu_data/static/lib/`).

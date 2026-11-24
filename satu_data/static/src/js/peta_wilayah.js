@@ -195,7 +195,7 @@ export class SatuDataPeta extends Component {
         });
         const adaDetail = Boolean(this.props.onDetailTitik);
         // Info titik tampil di jendela info setelah diklik (bukan saat hover).
-        this._lapisanTitik = L.layerGroup(
+        const markers = (
             titik.map((t) => {
                 const isi =
                     `<div class="sd-popup-nama">${escape(t.nama)}</div>` +
@@ -224,7 +224,30 @@ export class SatuDataPeta extends Component {
                 });
                 return marker;
             })
-        ).addTo(this._map);
+        );
+        // Titik yang berdekatan digabung menjadi lingkaran berangka (klik = perbesar, atau
+        // pada zoom maksimum titik disebar). Tanpa plugin markercluster, titik digambar apa adanya.
+        if (L.markerClusterGroup) {
+            const warna = this.props.ikonTitik === "sekolah" ? "sd-cluster--sekolah" : "sd-cluster--puskesmas";
+            this._lapisanTitik = L.markerClusterGroup({
+                showCoverageOnHover: false,
+                maxClusterRadius: 42,
+                spiderfyOnMaxZoom: true,
+                iconCreateFunction: (cluster) => {
+                    const n = cluster.getChildCount();
+                    const ukuran = n < 10 ? 30 : n < 100 ? 36 : 44;
+                    return L.divIcon({
+                        html: `<span>${n}</span>`,
+                        className: `sd-cluster ${warna}`,
+                        iconSize: [ukuran, ukuran],
+                    });
+                },
+            });
+            this._lapisanTitik.addLayers(markers);
+        } else {
+            this._lapisanTitik = L.layerGroup(markers);
+        }
+        this._lapisanTitik.addTo(this._map);
     }
 
     _sorot() {
