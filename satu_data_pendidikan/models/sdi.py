@@ -1,30 +1,47 @@
+from collections import defaultdict
+
 from odoo import api, fields, models
 
-SEKTOR = [('pendidikan_usia_sekolah', 'Pendidikan: Penduduk Usia Sekolah')]
-MODEL_SEKTOR = {'pendidikan_usia_sekolah': 'satu_data.pendidikan.usia_sekolah'}
-VIEW_ISIAN = {'pendidikan_usia_sekolah': 'satu_data_pendidikan.view_usia_sekolah_list_isian'}
+from .rekap import KELOMPOK_REKAP
+
+SEKTOR = [
+    ('pendidikan',               'Pendidikan: Rekap Semester'),
+    ('pendidikan_usia_sekolah',  'Pendidikan: Penduduk Usia Sekolah'),
+]
+MODEL_SEKTOR = {
+    'pendidikan':              'satu_data.pendidikan.rekap',
+    'pendidikan_usia_sekolah': 'satu_data.pendidikan.usia_sekolah',
+}
+VIEW_ISIAN = {
+    'pendidikan':              'satu_data_pendidikan.view_rekap_list_isian',
+    'pendidikan_usia_sekolah': 'satu_data_pendidikan.view_usia_sekolah_list_isian',
+}
+ONDELETE_PENGAJUAN = {kode: 'cascade' for kode, _l in SEKTOR}
+ONDELETE_DATA = {kode: 'set null' for kode, _l in SEKTOR}
 
 
 class SatuDataPengajuan(models.Model):
     _inherit = 'satu_data.pengajuan'
 
-    sektor = fields.Selection(selection_add=SEKTOR,
-                              ondelete={'pendidikan_usia_sekolah': 'cascade'})
+    sektor = fields.Selection(selection_add=SEKTOR, ondelete=ONDELETE_PENGAJUAN)
     usia_sekolah_ids = fields.One2many('satu_data.pendidikan.usia_sekolah', 'pengajuan_id',
                                        string='Penduduk Usia Sekolah per Desa')
+    rekap_pendidikan_ids = fields.One2many('satu_data.pendidikan.rekap', 'pengajuan_id',
+                                           string='Rekap Semester per Desa dan Jenjang')
 
     @api.model
     def _sd_info_sektor(self):
         info = super()._sd_info_sektor()
-        info['pendidikan_usia_sekolah'] = {
-            'model': 'satu_data.pendidikan.usia_sekolah',
+        umum = {
             'grup': 'satu_data_pendidikan.group_produsen_pendidikan',
             'instansi': 'satu_data_pendidikan.instansi_disdik',
-            'frekuensi': 'tahunan',
-            # Penduduk usia sekolah ditetapkan di awal tahun.
-            'batas_hari': 31,
-            'acuan_batas': 'awal',
         }
+        # Rekap semester: jadwal bawaan (30 hari setelah semester berakhir).
+        info['pendidikan'] = dict(umum, model='satu_data.pendidikan.rekap', frekuensi='semesteran')
+        # Penduduk usia sekolah ditetapkan di awal tahun.
+        info['pendidikan_usia_sekolah'] = dict(
+            umum, model='satu_data.pendidikan.usia_sekolah', frekuensi='tahunan',
+            batas_hari=31, acuan_batas='awal')
         return info
 
     @api.model_create_multi
@@ -43,24 +60,60 @@ class SatuDataPengajuan(models.Model):
     def _sd_siapkan_baris(self):
         res = super()._sd_siapkan_baris()
         for rec in self:
-            model = MODEL_SEKTOR.get(rec.sektor)
-            if not model or rec.state != 'draf':
+            if rec.state != 'draf':
                 continue
-            Baris = self.env[model].with_context(tracking_disable=True, mail_create_nolog=True)
-            ada = Baris.search([('periode_id', '=', rec.periode_id.id),
-                                ('company_id', '=', rec.company_id.id)]).desa_id
-            kosong = self.env['satu_data.desa'].search(
-                [('company_id', '=', rec.company_id.id)]) - ada
-            if kosong:
-                Baris.create([{'desa_id': d.id, 'periode_id': rec.periode_id.id} for d in kosong])
+            if rec.sektor == 'pendidikan_usia_sekolah':
+                self._siapkan_baris_usia_sekolah(rec)
+            elif rec.sektor == 'pendidikan':
+                self._siapkan_baris_rekap(rec)
         return res
 
+    def _siapkan_baris_usia_sekolah(self, rec):
+        Baris = self.env['satu_data.pendidikan.usia_sekolah'].with_context(
+            tracking_disable=True, mail_create_nolog=True)
+        ada = Baris.search([('periode_id', '=', rec.periode_id.id),
+                            ('company_id', '=', rec.company_id.id)]).desa_id
+        kosong = self.env['satu_data.desa'].search([('company_id', '=', rec.company_id.id)]) - ada
+        if kosong:
+            Baris.create([{'desa_id': d.id, 'periode_id': rec.periode_id.id} for d in kosong])
+
+    def _siapkan_baris_rekap(self, rec):
+        """Satu baris per desa dan kelompok jenjang; jumlah sekolah diisi dari master."""
+        Baris = self.env['satu_data.pendidikan.rekap'].with_context(
+            tracking_disable=True, mail_create_nolog=True)
+        ada = {(b.desa_id.id, b.kelompok) for b in Baris.search([
+            ('periode_id', '=', rec.periode_id.id), ('company_id', '=', rec.company_id.id)])}
+        hitung = defaultdict(int)
+        for desa, kelompok, status, n in self.env['satu_data.sekolah']._read_group(
+                [('company_id', '=', rec.company_id.id)],
+                ['desa_id', 'kelompok', 'status'], ['__count']):
+            hitung[(desa.id, kelompok, status)] = n
+        baru = []
+        for desa in self.env['satu_data.desa'].search([('company_id', '=', rec.company_id.id)]):
+            for kelompok, _label in KELOMPOK_REKAP:
+                if (desa.id, kelompok) in ada:
+                    continue
+                baru.append({
+                    'desa_id': desa.id, 'periode_id': rec.periode_id.id, 'kelompok': kelompok,
+                    'sekolah_negeri': hitung[(desa.id, kelompok, 'negeri')],
+                    'sekolah_swasta': hitung[(desa.id, kelompok, 'swasta')],
+                })
+        if baru:
+            Baris.create(baru)
+
     def action_lihat_data(self):
-        """Tabel isian dikelompokkan per kecamatan, selain tabel di form laporan."""
+        """Tabel isian (dikelompokkan), selain tabel di form laporan."""
         self.ensure_one()
         model = MODEL_SEKTOR.get(self.sektor)
         if not model:
             return super().action_lihat_data()
+        konteks = {'default_periode_id': self.periode_id.id}
+        if self.sektor == 'pendidikan':
+            # Isi per jenjang, lalu per kecamatan.
+            konteks.update({'search_default_group_kelompok': 1,
+                            'search_default_group_kecamatan': 1})
+        else:
+            konteks['search_default_group_kecamatan'] = 1
         return {
             'type': 'ir.actions.act_window',
             'name': self.name,
@@ -68,13 +121,11 @@ class SatuDataPengajuan(models.Model):
             'views': [(self.env.ref(VIEW_ISIAN[self.sektor]).id, 'list'), (False, 'form')],
             'domain': [('periode_id', '=', self.periode_id.id),
                        ('company_id', '=', self.company_id.id)],
-            'context': {'default_periode_id': self.periode_id.id,
-                        'search_default_group_kecamatan': 1},
+            'context': konteks,
         }
 
 
 class SatuDataData(models.Model):
     _inherit = 'satu_data.data'
 
-    sektor = fields.Selection(selection_add=SEKTOR,
-                              ondelete={'pendidikan_usia_sekolah': 'set null'})
+    sektor = fields.Selection(selection_add=SEKTOR, ondelete=ONDELETE_DATA)

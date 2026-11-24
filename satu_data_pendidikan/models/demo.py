@@ -7,6 +7,7 @@ NPSN sintetis berawalan 9 (bukan NPSN sungguhan), dan koordinat acak di dalam de
 Deterministik (seed tetap).
 """
 import json
+import math
 import random
 from collections import defaultdict
 from datetime import datetime, time, timedelta
@@ -15,6 +16,22 @@ from odoo import api, models
 
 SUMBER_DEMO = 'CONTOH (fiktif), bukan data resmi'
 TAHUN_DEMO = (2025, 2026)
+
+# Rekap semester demo: Semester I dan II 2025, Semester I 2026 (tanggal mulai periode).
+SEMESTER_DEMO = ('2025-01-01', '2025-07-01', '2026-01-01')
+# Per kelompok jenjang: kelompok usia penyebut, APK sasaran, porsi siswa usia resmi, kapasitas
+# siswa per rombel, siswa per guru, porsi guru S1/D4 dan bersertifikat, porsi lulusan terhadap
+# siswa, porsi lulusan yang melanjutkan, porsi putus sekolah, porsi siswa laki-laki.
+KONFIG_JENJANG = {
+    'paud':       dict(usia='usia_5_6',   apk=0.62, resmi=0.92,  kelas=18, rasio=12, s1=0.58, sert=0.22,
+                       lulus=0.50, lanjut=0.97, putus=0.0010, laki=0.505),
+    'sd_mi':      dict(usia='usia_7_12',  apk=1.04, resmi=0.88, kelas=24, rasio=17, s1=0.86, sert=0.58,
+                       lulus=1 / 6, lanjut=0.97, putus=0.0015, laki=0.513),
+    'smp_mts':    dict(usia='usia_13_15', apk=0.97, resmi=0.90,  kelas=31, rasio=15, s1=0.92, sert=0.62,
+                       lulus=1 / 3, lanjut=0.88, putus=0.0050, laki=0.505),
+    'sma_smk_ma': dict(usia='usia_16_18', apk=0.80, resmi=0.86,  kelas=33, rasio=14, s1=0.95, sert=0.64,
+                       lulus=1 / 3, lanjut=0.35, putus=0.0090, laki=0.485),
+}
 
 # Porsi kelompok usia terhadap seluruh penduduk (rata-rata nasional kasar).
 RASIO_USIA = {'usia_5_6': 0.027, 'usia_7_12': 0.084, 'usia_13_15': 0.042, 'usia_16_18': 0.040}
@@ -182,6 +199,93 @@ class SatuDataPendidikanDemo(models.AbstractModel):
         for tahun in TAHUN_DEMO:
             p = Pengajuan.sd_siapkan('pendidikan_usia_sekolah', tahunan[tahun], company, instansi)
             selisih = rng.randint(1, 10) if rng.random() < 0.3 else -rng.randint(0, 12)
+            diajukan = datetime.combine(p.batas_pengajuan + timedelta(days=selisih), time(3))
+            p.write({'state': 'terbit', 'diajukan_oleh': admin.id,
+                     'tanggal_diajukan_pertama': diajukan, 'tanggal_diajukan': diajukan,
+                     'diperiksa_oleh': admin.id,
+                     'tanggal_diperiksa': diajukan + timedelta(days=rng.randint(1, 4))})
+        return True
+
+    @api.model
+    def _sd_demo_rekap_semester(self):
+        """Rekap semester demo per desa dan jenjang; jumlah sekolah dari master."""
+        company = self.env.ref('base.main_company')
+        Rekap = self.env['satu_data.pendidikan.rekap'].with_context(
+            tracking_disable=True, mail_create_nolog=True, mail_notrack=True)
+        Sekolah = self.env['satu_data.sekolah']
+        Usia = self.env['satu_data.pendidikan.usia_sekolah']
+        if Rekap.search_count([('company_id', '=', company.id)], limit=1) or \
+                not Sekolah.search_count([('company_id', '=', company.id)], limit=1):
+            return False   # sudah ada data, atau belum ada sekolah demo
+        Periode = self.env['satu_data.periode']
+        for tahun in TAHUN_DEMO:
+            Periode.sd_buat_periode_baku(tahun, 'semesteran')
+        semester = [Periode.search([('frekuensi', '=', 'semesteran'), ('tanggal_mulai', '=', t)], limit=1)
+                    for t in SEMESTER_DEMO]
+
+        rng = random.Random(3511)
+        desa_semua = self.env['satu_data.desa'].search([('company_id', '=', company.id)], order='kode')
+        per_kec = defaultdict(list)
+        for d in desa_semua:
+            per_kec[d.kecamatan_id.id].append(d.id)
+        n_sekolah = defaultdict(lambda: {'negeri': 0, 'swasta': 0})
+        for desa, kelompok, status, n in Sekolah._read_group(
+                [('company_id', '=', company.id)], ['desa_id', 'kelompok', 'status'], ['__count']):
+            n_sekolah[(desa.id, kelompok)][status] = n
+        usia = {(u.periode_id.tanggal_mulai.year, u.desa_id.id): u
+                for u in Usia.search([('company_id', '=', company.id)])}
+
+        def klip(x, a, b):
+            return max(a, min(b, x))
+
+        nilai = []
+        for idx, periode in enumerate(semester):
+            tahun = periode.tanggal_mulai.year
+            akhir_tahun_ajaran = periode.tanggal_mulai.month == 1     # Semester I = Januari–Juni
+            for kelompok, cfg in KONFIG_JENJANG.items():
+                for kec_id, daftar in per_kec.items():
+                    sasaran = sum(usia[(tahun, d)][cfg['usia']] for d in daftar if (tahun, d) in usia)
+                    target = sasaran * cfg['apk'] * rng.uniform(0.93, 1.07) * (1 + 0.004 * idx)
+                    bobot = {d: sum(n_sekolah[(d, kelompok)].values()) * rng.uniform(0.6, 1.5)
+                             for d in daftar}
+                    total_bobot = sum(bobot.values())
+                    for d in daftar:
+                        siswa = round(target * bobot[d] / total_bobot) if total_bobot else 0
+                        laki = int(klip(round(siswa * rng.gauss(cfg['laki'], 0.01)), 0, siswa))
+                        resmi = min(siswa, round(siswa * cfg['resmi'] * rng.uniform(0.97, 1.02)))
+                        rombel = math.ceil(siswa / (cfg['kelas'] * rng.uniform(0.85, 1.1))) if siswa else 0
+                        guru = max(1 if siswa else 0,
+                                   round(siswa / (cfg['rasio'] * rng.uniform(0.85, 1.15))))
+                        s1 = min(guru, round(guru * min(0.99, cfg['s1'] + 0.012 * idx) * rng.uniform(0.95, 1.03)))
+                        sert = min(guru, round(guru * min(0.95, cfg['sert'] + 0.015 * idx) * rng.uniform(0.9, 1.08)))
+                        kelas = round(rombel * rng.uniform(0.95, 1.12))
+                        baik = round(kelas * klip(0.66 + 0.01 * idx + rng.gauss(0, 0.04), 0.4, 0.95))
+                        ringan = min(kelas - baik, round(kelas * 0.22 * rng.uniform(0.7, 1.3)))
+                        berat = kelas - baik - ringan
+                        putus = lulus = lanjut = 0
+                        if akhir_tahun_ajaran and siswa:
+                            putus = round(siswa * cfg['putus'] * rng.uniform(0.5, 1.5))
+                            lulus = round(siswa * cfg['lulus'] * rng.uniform(0.93, 1.05))
+                            lanjut = min(lulus, round(lulus * cfg['lanjut'] * rng.uniform(0.95, 1.03)))
+                        nilai.append({
+                            'desa_id': d, 'periode_id': periode.id, 'kelompok': kelompok,
+                            'sumber': SUMBER_DEMO,
+                            'sekolah_negeri': n_sekolah[(d, kelompok)]['negeri'],
+                            'sekolah_swasta': n_sekolah[(d, kelompok)]['swasta'],
+                            'siswa_l': laki, 'siswa_p': siswa - laki, 'siswa_usia_resmi': resmi,
+                            'rombel': rombel, 'guru': guru, 'guru_s1': s1, 'guru_sertifikasi': sert,
+                            'kelas_baik': baik, 'kelas_rusak_ringan': ringan, 'kelas_rusak_berat': berat,
+                            'putus_sekolah': putus, 'lulusan': lulus, 'melanjutkan': lanjut,
+                        })
+        Rekap.create(nilai)
+
+        # Pengajuan: semua semester terbit; sebagian kecil terlambat.
+        instansi = self.env.ref('satu_data_pendidikan.instansi_disdik')
+        admin = self.env.ref('base.user_admin')
+        Pengajuan = self.env['satu_data.pengajuan'].sudo()
+        for periode in semester:
+            p = Pengajuan.sd_siapkan('pendidikan', periode, company, instansi)
+            selisih = rng.randint(1, 12) if rng.random() < 0.2 else -rng.randint(0, 10)
             diajukan = datetime.combine(p.batas_pengajuan + timedelta(days=selisih), time(3))
             p.write({'state': 'terbit', 'diajukan_oleh': admin.id,
                      'tanggal_diajukan_pertama': diajukan, 'tanggal_diajukan': diajukan,

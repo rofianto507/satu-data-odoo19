@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Laporan Penduduk Usia Sekolah Tahunan: satu layar untuk mengisi, mengirim, dan memeriksa,
-         memakai model pengajuan modul inti (pola yang sama dengan kependudukan dan kesehatan). -->
+    <!-- Laporan Semester dan Laporan Penduduk Usia Sekolah Tahunan: satu layar untuk mengisi,
+         mengirim, dan memeriksa, memakai model pengajuan modul inti (pola yang sama dengan
+         kependudukan dan kesehatan). -->
+
+    <record id="action_buka_laporan_rekap" model="ir.actions.act_window">
+        <field name="name">Buka Laporan</field>
+        <field name="res_model">satu_data.pengajuan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_sektor': 'pendidikan'}</field>
+        <field name="group_ids" eval="[(4, ref('group_produsen_pendidikan'))]"/>
+    </record>
 
     <record id="action_buka_laporan_usia_sekolah" model="ir.actions.act_window">
         <field name="name">Buka Laporan</field>
@@ -11,6 +21,32 @@
         <field name="target">new</field>
         <field name="context">{'default_sektor': 'pendidikan_usia_sekolah'}</field>
         <field name="group_ids" eval="[(4, ref('group_produsen_pendidikan'))]"/>
+    </record>
+
+    <record id="view_laporan_rekap_list" model="ir.ui.view">
+        <field name="name">satu_data.pengajuan.list.rekap_pendidikan</field>
+        <field name="model">satu_data.pengajuan</field>
+        <field name="priority">42</field>
+        <field name="arch" type="xml">
+            <list string="Laporan Semester Pendidikan" create="0" delete="0">
+                <header>
+                    <button name="%(action_buka_laporan_rekap)d" type="action"
+                            string="Buka Laporan Semester" class="btn-primary" display="always"
+                            groups="satu_data_pendidikan.group_produsen_pendidikan"/>
+                </header>
+                <field name="periode_id" string="Semester"/>
+                <field name="jumlah_terisi" string="Baris Terisi"/>
+                <field name="jumlah_kosong" string="Belum Terisi"/>
+                <field name="batas_pengajuan" optional="show"/>
+                <field name="ketepatan" widget="badge" optional="show"
+                       decoration-success="ketepatan == 'tepat'" decoration-danger="ketepatan == 'terlambat'"/>
+                <field name="perlu_perbaikan" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'diajukan'"
+                       decoration-success="state == 'terbit'"
+                       decoration-warning="state == 'draf' and perlu_perbaikan"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
     </record>
 
     <record id="view_laporan_usia_sekolah_list" model="ir.ui.view">
@@ -39,13 +75,43 @@
         </field>
     </record>
 
-    <!-- Tabel isian per desa langsung di form laporan -->
+    <!-- Tabel isian langsung di form laporan -->
     <record id="view_pengajuan_form_pendidikan" model="ir.ui.view">
         <field name="name">satu_data.pengajuan.form.pendidikan</field>
         <field name="model">satu_data.pengajuan</field>
         <field name="inherit_id" ref="satu_data.view_pengajuan_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='catatan']" position="after">
+                <div invisible="sektor != 'pendidikan'" class="mb-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h5 class="m-0">Data per Desa/Kelurahan dan Jenjang</h5>
+                        <button name="action_lihat_data" type="object" class="btn btn-secondary btn-sm"
+                                icon="fa-graduation-cap" string="Isi per Jenjang"/>
+                    </div>
+                    <field name="rekap_pendidikan_ids" nolabel="1" readonly="state != 'draf'">
+                        <list editable="bottom" create="0" delete="0" limit="1500">
+                            <field name="terisi" readonly="1" string="Terisi"/>
+                            <field name="kecamatan_id" readonly="1" optional="show"/>
+                            <field name="desa_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="kelompok" readonly="1"/>
+                            <field name="sekolah_negeri" string="Sek. Negeri" sum="Total"/>
+                            <field name="sekolah_swasta" string="Sek. Swasta" sum="Total"/>
+                            <field name="siswa_l" string="Siswa L" sum="Total"/>
+                            <field name="siswa_p" string="Siswa P" sum="Total"/>
+                            <field name="siswa_usia_resmi" string="Usia Resmi" sum="Total"/>
+                            <field name="rombel" sum="Total"/>
+                            <field name="guru" sum="Total"/>
+                            <field name="guru_s1" string="Guru S1/D4" sum="Total"/>
+                            <field name="guru_sertifikasi" string="Guru Sertif." sum="Total"/>
+                            <field name="kelas_baik" string="Kelas Baik" sum="Total"/>
+                            <field name="kelas_rusak_ringan" string="Rusak Ringan" sum="Total"/>
+                            <field name="kelas_rusak_berat" string="Rusak Berat" sum="Total"/>
+                            <field name="putus_sekolah" string="Putus Sek." sum="Total"/>
+                            <field name="lulusan" sum="Total"/>
+                            <field name="melanjutkan" string="Melanjutkan" sum="Total"/>
+                        </list>
+                    </field>
+                </div>
                 <div invisible="sektor != 'pendidikan_usia_sekolah'" class="mb-3">
                     <div class="d-flex align-items-center justify-content-between mb-2">
                         <h5 class="m-0">Data per Desa/Kelurahan</h5>
@@ -65,6 +131,20 @@
                     </field>
                 </div>
             </xpath>
+        </field>
+    </record>
+
+    <record id="action_laporan_rekap" model="ir.actions.act_window">
+        <field name="name">Laporan Semester Pendidikan</field>
+        <field name="res_model">satu_data.pengajuan</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_laporan_rekap_list"/>
+        <field name="domain">[('sektor', '=', 'pendidikan')]</field>
+        <field name="context">{'default_sektor': 'pendidikan'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada laporan semester</p>
+            <p>Tekan "Buka Laporan Semester", pilih semester, lalu isi tabel desa dan jenjang
+               (jumlah sekolah terisi otomatis dari master) dan kirim ke Walidata dari layar yang sama.</p>
         </field>
     </record>
 

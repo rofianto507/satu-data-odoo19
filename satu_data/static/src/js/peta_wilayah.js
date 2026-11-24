@@ -21,6 +21,15 @@ const IKON_TITIK =
     '<rect x="8" y="13" width="16" height="6" rx="1.5" fill="#ff005c"/>' +
     "</svg>";
 
+// Penanda satuan pendidikan: lencana putih berpinggir biru dengan topi toga.
+const IKON_SEKOLAH =
+    '<svg viewBox="0 0 32 32" width="100%" height="100%" aria-hidden="true">' +
+    '<circle cx="16" cy="16" r="13.5" fill="#fff" stroke="#1d4ed8" stroke-width="3"/>' +
+    '<path d="M16 8 5.5 13.5 16 19l10.5-5.5z" fill="#f59e0b"/>' +
+    '<path d="M10 17v4.2c0 1.4 2.7 2.8 6 2.8s6-1.4 6-2.8V17l-6 3.2z" fill="#f59e0b"/>' +
+    "</svg>";
+const IKON = { puskesmas: IKON_TITIK, sekolah: IKON_SEKOLAH };
+
 /**
  * Peta choropleth wilayah (Leaflet).
  *
@@ -44,6 +53,8 @@ export class SatuDataPeta extends Component {
         // Titik di atas wilayah (mis. puskesmas): [{id, nama, lat, lng, keterangan: [string]}]
         titik:          { type: Array, optional: true },
         judulTitik:     { type: String, optional: true },
+        // Gambar penanda titik: "puskesmas" (bawaan) atau "sekolah".
+        ikonTitik:      { type: String, optional: true },
         // Bila ada, jendela info titik memuat tombol "Lihat detail data" yang memanggil (id titik).
         onDetailTitik:  { type: Function, optional: true },
     };
@@ -59,7 +70,7 @@ export class SatuDataPeta extends Component {
 
         onMounted(() => this._init());
         useEffect(() => this._gambar(), () => [this.props.wilayah]);
-        useEffect(() => this._gambarTitik(), () => [this.props.titik]);
+        useEffect(() => this._gambarTitik(), () => [this.props.titik, this.props.ikonTitik]);
         useEffect(() => this._sorot(), () => [this.props.terpilihId]);
         useEffect(() => this._aturPetaDasar(), () => [this.props.petaDasar && this.props.petaDasar.kode]);
         onWillUnmount(() => {
@@ -177,7 +188,7 @@ export class SatuDataPeta extends Component {
         // atas pane wilayah, jadi titik tidak tertutup saat wilayah digambar ulang atau disorot.
         const ikon = L.divIcon({
             className: "sd-marker-titik",
-            html: IKON_TITIK,
+            html: IKON[this.props.ikonTitik] || IKON_TITIK,
             iconSize: [UKURAN_TITIK, UKURAN_TITIK],
             iconAnchor: [UKURAN_TITIK / 2, UKURAN_TITIK / 2],
             popupAnchor: [0, -UKURAN_TITIK / 2],

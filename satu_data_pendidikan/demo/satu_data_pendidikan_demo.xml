@@ -2,9 +2,11 @@
 <!--
     CONTOH (fiktif), bukan data resmi. Satuan pendidikan demo per desa/kelurahan (nama
     mengikuti desa lokasinya, NPSN sintetis), penduduk usia sekolah 2025 dan 2026, dan
-    pengajuan terbit. Dibangkitkan oleh satu_data.pendidikan.demo._sd_demo_pendidikan
-    (deterministik; tidak mengisi ulang bila satuan pendidikan sudah ada).
+    pengajuan terbit, serta rekap semester per desa dan jenjang (Semester I dan II 2025,
+    Semester I 2026). Dibangkitkan oleh satu_data.pendidikan.demo (deterministik; tidak
+    mengisi ulang bila datanya sudah ada).
 -->
 <odoo>
     <function model="satu_data.pendidikan.demo" name="_sd_demo_pendidikan"/>
+    <function model="satu_data.pendidikan.demo" name="_sd_demo_rekap_semester"/>
 </odoo>

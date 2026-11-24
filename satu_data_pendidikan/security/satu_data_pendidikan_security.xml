@@ -30,6 +30,12 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="rule_rekap_pendidikan_company" model="ir.rule">
+        <field name="name">Satu Data: rekap pendidikan sesuai company</field>
+        <field name="model_id" ref="model_satu_data_pendidikan_rekap"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
     <record id="rule_usia_sekolah_company" model="ir.rule">
         <field name="name">Satu Data: penduduk usia sekolah sesuai company</field>
         <field name="model_id" ref="model_satu_data_pendidikan_usia_sekolah"/>

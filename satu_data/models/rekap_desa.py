@@ -45,6 +45,10 @@ class SatuDataRekapDesaMixin(models.AbstractModel):
              'Baris yang belum terisi tidak tampil di dashboard.')
 
     _sd_field_angka = ()    # diisi model pewaris
+    # Baris per desa pada laporan (mis. 4 untuk desa x jenjang) dan satuannya di peringatan
+    # "x dari y ... belum terisi".
+    _sd_baris_per_desa = 1
+    _sd_satuan_baris = 'desa/kelurahan'
 
     @api.depends('desa_id')
     def _compute_wilayah(self):

@@ -8,8 +8,12 @@
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button name="action_lihat_usia_sekolah" type="object" class="oe_stat_button"
-                        icon="fa-graduation-cap" invisible="not id or frekuensi != 'tahunan'">
+                        icon="fa-child" invisible="not id or frekuensi != 'tahunan'">
                     <field name="jumlah_usia_sekolah" widget="statinfo" string="Usia Sekolah"/>
+                </button>
+                <button name="action_lihat_rekap_pendidikan" type="object" class="oe_stat_button"
+                        icon="fa-graduation-cap" invisible="not id or frekuensi != 'semesteran'">
+                    <field name="jumlah_rekap_pendidikan" widget="statinfo" string="Rekap Pendidikan"/>
                 </button>
             </div>
         </field>

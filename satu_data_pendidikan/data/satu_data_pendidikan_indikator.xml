@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Daftar Data indikator pendidikan (dihitung dari rekap semester dan penduduk usia sekolah).
+    Dibuat dari konstanta INDIKATOR (models/indikator.py). noupdate: Walidata/Pembina Data
+    boleh melengkapi isian (mis. tingkat penyajian) tanpa tertimpa upgrade.
+-->
+<odoo noupdate="1">
+
+    <record id="kegiatan_rekap_semester" model="satu_data.kegiatan">
+        <field name="name">Rekap Pendidikan Semester</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="jenis">kompilasi</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="tujuan">Memantau ketersediaan, mutu layanan, partisipasi, dan keberlanjutan pendidikan per desa/kelurahan dan jenjang setiap semester.</field>
+        <field name="keterangan">Dinas Pendidikan menghimpun rekap satuan pendidikan, peserta didik, guru, ruang kelas, putus sekolah, dan lulusan per desa/kelurahan dan jenjang (termasuk madrasah dari Kementerian Agama), lalu mengajukannya ke Walidata paling lambat 30 hari setelah semester berakhir. Hanya angka rekap, tanpa data perorangan.</field>
+    </record>
+
+    <record id="data_jml_sekolah" model="satu_data.data">
+        <field name="name">Jumlah Satuan Pendidikan</field>
+        <field name="kode">pendidikan.jml_sekolah</field>
+        <field name="sequence">11</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Jumlah satuan pendidikan (negeri dan swasta, termasuk madrasah) menurut rekap semester.</field>
+        <field name="metode">Dijumlahkan dari rekap semester per desa/kelurahan dan jenjang (baris yang sudah terisi); kecamatan dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Sekolah</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, ketersediaan</field>
+    </record>
+
+    <record id="data_jml_siswa" model="satu_data.data">
+        <field name="name">Jumlah Peserta Didik</field>
+        <field name="kode">pendidikan.jml_siswa</field>
+        <field name="sequence">12</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Jumlah peserta didik laki-laki dan perempuan pada semester terpilih.</field>
+        <field name="metode">Dijumlahkan dari rekap semester per desa/kelurahan dan jenjang (baris yang sudah terisi); kecamatan dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Siswa</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, ketersediaan</field>
+    </record>
+
+    <record id="data_jml_guru" model="satu_data.data">
+        <field name="name">Jumlah Guru</field>
+        <field name="kode">pendidikan.jml_guru</field>
+        <field name="sequence">13</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Jumlah guru pada semester terpilih.</field>
+        <field name="metode">Dijumlahkan dari rekap semester per desa/kelurahan dan jenjang (baris yang sudah terisi); kecamatan dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Guru</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, ketersediaan</field>
+    </record>
+
+    <record id="data_rasio_murid_guru" model="satu_data.data">
+        <field name="name">Rasio Murid per Guru</field>
+        <field name="kode">pendidikan.rasio_murid_guru</field>
+        <field name="sequence">14</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Jumlah peserta didik dibagi jumlah guru. Makin rendah makin banyak perhatian guru per murid.</field>
+        <field name="metode">Peserta didik dibagi guru. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Rasio</field>
+        <field name="satuan">Murid per guru</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, mutu layanan</field>
+    </record>
+
+    <record id="data_murid_per_rombel" model="satu_data.data">
+        <field name="name">Rata-rata Murid per Rombongan Belajar</field>
+        <field name="kode">pendidikan.murid_per_rombel</field>
+        <field name="sequence">15</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Jumlah peserta didik dibagi jumlah rombongan belajar.</field>
+        <field name="metode">Peserta didik dibagi rombongan belajar. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Rasio</field>
+        <field name="satuan">Murid per rombel</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, mutu layanan</field>
+    </record>
+
+    <record id="data_kelas_baik" model="satu_data.data">
+        <field name="name">Ruang Kelas dalam Kondisi Baik</field>
+        <field name="kode">pendidikan.kelas_baik</field>
+        <field name="sequence">16</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase ruang kelas dalam kondisi baik dari seluruh ruang kelas (baik, rusak ringan, rusak berat).</field>
+        <field name="metode">Ruang kelas baik dibagi seluruh ruang kelas, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, mutu layanan</field>
+    </record>
+
+    <record id="data_guru_s1" model="satu_data.data">
+        <field name="name">Guru Berkualifikasi S1/D4</field>
+        <field name="kode">pendidikan.guru_s1</field>
+        <field name="sequence">17</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase guru berkualifikasi akademik minimal S1/D4.</field>
+        <field name="metode">Guru S1/D4 dibagi guru, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, mutu layanan</field>
+    </record>
+
+    <record id="data_guru_sertifikasi" model="satu_data.data">
+        <field name="name">Guru Bersertifikat Pendidik</field>
+        <field name="kode">pendidikan.guru_sertifikasi</field>
+        <field name="sequence">18</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase guru yang memiliki sertifikat pendidik.</field>
+        <field name="metode">Guru bersertifikat dibagi guru, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, mutu layanan</field>
+    </record>
+
+    <record id="data_apk_paud" model="satu_data.data">
+        <field name="name">Angka Partisipasi Kasar (APK) PAUD/TK</field>
+        <field name="kode">pendidikan.apk_paud</field>
+        <field name="sequence">19</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Peserta didik PAUD/TK (berapa pun usianya) dibagi penduduk usia 5–6 tahun, dikali 100. Dapat melebihi 100% bila ada siswa di luar usia resmi.</field>
+        <field name="metode">Peserta didik PAUD/TK dibagi penduduk usia 5–6 tahun, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio). Data per lokasi sekolah, bukan tempat tinggal siswa, sehingga disajikan paling rendah di tingkat kecamatan.</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan; Semester</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, partisipasi</field>
+    </record>
+
+    <record id="data_apk_sd" model="satu_data.data">
+        <field name="name">Angka Partisipasi Kasar (APK) SD/MI</field>
+        <field name="kode">pendidikan.apk_sd</field>
+        <field name="sequence">20</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Peserta didik SD/MI (berapa pun usianya) dibagi penduduk usia 7–12 tahun, dikali 100. Dapat melebihi 100% bila ada siswa di luar usia resmi.</field>
+        <field name="metode">Peserta didik SD/MI dibagi penduduk usia 7–12 tahun, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio). Data per lokasi sekolah, bukan tempat tinggal siswa, sehingga disajikan paling rendah di tingkat kecamatan.</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan; Semester</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, partisipasi</field>
+    </record>
+
+    <record id="data_apm_sd" model="satu_data.data">
+        <field name="name">Angka Partisipasi Murni (APM) SD/MI</field>
+        <field name="kode">pendidikan.apm_sd</field>
+        <field name="sequence">21</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Peserta didik SD/MI yang berusia 7–12 tahun dibagi penduduk usia 7–12 tahun, dikali 100. Tidak melebihi 100%.</field>
+        <field name="metode">Peserta didik SD/MI usia resmi dibagi penduduk usia 7–12 tahun, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio). Data per lokasi sekolah, bukan tempat tinggal siswa, sehingga disajikan paling rendah di tingkat kecamatan.</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan; Semester</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, partisipasi</field>
+    </record>
+
+    <record id="data_apk_smp" model="satu_data.data">
+        <field name="name">Angka Partisipasi Kasar (APK) SMP/MTs</field>
+        <field name="kode">pendidikan.apk_smp</field>
+        <field name="sequence">22</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Peserta didik SMP/MTs (berapa pun usianya) dibagi penduduk usia 13–15 tahun, dikali 100. Dapat melebihi 100% bila ada siswa di luar usia resmi.</field>
+        <field name="metode">Peserta didik SMP/MTs dibagi penduduk usia 13–15 tahun, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio). Data per lokasi sekolah, bukan tempat tinggal siswa, sehingga disajikan paling rendah di tingkat kecamatan.</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan; Semester</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, partisipasi</field>
+    </record>
+
+    <record id="data_apm_smp" model="satu_data.data">
+        <field name="name">Angka Partisipasi Murni (APM) SMP/MTs</field>
+        <field name="kode">pendidikan.apm_smp</field>
+        <field name="sequence">23</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Peserta didik SMP/MTs yang berusia 13–15 tahun dibagi penduduk usia 13–15 tahun, dikali 100. Tidak melebihi 100%.</field>
+        <field name="metode">Peserta didik SMP/MTs usia resmi dibagi penduduk usia 13–15 tahun, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio). Data per lokasi sekolah, bukan tempat tinggal siswa, sehingga disajikan paling rendah di tingkat kecamatan.</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan; Semester</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, partisipasi</field>
+    </record>
+
+    <record id="data_apk_sma" model="satu_data.data">
+        <field name="name">Angka Partisipasi Kasar (APK) SMA/SMK/MA</field>
+        <field name="kode">pendidikan.apk_sma</field>
+        <field name="sequence">24</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Peserta didik SMA/SMK/MA (berapa pun usianya) dibagi penduduk usia 16–18 tahun, dikali 100. Dapat melebihi 100% bila ada siswa di luar usia resmi.</field>
+        <field name="metode">Peserta didik SMA/SMK/MA dibagi penduduk usia 16–18 tahun, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio). Data per lokasi sekolah, bukan tempat tinggal siswa, sehingga disajikan paling rendah di tingkat kecamatan.</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan; Semester</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, partisipasi</field>
+    </record>
+
+    <record id="data_apm_sma" model="satu_data.data">
+        <field name="name">Angka Partisipasi Murni (APM) SMA/SMK/MA</field>
+        <field name="kode">pendidikan.apm_sma</field>
+        <field name="sequence">25</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Peserta didik SMA/SMK/MA yang berusia 16–18 tahun dibagi penduduk usia 16–18 tahun, dikali 100. Tidak melebihi 100%.</field>
+        <field name="metode">Peserta didik SMA/SMK/MA usia resmi dibagi penduduk usia 16–18 tahun, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio). Data per lokasi sekolah, bukan tempat tinggal siswa, sehingga disajikan paling rendah di tingkat kecamatan.</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan; Semester</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, partisipasi</field>
+    </record>
+
+    <record id="data_jml_putus" model="satu_data.data">
+        <field name="name">Jumlah Siswa Putus Sekolah</field>
+        <field name="kode">pendidikan.jml_putus</field>
+        <field name="sequence">26</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Siswa putus sekolah selama tahun ajaran (dari rekap Semester I).</field>
+        <field name="metode">Dijumlahkan dari rekap semester per desa/kelurahan dan jenjang (baris yang sudah terisi); kecamatan dan kabupaten/kota adalah penjumlahan desa/kelurahan. Diambil dari rekap Semester I (akhir tahun ajaran); Semester II memakai Semester I pada tahun yang sama.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Siswa</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, keberlanjutan</field>
+    </record>
+
+    <record id="data_angka_putus" model="satu_data.data">
+        <field name="name">Angka Putus Sekolah</field>
+        <field name="kode">pendidikan.angka_putus</field>
+        <field name="sequence">27</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Siswa putus sekolah dibagi jumlah peserta didik, dikali 100 (Semester I).</field>
+        <field name="metode">Siswa putus sekolah dibagi peserta didik, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio). Diambil dari rekap Semester I (akhir tahun ajaran); Semester II memakai Semester I pada tahun yang sama.</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, keberlanjutan</field>
+    </record>
+
+    <record id="data_angka_melanjutkan" model="satu_data.data">
+        <field name="name">Angka Melanjutkan</field>
+        <field name="kode">pendidikan.angka_melanjutkan</field>
+        <field name="sequence">28</field>
+        <field name="sektor">pendidikan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_disdik"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_rekap_semester"/>
+        <field name="topik_id" ref="satu_data.topik_pendidikan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_01"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Lulusan yang melanjutkan ke jenjang berikutnya dibagi jumlah lulusan, dikali 100 (Semester I).</field>
+        <field name="metode">Lulusan melanjutkan dibagi lulusan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio). Diambil dari rekap Semester I (akhir tahun ajaran); Semester II memakai Semester I pada tahun yang sama.</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Semester, Jenjang</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="batas_hari">30</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; NPSN satuan pendidikan (Kemendikdasmen)</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permendikbudristek No 32 Tahun 2022 tentang Standar Teknis Pemenuhan SPM Pendidikan; Data Pokok Pendidikan (Dapodik); Statistik Pendidikan (BPS)</field>
+        <field name="tag">pendidikan, keberlanjutan</field>
+    </record>
+
+</odoo>

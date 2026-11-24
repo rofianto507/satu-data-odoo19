@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rekap_list" model="ir.ui.view">
+        <field name="name">satu_data.pendidikan.rekap.list</field>
+        <field name="model">satu_data.pendidikan.rekap</field>
+        <field name="arch" type="xml">
+            <list string="Rekap Pendidikan Semester" create="0">
+                <field name="periode_id"/>
+                <field name="kecamatan_id"/>
+                <field name="desa_id"/>
+                <field name="kelompok"/>
+                <field name="sekolah_total" string="Sekolah" sum="Total"/>
+                <field name="siswa" sum="Total"/>
+                <field name="guru" sum="Total"/>
+                <field name="rombel" sum="Total" optional="show"/>
+                <field name="kelas_total" string="Ruang Kelas" sum="Total" optional="show"/>
+                <field name="kelas_baik" string="Kelas Baik" sum="Total" optional="hide"/>
+                <field name="sumber" optional="hide"/>
+                <field name="terisi" optional="show"/>
+                <field name="sd_status" widget="badge" optional="show"
+                       decoration-info="sd_status == 'diajukan'" decoration-success="sd_status == 'terbit'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Isian cepat (tombol "Isi per Jenjang" di laporan): semua angka, edit langsung di baris. -->
+    <record id="view_rekap_list_isian" model="ir.ui.view">
+        <field name="name">satu_data.pendidikan.rekap.list.isian</field>
+        <field name="model">satu_data.pendidikan.rekap</field>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <list string="Isian Rekap Pendidikan" editable="bottom" create="0">
+                <field name="sd_status" column_invisible="1"/>
+                <field name="terisi" readonly="1" string="Terisi"/>
+                <field name="desa_id" readonly="1"/>
+                <field name="kelompok" readonly="1"/>
+                <field name="sekolah_negeri" string="Sek. Negeri" sum="Total"/>
+                <field name="sekolah_swasta" string="Sek. Swasta" sum="Total"/>
+                <field name="siswa_l" string="Siswa L" sum="Total"/>
+                <field name="siswa_p" string="Siswa P" sum="Total"/>
+                <field name="siswa_usia_resmi" string="Usia Resmi" sum="Total"/>
+                <field name="rombel" sum="Total"/>
+                <field name="guru" sum="Total"/>
+                <field name="guru_s1" string="Guru S1/D4" sum="Total"/>
+                <field name="guru_sertifikasi" string="Guru Sertif." sum="Total"/>
+                <field name="kelas_baik" string="Kelas Baik" sum="Total"/>
+                <field name="kelas_rusak_ringan" string="Rusak Ringan" sum="Total"/>
+                <field name="kelas_rusak_berat" string="Rusak Berat" sum="Total"/>
+                <field name="putus_sekolah" string="Putus Sek." sum="Total"/>
+                <field name="lulusan" sum="Total"/>
+                <field name="melanjutkan" string="Melanjutkan" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rekap_form" model="ir.ui.view">
+        <field name="name">satu_data.pendidikan.rekap.form</field>
+        <field name="model">satu_data.pendidikan.rekap</field>
+        <field name="arch" type="xml">
+            <form string="Rekap Pendidikan Semester" create="0">
+                <header>
+                    <field name="sd_status" widget="statusbar" statusbar_visible="draf,diajukan,terbit"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info mb-3" role="status"
+                         invisible="sd_status not in ('diajukan', 'terbit')">
+                        Data semester ini sedang diperiksa atau sudah terbit sehingga dikunci.
+                        Minta Walidata mengembalikannya (menu Pemeriksaan) bila perlu diperbaiki.
+                    </div>
+                    <div class="oe_title">
+                        <label for="desa_id"/>
+                        <h1><field name="desa_id" options="{'no_create': True}" placeholder="Pilih desa/kelurahan"/></h1>
+                    </div>
+                    <group>
+                        <group string="Wilayah dan Semester">
+                            <field name="kecamatan_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="periode_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="kelompok"/>
+                            <field name="sumber" placeholder="Mis. Dapodik dan data madrasah Kemenag"/>
+                            <field name="terisi"/>
+                        </group>
+                        <group string="Satuan Pendidikan">
+                            <field name="sekolah_negeri"/>
+                            <field name="sekolah_swasta"/>
+                            <field name="sekolah_total"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Peserta Didik">
+                            <field name="siswa_l"/>
+                            <field name="siswa_p"/>
+                            <field name="siswa"/>
+                            <field name="siswa_usia_resmi"/>
+                            <field name="rombel"/>
+                        </group>
+                        <group string="Pendidik">
+                            <field name="guru"/>
+                            <field name="guru_s1"/>
+                            <field name="guru_sertifikasi"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Ruang Kelas">
+                            <field name="kelas_baik"/>
+                            <field name="kelas_rusak_ringan"/>
+                            <field name="kelas_rusak_berat"/>
+                            <field name="kelas_total"/>
+                        </group>
+                        <group string="Kelulusan (akhir tahun ajaran, Semester I)">
+                            <field name="putus_sekolah"/>
+                            <field name="lulusan"/>
+                            <field name="melanjutkan"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        Angka per lokasi sekolah di desa/kelurahan ini, tanpa data siswa atau guru perorangan.
+                        Jumlah sekolah terisi dari master satuan pendidikan saat baris dibuat.
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rekap_search" model="ir.ui.view">
+        <field name="name">satu_data.pendidikan.rekap.search</field>
+        <field name="model">satu_data.pendidikan.rekap</field>
+        <field name="arch" type="xml">
+            <search string="Cari Rekap Pendidikan">
+                <field name="desa_id"/>
+                <field name="kecamatan_id"/>
+                <field name="periode_id"/>
+                <separator/>
+                <filter string="PAUD/TK" name="paud" domain="[('kelompok', '=', 'paud')]"/>
+                <filter string="SD/MI" name="sd_mi" domain="[('kelompok', '=', 'sd_mi')]"/>
+                <filter string="SMP/MTs" name="smp_mts" domain="[('kelompok', '=', 'smp_mts')]"/>
+                <filter string="SMA/SMK/MA" name="sma_smk_ma" domain="[('kelompok', '=', 'sma_smk_ma')]"/>
+                <separator/>
+                <filter string="Belum Terisi" name="belum_terisi" domain="[('terisi', '=', False)]"/>
+                <filter string="Ada Sekolah" name="ada_sekolah" domain="[('sekolah_total', '&gt;', 0)]"/>
+                <group>
+                    <filter string="Semester" name="group_periode" context="{'group_by': 'periode_id'}"/>
+                    <filter string="Jenjang" name="group_kelompok" context="{'group_by': 'kelompok'}"/>
+                    <filter string="Kecamatan" name="group_kecamatan" context="{'group_by': 'kecamatan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_rekap_pivot" model="ir.ui.view">
+        <field name="name">satu_data.pendidikan.rekap.pivot</field>
+        <field name="model">satu_data.pendidikan.rekap</field>
+        <field name="arch" type="xml">
+            <pivot string="Rekap Pendidikan">
+                <field name="kecamatan_id" type="row"/>
+                <field name="kelompok" type="col"/>
+                <field name="siswa" type="measure"/>
+                <field name="sekolah_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_rekap" model="ir.actions.act_window">
+        <field name="name">Analisis Semester</field>
+        <field name="res_model">satu_data.pendidikan.rekap</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="search_view_id" ref="view_rekap_search"/>
+        <field name="context">{'search_default_group_periode': 1, 'search_default_group_kelompok': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada rekap pendidikan</p>
+            <p>Data diisi lewat Laporan Semester: buka laporan satu semester, isi tabel desa dan jenjang,
+               lalu kirim ke Walidata. Menu ini untuk menganalisis data semua semester.</p>
+        </field>
+    </record>
+
+</odoo>

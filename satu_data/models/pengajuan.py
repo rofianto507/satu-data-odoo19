@@ -49,8 +49,10 @@ class SatuDataPengajuan(models.Model):
                                      help='Dikembalikan Walidata; lihat Catatan Pemeriksaan.')
     jumlah_record = fields.Integer('Jumlah Baris', compute='_compute_jumlah_record')
     jumlah_terisi = fields.Integer('Desa Terisi', compute='_compute_jumlah_record')
-    jumlah_desa   = fields.Integer('Jumlah Desa', compute='_compute_jumlah_record')
-    jumlah_kosong = fields.Integer('Desa Belum Terisi', compute='_compute_jumlah_record')
+    # Target baris laporan = jumlah desa x baris per desa (mis. pendidikan: desa x jenjang).
+    jumlah_desa   = fields.Integer('Target Baris', compute='_compute_jumlah_record')
+    jumlah_kosong = fields.Integer('Belum Terisi', compute='_compute_jumlah_record')
+    satuan_baris  = fields.Char('Satuan Baris', compute='_compute_jumlah_record')
     boleh_periksa = fields.Boolean(compute='_compute_boleh_periksa')
 
     # Ketepatan jadwal pemutakhiran (penilaian kinerja Produsen Data)
@@ -144,8 +146,11 @@ class SatuDataPengajuan(models.Model):
             rec.jumlah_record = Model.search_count(dom) if Model is not None else 0
             rec.jumlah_terisi = (Model.search_count(dom + Model._sd_domain_terisi())
                                  if Model is not None else 0)
-            rec.jumlah_desa = Desa.search_count([('company_id', '=', rec.company_id.id)])
+            per_desa = getattr(Model, '_sd_baris_per_desa', 1) if Model is not None else 1
+            rec.jumlah_desa = Desa.search_count([('company_id', '=', rec.company_id.id)]) * per_desa
             rec.jumlah_kosong = max(rec.jumlah_desa - rec.jumlah_terisi, 0)
+            rec.satuan_baris = (getattr(Model, '_sd_satuan_baris', 'desa/kelurahan')
+                                if Model is not None else 'desa/kelurahan')
 
     # ── Alur ─────────────────────────────────────────────────────────────────
 

@@ -533,8 +533,9 @@
                     <div class="alert alert-info mb-3" role="status"
                          invisible="state == 'terbit' or not jumlah_kosong">
                         <field name="jumlah_kosong" readonly="1" class="d-inline"/> dari
-                        <field name="jumlah_desa" readonly="1" class="d-inline"/> desa/kelurahan belum terisi.
-                        Laporan tetap bisa dikirim, tetapi desa yang kosong tidak tampil di dashboard.
+                        <field name="jumlah_desa" readonly="1" class="d-inline"/>
+                        <field name="satuan_baris" readonly="1" class="d-inline"/> belum terisi.
+                        Laporan tetap bisa dikirim, tetapi baris yang kosong tidak tampil di dashboard.
                     </div>
                     <field name="perlu_perbaikan" invisible="1"/>
                     <field name="jumlah_record" invisible="1"/>
