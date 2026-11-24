@@ -18,12 +18,41 @@ Contoh data demo memakai Kabupaten Jember.
 
 Sistem hanya menyimpan **angka rekap per wilayah**, tidak ada data perorangan.
 
+## Tampilan
+
+Seluruh angka pada tangkapan layar di bawah adalah **data demo fiktif**, bukan data resmi.
+
+### Dashboard Kependudukan
+Peta kepadatan penduduk per kecamatan yang bisa dibuka sampai tingkat desa/kelurahan, lengkap dengan
+kartu ringkasan, panel detail, dan daftar wilayah.
+
+<img src="docs/screenshots/dashboard-kependudukan-peta.png" alt="Dashboard Kependudukan: kartu ringkasan, peta jumlah penduduk per kecamatan, dan panel detail Kabupaten Jember" width="100%">
+
+Grafik batang bertumpuk laki-laki dan perempuan per kecamatan. Klik sebuah batang untuk melihat desa/kelurahannya.
+
+<img src="docs/screenshots/dashboard-kependudukan-grafik.png" alt="Grafik batang bertumpuk jumlah penduduk laki-laki dan perempuan per kecamatan" width="100%">
+
+### Dashboard Kesehatan
+Pilih indikator (12 SPM, imunisasi dasar lengkap, stunting, kematian ibu dan bayi, DBD), bulan, dan cara
+hitung bulanan atau kumulatif. Peta memberi warna wilayah menurut capaian dan menandai lokasi puskesmas.
+
+<img src="docs/screenshots/dashboard-kesehatan-peta.png" alt="Dashboard Kesehatan: kartu indikator kunci dan peta capaian dengan penanda puskesmas" width="100%">
+
+Klik penanda puskesmas untuk melihat jendela infonya, lalu **Lihat detail data** untuk membuka rekap
+bulanannya.
+
+<img src="docs/screenshots/dashboard-kesehatan-info-puskesmas.png" alt="Jendela info puskesmas di peta dengan tombol Lihat detail data" width="100%">
+
+Capaian 12 Standar Pelayanan Minimal dan tren bulanan indikator yang dipilih.
+
+<img src="docs/screenshots/dashboard-kesehatan-grafik.png" alt="Grafik capaian 12 SPM kesehatan dan tren bulanan" width="100%">
+
 ## Fitur utama
 
 - **Alur Satu Data yang sederhana.** Produsen Data mengisi laporan, Walidata memeriksa, dan hanya
   data yang sudah diterbitkan yang tampil di dashboard. Data yang sedang diperiksa atau sudah terbit dikunci.
 - **Dashboard peta per sektor.** Peta choropleth kabupaten → kecamatan → desa/kelurahan, kartu ringkasan,
-  dan grafik, dengan sidebar untuk berpindah antarsektor.
+  grafik, dan titik fasilitas dengan jendela info, dengan sidebar untuk berpindah antarsektor.
 - **Tata kelola data.** Daftar Data dengan metadata selaras data.go.id, urusan pemerintahan,
   Forum Satu Data, jadwal pemutakhiran, dan penilaian ketepatan waktu Produsen Data.
 - **Editor batas wilayah.** Geser, tambah, dan hapus titik batas desa/kecamatan langsung di peta.
@@ -36,21 +65,26 @@ Sistem hanya menyimpan **angka rekap per wilayah**, tidak ada data perorangan.
 |---|---|
 | `satu_data` | Modul inti: wilayah (kecamatan, desa/kelurahan, batas peta GeoJSON dan editornya), periode data, instansi, Daftar Data berikut metadata, Forum Satu Data, laporan dan pemeriksaan Walidata, peran akses, kerangka dashboard dengan sidebar per sektor |
 | `satu_data_kependudukan` | Laporan semester penduduk per desa (laki-laki, perempuan, KK, kepadatan), dashboard peta penduduk dengan grafik laki-laki/perempuan |
-| `satu_data_kesehatan` | Fasilitas kesehatan dan wilayah kerja puskesmas, sasaran tahunan, rekap layanan bulanan per desa, 21 indikator (12 SPM, imunisasi dasar lengkap, stunting, kematian ibu/bayi, DBD), dashboard peta dengan titik puskesmas |
+| `satu_data_kesehatan` | Fasilitas kesehatan dan wilayah kerja puskesmas, laporan bulanan dan laporan sasaran tahunan per desa, 21 indikator (12 SPM, imunisasi dasar lengkap, stunting, kematian ibu/bayi, DBD), dashboard peta dengan titik puskesmas |
 
 Modul sektor bergantung pada `satu_data`. Modul inti bisa dipasang tanpa modul sektor.
 
 ## Alur kerja
 
-```
-Produsen Data mengisi laporan  ──Kirim──▶  Walidata memeriksa  ──Terbitkan──▶  Dashboard
-        (Diisi)                              (Diperiksa)                         (Terbit)
-              ◀────────── Kembalikan dengan catatan ──────────┘
-```
+Setiap sektor memakai satu pola: **satu laporan per periode** dengan tiga status,
+**Diisi → Diperiksa → Terbit**.
 
-Satu laporan per sektor dan periode, dengan tiga status: **Diisi → Diperiksa → Terbit**.
-Laporan tetap bisa dikirim walau ada desa yang belum terisi; Walidata melihat jumlah desa yang kosong,
-dan desa itu tidak tampil di dashboard.
+<img src="docs/alur-laporan.png" alt="Diagram alur laporan: Produsen Data membuka laporan, mengisi tabel desa, dan mengirim; Walidata memeriksa lalu menerbitkan atau mengembalikan dengan catatan; dashboard menampilkan data terbit" width="100%">
+
+1. **Buka laporan.** Produsen Data memilih periode dan langsung mendapat baris semua desa/kelurahan.
+2. **Isi tabel desa.** Angka diisi langsung di tabel, dan desa yang masih kosong ditandai.
+3. **Kirim ke Walidata.** Sistem memeriksa kelengkapan. Laporan tetap bisa dikirim walau ada desa kosong,
+   tetapi Walidata melihat jumlahnya dan desa itu tidak tampil di dashboard.
+4. **Periksa.** Walidata menerbitkan, atau mengembalikan dengan catatan wajib. Laporan yang dikembalikan
+   kembali ke status Diisi dan catatan Walidata tampil di bagian atasnya.
+5. **Terbit.** Data resmi dan terkunci, lalu tampil di dashboard.
+
+<img src="docs/screenshots/laporan-semester.png" alt="Laporan semester kependudukan dengan bilah status Diisi, Diperiksa, Terbit dan tabel isian per desa" width="100%">
 
 ### Peran
 
@@ -93,7 +127,6 @@ Seluruh data demo bersifat **fiktif** dan hanya contoh, bukan data resmi:
 
 ## Rencana pengembangan
 
-- Laporan bulanan untuk sektor kesehatan dengan alur yang sama seperti kependudukan
 - Impor Excel dan penanda angka yang tidak wajar
 - Portal publik: katalog Daftar Data, unduhan CSV/XLSX/JSON beserta metadata, dan permintaan data
 - Modul pendidikan
