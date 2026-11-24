@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Produsen Data, Metadata Kegiatan, dan Daftar Data sektor kependudukan
+    (prinsip Satu Data Indonesia: standar data, metadata, kode referensi).
+    noupdate: Walidata/Pembina Data boleh melengkapi isian tanpa tertimpa upgrade.
+-->
+<odoo noupdate="1">
+
+    <record id="instansi_dukcapil" model="satu_data.instansi">
+        <field name="name">Dinas Kependudukan dan Pencatatan Sipil</field>
+        <field name="singkatan">Dispendukcapil</field>
+        <field name="jenis">opd</field>
+        <field name="peran">produsen</field>
+        <field name="sequence">20</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="urusan_ids" eval="[(6, 0, [ref('satu_data.urusan_2_12')])]"/>
+    </record>
+
+    <record id="kegiatan_dkb" model="satu_data.kegiatan">
+        <field name="name">Data Kependudukan Bersih (DKB) Semester</field>
+        <field name="instansi_id" ref="instansi_dukcapil"/>
+        <field name="jenis">kompilasi</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="tujuan">Menyediakan jumlah penduduk dan kepala keluarga per desa/kelurahan untuk perencanaan pembangunan dan pelayanan publik.</field>
+        <field name="keterangan">Rekap Data Kependudukan Bersih hasil konsolidasi administrasi kependudukan (penduduk ber-NIK) per desa/kelurahan pada akhir semester. Hanya angka rekap, tanpa data perorangan.</field>
+    </record>
+
+    <record id="data_jumlah_penduduk" model="satu_data.data">
+        <field name="name">Jumlah Penduduk</field>
+        <field name="kode">kependudukan.jumlah_penduduk</field>
+        <field name="sequence">1</field>
+        <field name="sektor">kependudukan</field>
+        <field name="instansi_id" ref="instansi_dukcapil"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_dkb"/>
+        <field name="topik_id" ref="satu_data.topik_pemerintahan"/>
+        <field name="urusan_id" ref="satu_data.urusan_2_12"/>
+        <field name="prioritas" eval="True"/>
+        <field name="konsep">Penduduk adalah warga negara Indonesia dan orang asing yang bertempat tinggal di Indonesia.</field>
+        <field name="definisi">Jumlah penduduk yang tercatat dalam data kependudukan (memiliki NIK) dan berdomisili di wilayah tersebut pada akhir periode.</field>
+        <field name="metode">Jumlah penduduk laki-laki ditambah perempuan per desa/kelurahan. Angka kecamatan dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Jiwa</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">UU No 23 Tahun 2006 jo. UU No 24 Tahun 2013 tentang Administrasi Kependudukan</field>
+        <field name="tag">penduduk, kependudukan, dukcapil</field>
+    </record>
+
+    <record id="data_penduduk_laki" model="satu_data.data">
+        <field name="name">Jumlah Penduduk Laki-laki</field>
+        <field name="kode">kependudukan.jumlah_laki_laki</field>
+        <field name="sequence">2</field>
+        <field name="sektor">kependudukan</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dukcapil"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_dkb"/>
+        <field name="topik_id" ref="satu_data.topik_pemerintahan"/>
+        <field name="urusan_id" ref="satu_data.urusan_2_12"/>
+        <field name="definisi">Jumlah penduduk berjenis kelamin laki-laki yang tercatat dalam data kependudukan pada akhir periode.</field>
+        <field name="metode">Rekap DKB per desa/kelurahan; kecamatan dan kabupaten/kota = penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Jiwa</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Jenis kelamin</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="tag">penduduk, jenis kelamin</field>
+    </record>
+
+    <record id="data_penduduk_perempuan" model="satu_data.data">
+        <field name="name">Jumlah Penduduk Perempuan</field>
+        <field name="kode">kependudukan.jumlah_perempuan</field>
+        <field name="sequence">3</field>
+        <field name="sektor">kependudukan</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dukcapil"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_dkb"/>
+        <field name="topik_id" ref="satu_data.topik_pemerintahan"/>
+        <field name="urusan_id" ref="satu_data.urusan_2_12"/>
+        <field name="definisi">Jumlah penduduk berjenis kelamin perempuan yang tercatat dalam data kependudukan pada akhir periode.</field>
+        <field name="metode">Rekap DKB per desa/kelurahan; kecamatan dan kabupaten/kota = penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Jiwa</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan; Jenis kelamin</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="tag">penduduk, jenis kelamin</field>
+    </record>
+
+    <record id="data_jumlah_kk" model="satu_data.data">
+        <field name="name">Jumlah Kepala Keluarga</field>
+        <field name="kode">kependudukan.jumlah_kk</field>
+        <field name="sequence">4</field>
+        <field name="sektor">kependudukan</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dukcapil"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_dkb"/>
+        <field name="topik_id" ref="satu_data.topik_pemerintahan"/>
+        <field name="urusan_id" ref="satu_data.urusan_2_12"/>
+        <field name="definisi">Jumlah kartu keluarga (kepala keluarga) yang tercatat dalam data kependudukan pada akhir periode.</field>
+        <field name="metode">Rekap DKB per desa/kelurahan; kecamatan dan kabupaten/kota = penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Kepala keluarga</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="tag">keluarga, kependudukan</field>
+    </record>
+
+    <record id="data_kepadatan" model="satu_data.data">
+        <field name="name">Kepadatan Penduduk</field>
+        <field name="kode">kependudukan.kepadatan</field>
+        <field name="sequence">5</field>
+        <field name="sektor">kependudukan</field>
+        <field name="instansi_id" ref="instansi_dukcapil"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_dkb"/>
+        <field name="topik_id" ref="satu_data.topik_pemerintahan"/>
+        <field name="urusan_id" ref="satu_data.urusan_2_12"/>
+        <field name="definisi">Banyaknya penduduk per kilometer persegi luas wilayah.</field>
+        <field name="metode">Jumlah penduduk dibagi luas wilayah (km²). Luas desa/kelurahan dari master wilayah; kepadatan kecamatan dan kabupaten/kota hanya dihitung bila seluruh desa/kelurahannya memiliki luas.</field>
+        <field name="ukuran">Rasio</field>
+        <field name="satuan">Jiwa/km²</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">semesteran</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="tag">penduduk, kepadatan</field>
+    </record>
+
+</odoo>

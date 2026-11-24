@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="satu_data.PetaWilayah">
+        <div class="sd-peta">
+            <div t-ref="peta" class="sd-peta-kanvas"/>
+
+            <div t-if="state.tanpaLeaflet" class="sd-peta-pesan">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"/> Pustaka peta gagal dimuat.
+            </div>
+            <div t-elif="!adaGeometri" class="sd-peta-pesan">
+                <i class="fa fa-map-o" aria-hidden="true"/>
+                Belum ada batas wilayah (GeoJSON) untuk ditampilkan. Angka tetap tersedia di panel samping.
+            </div>
+
+            <div class="sd-legenda" aria-label="Legenda peta">
+                <div class="sd-legenda-judul" t-esc="props.judulLegenda"/>
+                <div t-foreach="props.kelas" t-as="k" t-key="k_index" class="sd-legenda-baris">
+                    <span class="sd-legenda-kotak" t-attf-style="background: {{ k.warna }}"/>
+                    <span t-esc="k.label"/>
+                </div>
+                <div class="sd-legenda-baris">
+                    <span class="sd-legenda-kotak sd-legenda-kotak--kosong"
+                          t-attf-style="background: {{ props.warnaTanpaData }}"/>
+                    <span>Belum ada data</span>
+                </div>
+                <div t-if="props.titik and props.titik.length" class="sd-legenda-baris">
+                    <span class="sd-legenda-titik"/>
+                    <span t-esc="props.judulTitik or 'Titik'"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

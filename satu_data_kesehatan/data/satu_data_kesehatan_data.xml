@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Produsen Data, Metadata Kegiatan, dan Daftar Data sektor kesehatan (prinsip Satu Data
+    Indonesia: standar data, metadata, kode referensi). noupdate: Walidata/Pembina Data
+    boleh melengkapi isian tanpa tertimpa upgrade.
+-->
+<odoo noupdate="1">
+
+    <record id="instansi_dinkes" model="satu_data.instansi">
+        <field name="name">Dinas Kesehatan</field>
+        <field name="singkatan">Dinkes</field>
+        <field name="jenis">opd</field>
+        <field name="peran">produsen</field>
+        <field name="sequence">30</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="urusan_ids" eval="[(6, 0, [ref('satu_data.urusan_1_02')])]"/>
+    </record>
+
+    <record id="kegiatan_laporan_bulanan" model="satu_data.kegiatan">
+        <field name="name">Laporan Bulanan Pelayanan Kesehatan Puskesmas</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="jenis">kompilasi</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="tujuan">Memantau capaian Standar Pelayanan Minimal bidang kesehatan, imunisasi, stunting, kematian ibu dan bayi, serta DBD per desa/kelurahan setiap bulan.</field>
+        <field name="keterangan">Puskesmas merekap pelayanan dan kejadian per desa/kelurahan tempat tinggal sasaran di wilayah kerjanya, lalu Dinas Kesehatan menghimpun dan mengajukannya ke Walidata paling lambat tanggal 10 bulan berikutnya. Hanya angka rekap, tanpa data perorangan.</field>
+    </record>
+
+    <record id="kegiatan_sasaran" model="satu_data.kegiatan">
+        <field name="name">Penetapan Sasaran Program Kesehatan Tahunan</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="jenis">kompilasi</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="tujuan">Menyediakan sasaran (penyebut) capaian Standar Pelayanan Minimal bidang kesehatan dan indikator kesehatan per desa/kelurahan.</field>
+        <field name="keterangan">Dinas Kesehatan menetapkan sasaran per desa/kelurahan pada awal tahun dari proyeksi penduduk dan estimasi prevalensi; puskesmas memverifikasi untuk wilayah kerjanya. Hanya angka rekap, tanpa data perorangan.</field>
+    </record>
+
+    <record id="data_sasaran_ibu_hamil" model="satu_data.data">
+        <field name="name">Sasaran Ibu Hamil</field>
+        <field name="kode">kesehatan.sasaran_ibu_hamil</field>
+        <field name="sequence">1</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Perkiraan jumlah ibu hamil di wilayah dalam satu tahun, sasaran pelayanan kesehatan ibu hamil sesuai standar (SPM 1).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Ibu</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_ibu_bersalin" model="satu_data.data">
+        <field name="name">Sasaran Ibu Bersalin</field>
+        <field name="kode">kesehatan.sasaran_ibu_bersalin</field>
+        <field name="sequence">2</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Perkiraan jumlah ibu bersalin di wilayah dalam satu tahun, sasaran pelayanan persalinan sesuai standar (SPM 2).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Ibu</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_bayi_baru_lahir" model="satu_data.data">
+        <field name="name">Sasaran Bayi Baru Lahir</field>
+        <field name="kode">kesehatan.sasaran_bayi_baru_lahir</field>
+        <field name="sequence">3</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Perkiraan jumlah bayi lahir hidup (usia 0–28 hari) dalam satu tahun, sasaran pelayanan kesehatan bayi baru lahir (SPM 3).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Bayi</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_bayi" model="satu_data.data">
+        <field name="name">Sasaran Bayi (0–11 Bulan)</field>
+        <field name="kode">kesehatan.sasaran_bayi</field>
+        <field name="sequence">4</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Perkiraan jumlah bayi usia 0–11 bulan dalam satu tahun, sasaran imunisasi dasar lengkap.</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Bayi</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_balita" model="satu_data.data">
+        <field name="name">Sasaran Balita (0–59 Bulan)</field>
+        <field name="kode">kesehatan.sasaran_balita</field>
+        <field name="sequence">5</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Perkiraan jumlah anak usia 0–59 bulan, sasaran pelayanan kesehatan balita sesuai standar (SPM 4) dan pemantauan pertumbuhan/stunting.</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Anak</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_usia_dasar" model="satu_data.data">
+        <field name="name">Sasaran Anak Usia Pendidikan Dasar</field>
+        <field name="kode">kesehatan.sasaran_usia_dasar</field>
+        <field name="sequence">6</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Jumlah anak usia 7–15 tahun (kelas 1–9 dan setara) di wilayah, sasaran skrining kesehatan usia pendidikan dasar (SPM 5).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Anak</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_usia_produktif" model="satu_data.data">
+        <field name="name">Sasaran Usia Produktif (15–59 Tahun)</field>
+        <field name="kode">kesehatan.sasaran_usia_produktif</field>
+        <field name="sequence">7</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Jumlah penduduk usia 15–59 tahun, sasaran skrining kesehatan usia produktif (SPM 6).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Orang</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_usia_lanjut" model="satu_data.data">
+        <field name="name">Sasaran Usia Lanjut (60 Tahun ke Atas)</field>
+        <field name="kode">kesehatan.sasaran_usia_lanjut</field>
+        <field name="sequence">8</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Jumlah penduduk usia 60 tahun ke atas, sasaran skrining kesehatan usia lanjut (SPM 7).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Orang</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_hipertensi" model="satu_data.data">
+        <field name="name">Sasaran Penderita Hipertensi</field>
+        <field name="kode">kesehatan.sasaran_hipertensi</field>
+        <field name="sequence">9</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Estimasi jumlah penderita hipertensi usia 15 tahun ke atas (prevalensi dikali jumlah penduduk usia 15 tahun ke atas), sasaran pelayanan kesehatan penderita hipertensi (SPM 8).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Orang</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_diabetes" model="satu_data.data">
+        <field name="name">Sasaran Penderita Diabetes Melitus</field>
+        <field name="kode">kesehatan.sasaran_diabetes</field>
+        <field name="sequence">10</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Estimasi jumlah penderita diabetes melitus usia 15 tahun ke atas, sasaran pelayanan kesehatan penderita DM (SPM 9).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Orang</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_odgj_berat" model="satu_data.data">
+        <field name="name">Sasaran ODGJ Berat</field>
+        <field name="kode">kesehatan.sasaran_odgj_berat</field>
+        <field name="sequence">11</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Estimasi jumlah orang dengan gangguan jiwa berat (psikotik akut dan skizofrenia), sasaran pelayanan kesehatan ODGJ berat (SPM 10).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Orang</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbatas</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_terduga_tbc" model="satu_data.data">
+        <field name="name">Sasaran Orang Terduga Tuberkulosis</field>
+        <field name="kode">kesehatan.sasaran_terduga_tbc</field>
+        <field name="sequence">12</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Estimasi jumlah orang terduga tuberkulosis, sasaran pelayanan kesehatan orang terduga TBC (SPM 11).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Orang</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+    <record id="data_sasaran_risiko_hiv" model="satu_data.data">
+        <field name="name">Sasaran Orang Berisiko Terinfeksi HIV</field>
+        <field name="kode">kesehatan.sasaran_risiko_hiv</field>
+        <field name="sequence">13</field>
+        <field name="sektor">kesehatan_sasaran</field>
+        <field name="jenis">variabel</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_sasaran"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="definisi">Estimasi jumlah orang berisiko terinfeksi HIV (ibu hamil, pasien TBC, pasien IMS, populasi kunci, dan warga binaan pemasyarakatan), sasaran pelayanan kesehatan orang berisiko HIV (SPM 12).</field>
+        <field name="metode">Ditetapkan Dinas Kesehatan per desa/kelurahan dari proyeksi penduduk sasaran atau estimasi prevalensi. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Orang</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">tahunan</field>
+        <field name="batas_hari">31</field>
+        <field name="acuan_batas">awal</field>
+        <field name="akses">terbatas</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, sasaran, spm</field>
+    </record>
+
+</odoo>

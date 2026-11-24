@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="satu_data_kependudukan.DashboardPeta">
+<div class="o_satu_data sd-dash" t-ref="root" t-att-class="{ 'sd-dash--layar-penuh': state.layarPenuh }">
+
+    <!-- ── Kepala: navigasi level (kiri) dan kontrol (kanan) ──────────────────
+         Identitas wilayah (logo, nama, kode) ditampilkan di kartu detail. -->
+    <header class="sd-kepala">
+        <nav class="sd-jejak" aria-label="Level wilayah">
+            <button t-if="state.kecamatanId" class="btn btn-sm btn-primary sd-kembali" t-on-click="kembali"
+                    t-att-disabled="state.memuat">
+                <i class="fa fa-arrow-left" aria-hidden="true"/> Kembali
+            </button>
+            <span class="sd-jejak-item" t-att-class="{ 'sd-jejak-item--aktif': !state.kecamatanId }">
+                Semua kecamatan
+            </span>
+            <t t-if="state.data and state.data.kecamatan">
+                <i class="fa fa-angle-right text-muted" aria-hidden="true"/>
+                <span class="sd-jejak-item sd-jejak-item--aktif">
+                    Kecamatan <t t-esc="state.data.kecamatan.nama"/>
+                </span>
+            </t>
+        </nav>
+
+        <div class="sd-kontrol">
+            <label t-if="state.data and state.data.daftar_periode.length" class="sd-periode">
+                <span>Periode</span>
+                <select class="form-select form-select-sm" t-on-change="pilihPeriode"
+                        t-att-disabled="state.memuat">
+                    <t t-foreach="state.data.daftar_periode" t-as="p" t-key="p.id">
+                        <option t-att-value="p.id"
+                                t-att-selected="state.periodeId === p.id"
+                                t-esc="p.label"/>
+                    </t>
+                </select>
+            </label>
+            <button class="btn btn-sm btn-light" t-on-click="toggleLayarPenuh"
+                    t-att-title="state.layarPenuh ? 'Keluar dari layar penuh' : 'Layar penuh'">
+                <i t-att-class="state.layarPenuh ? 'fa fa-compress' : 'fa fa-expand'" aria-hidden="true"/>
+                <span class="sd-label-tombol" t-esc="state.layarPenuh ? ' Keluar' : ' Layar penuh'"/>
+            </button>
+            <button class="btn btn-sm btn-light" t-on-click="muat" t-att-disabled="state.memuat" title="Muat ulang">
+                <i t-att-class="state.memuat ? 'fa fa-refresh fa-spin' : 'fa fa-refresh'" aria-hidden="true"/>
+            </button>
+        </div>
+    </header>
+
+    <!-- ── Galat ──────────────────────────────────────────────────────────── -->
+    <div t-if="state.galat" class="alert alert-danger sd-galat" role="alert">
+        <div><i class="fa fa-exclamation-circle" aria-hidden="true"/> <t t-esc="state.galat"/></div>
+        <button class="btn btn-sm btn-outline-danger" t-on-click="muat">Coba lagi</button>
+    </div>
+
+    <!-- ── Memuat pertama kali ────────────────────────────────────────────── -->
+    <div t-if="!state.data and state.memuat" class="sd-memuat">
+        <i class="fa fa-circle-o-notch fa-spin" aria-hidden="true"/> Memuat data wilayah...
+    </div>
+
+    <t t-if="state.data">
+
+        <!-- Wilayah belum diisi -->
+        <div t-if="!state.data.wilayah.length and state.data.level === 'kecamatan'" class="sd-kosong">
+            <i class="fa fa-map-o fa-2x" aria-hidden="true"/>
+            <p>Belum ada kecamatan untuk wilayah ini.</p>
+            <button class="btn btn-primary" t-on-click="bukaKecamatan">Kelola kecamatan</button>
+        </div>
+
+        <t t-else="">
+            <div t-if="!adaDataPeriode" class="alert alert-info sd-info" role="status">
+                Belum ada data kependudukan. Peta menampilkan batas wilayah saja.
+            </div>
+
+            <!-- KPI ringkasan untuk cakupan yang sedang ditampilkan -->
+            <t t-set="d" t-value="detail"/>
+            <section class="sd-kpi" t-att-class="{ 'sd-kpi--memuat': state.memuat }" aria-label="Ringkasan">
+                <div class="sd-kpi-kartu sd-kpi-kartu--utama">
+                    <div class="sd-kpi-label"><span class="sd-kpi-ikon"><i class="fa fa-users" aria-hidden="true"/></span>Jumlah penduduk</div>
+                    <div class="sd-kpi-nilai" t-esc="d.angka ? angka(d.angka.penduduk) : '–'"/>
+                    <div class="sd-kpi-sub"><t t-esc="d.jenis"/> <t t-esc="d.nama"/></div>
+                </div>
+                <div class="sd-kpi-kartu">
+                    <div class="sd-kpi-label"><span class="sd-kpi-ikon sd-kpi-ikon--laki"><i class="fa fa-male" aria-hidden="true"/></span>Laki-laki</div>
+                    <div class="sd-kpi-nilai" t-esc="d.angka ? angka(d.angka.laki_laki) : '–'"/>
+                    <div t-if="d.angka" class="sd-kpi-sub"><t t-esc="persen(d.angka.laki_laki, d.angka.penduduk)"/>%</div>
+                </div>
+                <div class="sd-kpi-kartu">
+                    <div class="sd-kpi-label"><span class="sd-kpi-ikon sd-kpi-ikon--perempuan"><i class="fa fa-female" aria-hidden="true"/></span>Perempuan</div>
+                    <div class="sd-kpi-nilai" t-esc="d.angka ? angka(d.angka.perempuan) : '–'"/>
+                    <div t-if="d.angka" class="sd-kpi-sub"><t t-esc="persen(d.angka.perempuan, d.angka.penduduk)"/>%</div>
+                </div>
+                <div class="sd-kpi-kartu">
+                    <div class="sd-kpi-label"><span class="sd-kpi-ikon sd-kpi-ikon--kk"><i class="fa fa-home" aria-hidden="true"/></span>Kepala keluarga</div>
+                    <div class="sd-kpi-nilai" t-esc="d.angka ? angka(d.angka.kk) : '–'"/>
+                    <div class="sd-kpi-sub">KK</div>
+                </div>
+                <div class="sd-kpi-kartu">
+                    <div class="sd-kpi-label"><span class="sd-kpi-ikon sd-kpi-ikon--padat"><i class="fa fa-th" aria-hidden="true"/></span>Kepadatan</div>
+                    <div class="sd-kpi-nilai" t-esc="d.angka and d.angka.kepadatan ? angka(d.angka.kepadatan) : '–'"/>
+                    <div class="sd-kpi-sub">
+                        <t t-if="d.angka and d.angka.kepadatan">jiwa/km²</t>
+                        <t t-else="">luas belum lengkap</t>
+                    </div>
+                </div>
+            </section>
+
+            <div class="sd-isi">
+                <!-- Peta -->
+                <section class="sd-kartu sd-kartu-peta" aria-label="Peta">
+                    <SatuDataPeta
+                        wilayah="state.data.wilayah"
+                        kelas="state.data.kelas"
+                        warnaTanpaData="state.data.warna_tanpa_data"
+                        terpilihId="state.terpilihId"
+                        petaDasar="petaDasarAktif"
+                        petunjukKlik="petunjukKlik"
+                        judulLegenda="'Jumlah penduduk (jiwa)'"
+                        onKlik.bind="klikWilayah"/>
+                    <!-- Pilihan peta dasar: pojok kanan atas kartu peta -->
+                    <label class="sd-peta-dasar" title="Pilih peta dasar di bawah warna wilayah">
+                        <i class="fa fa-globe" aria-hidden="true"/>
+                        <span class="visually-hidden">Peta dasar</span>
+                        <select class="form-select form-select-sm" t-on-change="pilihPetaDasar"
+                                aria-label="Peta dasar">
+                            <t t-foreach="state.data.peta_dasar.pilihan" t-as="p" t-key="p.kode">
+                                <option t-att-value="p.kode" t-att-selected="state.petaDasar === p.kode" t-esc="p.nama"/>
+                            </t>
+                            <option value="tanpa" t-att-selected="state.petaDasar === 'tanpa'">Tanpa peta dasar</option>
+                        </select>
+                    </label>
+                    <div t-if="state.memuat" class="sd-peta-memuat">
+                        <i class="fa fa-circle-o-notch fa-spin" aria-hidden="true"/>
+                    </div>
+                </section>
+
+                <!-- Panel detail dan daftar wilayah -->
+                <aside class="sd-panel">
+                    <section class="sd-kartu sd-detail" aria-live="polite">
+                        <div class="sd-detail-kepala">
+                            <div class="sd-detail-judul">
+                                <div class="sd-eyebrow" t-esc="d.jenis"/>
+                                <h2 class="sd-detail-nama" t-esc="d.nama"/>
+                                <div t-if="d.kode" class="sd-detail-kode">Kode <t t-esc="d.kode"/></div>
+                            </div>
+                            <button t-if="state.terpilihId" class="btn btn-sm btn-light"
+                                    t-on-click="tutupDetail"
+                                    title="Kembali ke ringkasan kecamatan">
+                                <i class="fa fa-times" aria-hidden="true"/>
+                            </button>
+                        </div>
+
+                        <t t-if="d.angka">
+                            <dl class="sd-detail-angka">
+                                <dt>Jumlah penduduk</dt><dd t-esc="angka(d.angka.penduduk)"/>
+                                <dt>Laki-laki</dt>
+                                <dd><t t-esc="angka(d.angka.laki_laki)"/> <small>(<t t-esc="persen(d.angka.laki_laki, d.angka.penduduk)"/>%)</small></dd>
+                                <dt>Perempuan</dt>
+                                <dd><t t-esc="angka(d.angka.perempuan)"/> <small>(<t t-esc="persen(d.angka.perempuan, d.angka.penduduk)"/>%)</small></dd>
+                                <dt>Jumlah KK</dt><dd t-esc="angka(d.angka.kk)"/>
+                                <t t-if="d.angka.kepadatan">
+                                    <dt>Luas</dt><dd><t t-esc="desimal(d.angka.luas)"/> km²</dd>
+                                    <dt>Kepadatan</dt><dd><t t-esc="angka(d.angka.kepadatan)"/> jiwa/km²</dd>
+                                </t>
+                            </dl>
+                            <div class="sd-batang-lp" role="img"
+                                 t-attf-aria-label="Laki-laki {{ persen(d.angka.laki_laki, d.angka.penduduk) }} persen, perempuan {{ persen(d.angka.perempuan, d.angka.penduduk) }} persen">
+                                <span class="sd-batang-l" t-attf-style="width: {{ d.angka.penduduk ? d.angka.laki_laki / d.angka.penduduk * 100 : 50 }}%"/>
+                                <span class="sd-batang-p"/>
+                            </div>
+                            <div class="sd-batang-keterangan"><span>Laki-laki</span><span>Perempuan</span></div>
+                            <p t-if="!d.angka.kepadatan" class="sd-catatan">
+                                Kepadatan tidak ditampilkan karena luas wilayah belum diisi untuk semua desa/kelurahan.
+                            </p>
+                            <p t-if="d.cakupan and d.cakupan.ada &lt; d.cakupan.total" class="sd-catatan">
+                                Data tersedia untuk <t t-esc="d.cakupan.ada"/> dari <t t-esc="d.cakupan.total"/> desa/kelurahan.
+                            </p>
+                        </t>
+                        <p t-else="" class="sd-catatan">Belum ada data kependudukan untuk periode ini.</p>
+
+                        <button t-if="adaDataPeriode" class="btn btn-sm btn-outline-primary sd-buka-data" t-on-click="bukaData">
+                            <i class="fa fa-table" aria-hidden="true"/> Lihat data
+                        </button>
+                    </section>
+
+                    <section class="sd-kartu sd-daftar">
+                        <h3 class="sd-daftar-judul">
+                            <t t-if="state.data.level === 'kecamatan'">Kecamatan</t>
+                            <t t-else="">Desa/kelurahan</t>
+                            <span class="text-muted">(<t t-esc="state.data.wilayah.length"/>)</span>
+                        </h3>
+                        <p t-if="!state.data.wilayah.length" class="sd-catatan">
+                            Belum ada desa/kelurahan di kecamatan ini.
+                        </p>
+                        <ul class="sd-daftar-isi">
+                            <li t-foreach="daftarUrut" t-as="w" t-key="w.id">
+                                <button class="sd-daftar-item"
+                                        t-att-class="{ 'sd-daftar-item--aktif': w.id === state.terpilihId }"
+                                        t-on-click="() => this.klikWilayah(w.id)"
+                                        t-att-disabled="state.memuat">
+                                    <span class="sd-daftar-warna" t-attf-style="background: {{ warnaWilayah(w) }}"/>
+                                    <span class="sd-daftar-nama">
+                                        <t t-esc="w.nama"/>
+                                        <small t-if="!w.geometri" class="text-muted" title="Batas wilayah belum diisi"> · tanpa peta</small>
+                                        <small t-if="w.arsip" class="text-muted" title="Wilayah sudah diarsipkan atau dipindah, tetapi masih punya data pada periode ini"> · diarsipkan/dipindah</small>
+                                    </span>
+                                    <span class="sd-daftar-nilai" t-esc="w.angka ? angka(w.angka.penduduk) : '–'"/>
+                                    <i t-if="state.data.level === 'kecamatan'" class="fa fa-angle-right text-muted" aria-hidden="true"/>
+                                </button>
+                            </li>
+                        </ul>
+                    </section>
+                </aside>
+            </div>
+
+            <!-- Grafik batang bertumpuk laki-laki/perempuan per wilayah (lebar penuh) -->
+            <section class="sd-kartu sd-grafik" aria-label="Grafik penduduk menurut jenis kelamin">
+                <div class="sd-grafik-kepala">
+                    <h2 class="sd-grafik-judul">
+                        Penduduk menurut jenis kelamin per
+                        <t t-esc="state.data.level === 'kecamatan' ? 'kecamatan' : 'desa/kelurahan'"/>
+                        <t t-if="state.data.kecamatan"> · Kecamatan <t t-esc="state.data.kecamatan.nama"/></t>
+                    </h2>
+                    <span t-if="state.data.periode.label" class="sd-grafik-sub" t-esc="state.data.periode.label"/>
+                </div>
+                <GrafikPenduduk wilayah="state.data.wilayah" onKlik.bind="klikWilayah"/>
+            </section>
+        </t>
+    </t>
+</div>
+</t>
+
+</templates>

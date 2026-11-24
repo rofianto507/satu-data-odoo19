@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_faskes_list" model="ir.ui.view">
+        <field name="name">satu_data.faskes.list</field>
+        <field name="model">satu_data.faskes</field>
+        <field name="arch" type="xml">
+            <list string="Fasilitas Kesehatan" decoration-muted="not active">
+                <field name="name"/>
+                <field name="kode" optional="show"/>
+                <field name="jenis"/>
+                <field name="kategori" optional="hide"/>
+                <field name="kecamatan_id"/>
+                <field name="desa_id"/>
+                <field name="induk_id" optional="hide"/>
+                <field name="jumlah_desa" string="Desa Binaan"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_faskes_form" model="ir.ui.view">
+        <field name="name">satu_data.faskes.form</field>
+        <field name="model">satu_data.faskes</field>
+        <field name="arch" type="xml">
+            <form string="Fasilitas Kesehatan">
+                <sheet>
+                    <widget name="web_ribbon" title="Diarsipkan" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Mis. Puskesmas Kaliwates"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identitas">
+                            <field name="jenis"/>
+                            <field name="kategori" invisible="jenis != 'puskesmas'"/>
+                            <field name="induk_id" invisible="jenis != 'pustu'" options="{'no_create': True}"/>
+                            <field name="kode"/>
+                            <field name="telepon" widget="phone"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Lokasi">
+                            <field name="desa_id" options="{'no_create': True}"/>
+                            <field name="kecamatan_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="alamat"/>
+                            <label for="latitude" string="Koordinat"/>
+                            <div class="o_row">
+                                <field name="latitude" placeholder="Lintang"/>
+                                <field name="longitude" placeholder="Bujur"/>
+                                <button name="action_koordinat_dari_desa" type="object" icon="fa-crosshairs"
+                                        class="btn-link" title="Isi dari titik tengah desa"
+                                        invisible="not desa_id"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Wilayah Kerja" name="wilayah_kerja" invisible="jenis != 'puskesmas'">
+                            <field name="wilayah_kerja_ids" options="{'no_create': True}">
+                                <list>
+                                    <field name="kode"/>
+                                    <field name="name"/>
+                                    <field name="jenis"/>
+                                    <field name="kecamatan_id"/>
+                                </list>
+                            </field>
+                            <div class="text-muted">
+                                Desa/kelurahan binaan puskesmas ini. Satu desa/kelurahan hanya masuk wilayah kerja
+                                satu puskesmas. Data kesehatan per desa mencatat puskesmas ini saat data dibuat.
+                            </div>
+                        </page>
+                        <page string="Puskesmas Pembantu" name="pustu" invisible="jenis != 'puskesmas'">
+                            <field name="pustu_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="desa_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_faskes_search" model="ir.ui.view">
+        <field name="name">satu_data.faskes.search</field>
+        <field name="model">satu_data.faskes</field>
+        <field name="arch" type="xml">
+            <search string="Cari Fasilitas Kesehatan">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('kode', 'ilike', self)]"/>
+                <field name="kecamatan_id"/>
+                <field name="desa_id"/>
+                <field name="wilayah_kerja_ids" string="Desa Binaan"/>
+                <separator/>
+                <filter string="Puskesmas" name="puskesmas" domain="[('jenis', '=', 'puskesmas')]"/>
+                <filter string="Puskesmas Pembantu" name="pustu" domain="[('jenis', '=', 'pustu')]"/>
+                <filter string="Rumah Sakit" name="rumah_sakit" domain="[('jenis', '=', 'rumah_sakit')]"/>
+                <filter string="Klinik" name="klinik" domain="[('jenis', '=', 'klinik')]"/>
+                <separator/>
+                <filter string="Tanpa Koordinat" name="tanpa_koordinat"
+                        domain="[('latitude', '=', 0), ('longitude', '=', 0)]"/>
+                <filter string="Puskesmas Tanpa Wilayah Kerja" name="tanpa_wilayah"
+                        domain="[('jenis', '=', 'puskesmas'), ('wilayah_kerja_ids', '=', False)]"/>
+                <filter string="Diarsipkan" name="arsip" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Jenis" name="group_jenis" context="{'group_by': 'jenis'}"/>
+                    <filter string="Kecamatan" name="group_kecamatan" context="{'group_by': 'kecamatan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_faskes" model="ir.actions.act_window">
+        <field name="name">Fasilitas Kesehatan</field>
+        <field name="res_model">satu_data.faskes</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_faskes_search"/>
+        <field name="context">{'search_default_puskesmas': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tambahkan fasilitas kesehatan</p>
+            <p>Puskesmas beserta wilayah kerjanya (desa/kelurahan binaan), puskesmas pembantu,
+               rumah sakit, dan klinik.</p>
+        </field>
+    </record>
+
+</odoo>

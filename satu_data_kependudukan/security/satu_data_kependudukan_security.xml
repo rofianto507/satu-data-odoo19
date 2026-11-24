@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="privilege_kependudukan" model="res.groups.privilege">
+            <field name="name">Satu Data: Kependudukan</field>
+            <field name="category_id" ref="satu_data.module_category_satu_data"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Produsen Data sektor kependudukan (petugas Dispendukcapil): mengisi rekap
+             dan mengajukannya ke Walidata. -->
+        <record id="group_produsen_kependudukan" model="res.groups">
+            <field name="name">Produsen Data Kependudukan</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="privilege_kependudukan"/>
+            <field name="implied_ids" eval="[(4, ref('satu_data.group_satu_data_operator'))]"/>
+        </record>
+    </data>
+
+    <!-- Walidata boleh memperbaiki data semua sektor. Grup Walidata ada di blok noupdate
+         modul inti (perubahan lewat <record> dilewati saat upgrade), jadi pakai <function>
+         yang dijalankan setiap instal/upgrade. -->
+    <function model="res.groups" name="write"
+              eval="[[ref('satu_data.group_satu_data_walidata')],
+                     {'implied_ids': [(4, ref('group_produsen_kependudukan'))]}]"/>
+
+    <!-- Global (tanpa grup) agar berlaku untuk semua user. -->
+    <record id="rule_kependudukan_company" model="ir.rule">
+        <field name="name">Satu Data: kependudukan sesuai company</field>
+        <field name="model_id" ref="model_satu_data_kependudukan"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

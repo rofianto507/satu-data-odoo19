@@ -1,0 +1,123 @@
+/* Dashboard kesehatan: tambahan di atas gaya bersama satu_data (dashboard_peta.css). */
+
+.o_satu_data.sd-kes .sd-kpi {
+    grid-template-columns: minmax(0, 1.6fr) repeat(5, minmax(0, 1fr));
+}
+
+/* Kartu KPI kecil bisa diklik untuk menampilkan indikatornya di peta */
+.o_satu_data .sd-kes-kpi {
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.o_satu_data .sd-kes-kpi:hover:not(:disabled) {
+    border-color: var(--sd-aksen);
+}
+
+.o_satu_data .sd-kes-kpi--aktif {
+    border-color: var(--sd-aksen);
+    box-shadow: inset 0 0 0 1px var(--sd-aksen);
+}
+
+.o_satu_data .sd-kes-satuan {
+    font-size: 0.55em;
+    font-weight: 600;
+    margin-left: 0.1em;
+    color: var(--sd-teks-2);
+}
+
+.o_satu_data .sd-kes-indikator .form-select {
+    max-width: clamp(180px, 22vw, 520px);
+}
+
+.o_satu_data .sd-kes-mode .btn {
+    white-space: nowrap;
+}
+
+/* Kontrol lapisan peta: centang puskesmas + peta dasar */
+.o_satu_data .sd-kes-lapisan {
+    gap: 0.8em;
+}
+
+.o_satu_data .sd-kes-lapisan > label {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    margin: 0;
+}
+
+.o_satu_data .sd-kes-cek .form-check-input {
+    margin: 0;
+}
+
+/* Nilai besar di panel detail */
+.o_satu_data .sd-kes-nilai {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35em;
+    margin-top: 0.6em;
+    font-variant-numeric: tabular-nums;
+}
+
+.o_satu_data .sd-kes-nilai-angka {
+    font-size: 2em;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.o_satu_data .sd-kes-nilai-satuan {
+    color: var(--sd-teks-2);
+    font-weight: 600;
+}
+
+.o_satu_data .sd-kes-nilai-ket {
+    color: var(--sd-teks-2);
+    font-size: 0.85em;
+}
+
+.o_satu_data .sd-kes-definisi {
+    font-size: 0.85em;
+}
+
+.o_satu_data .sd-kes-urut {
+    font-weight: 400;
+    color: var(--sd-teks-2);
+    font-size: 0.75em;
+    margin-left: 0.5em;
+}
+
+/* Dua kartu grafik berdampingan */
+.o_satu_data .sd-kes-grafik-ganda {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: var(--sd-jarak);
+    flex: none;
+}
+
+.o_satu_data .sd-kes-kanvas-spm {
+    height: clamp(320px, 40vh, 760px);
+}
+
+@media (max-width: 1399.98px) {
+    .o_satu_data.sd-kes .sd-kpi {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991.98px) {
+    .o_satu_data .sd-kes-grafik-ganda {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 767.98px) {
+    .o_satu_data.sd-kes .sd-kpi {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .o_satu_data .sd-kes-indikator .form-select {
+        max-width: 60vw;
+    }
+}

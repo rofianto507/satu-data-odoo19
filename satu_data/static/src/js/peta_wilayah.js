@@ -1,0 +1,224 @@
+/** @odoo-module **/
+
+import { Component, onMounted, onWillUnmount, toRaw, useEffect, useRef, useState } from "@odoo/owl";
+import { escape } from "@web/core/utils/strings";
+
+// Tampilan awal sebelum batas wilayah dimuat: seluruh Indonesia.
+const PUSAT_AWAL = [-2.5, 118];
+const ZOOM_AWAL = 5;
+const fmtAngka = new Intl.NumberFormat("id-ID");
+// Tebal garis batas wilayah saat disorot (hover) atau dipilih, dalam piksel.
+const TEBAL_SOROT = 2;
+
+/**
+ * Peta choropleth wilayah (Leaflet).
+ *
+ * Komponen ini hanya menggambar: warna diambil dari `kelas` yang dihitung server,
+ * klik area diteruskan ke induk lewat `onKlik(id)`.
+ */
+export class SatuDataPeta extends Component {
+    static template = "satu_data.PetaWilayah";
+    static props = {
+        wilayah:        Array,
+        kelas:          Array,
+        warnaTanpaData: String,
+        terpilihId:     { type: [Number, Boolean], optional: true },
+        // {kode, url, subdomain, atribusi, abu, maks_zoom} atau false (tanpa peta dasar)
+        petaDasar:      { type: [Object, Boolean] },
+        petunjukKlik:   String,
+        judulLegenda:   String,
+        onKlik:         Function,
+        // Teks angka di tooltip wilayah: (w) => string. Bawaan: jumlah penduduk.
+        teksNilai:      { type: Function, optional: true },
+        // Titik di atas wilayah (mis. puskesmas): [{id, nama, lat, lng, keterangan: [string]}]
+        titik:          { type: Array, optional: true },
+        judulTitik:     { type: String, optional: true },
+    };
+
+    setup() {
+        this.petaRef = useRef("peta");
+        this.state = useState({ tanpaLeaflet: false });
+        this._map = null;
+        this._lapisan = null;
+        this._tile = null;
+        this._lapisanTitik = null;
+        this._byId = new Map();
+
+        onMounted(() => this._init());
+        useEffect(() => this._gambar(), () => [this.props.wilayah]);
+        useEffect(() => this._gambarTitik(), () => [this.props.titik]);
+        useEffect(() => this._sorot(), () => [this.props.terpilihId]);
+        useEffect(() => this._aturPetaDasar(), () => [this.props.petaDasar && this.props.petaDasar.kode]);
+        onWillUnmount(() => {
+            this._resizeObs?.disconnect();
+            if (this._map) {
+                this._map.remove();
+                this._map = null;
+            }
+        });
+    }
+
+    get adaGeometri() {
+        return this.props.wilayah.some((w) => w.geometri);
+    }
+
+    // ── Leaflet ──────────────────────────────────────────────────────────────
+
+    _init() {
+        const el = this.petaRef.el;
+        if (!el || typeof L === "undefined") {
+            this.state.tanpaLeaflet = true;
+            return;
+        }
+        this._map = L.map(el, { zoomSnap: 0.25, zoomControl: true }).setView(PUSAT_AWAL, ZOOM_AWAL);
+        // Ukuran kontainer berubah saat layar penuh, rotasi ponsel, atau panel dilipat.
+        this._resizeObs = new ResizeObserver(() => this._map && this._map.invalidateSize());
+        this._resizeObs.observe(el);
+    }
+
+    _aturPetaDasar() {
+        if (!this._map) {
+            return;
+        }
+        // Ganti lapisan tile setiap kali pilihan peta dasar berubah.
+        if (this._tile) {
+            this._tile.remove();
+            this._tile = null;
+        }
+        const pd = toRaw(this.props.petaDasar);
+        if (!pd || !pd.url) {
+            return;
+        }
+        const opsi = {
+            attribution: pd.atribusi || "",
+            maxZoom: pd.maks_zoom || 19,
+            // Peta dasar berwarna ramai (OSM standar) dibuat abu-abu lewat CSS agar
+            // tidak bercampur dengan warna data.
+            className: pd.abu ? "sd-tile-abu" : "",
+        };
+        if (pd.subdomain) {
+            opsi.subdomains = pd.subdomain;
+        }
+        if (pd.maks_zoom_asli) {
+            opsi.maxNativeZoom = pd.maks_zoom_asli; // zoom di atasnya: tile diperbesar
+        }
+        this._tile = L.tileLayer(pd.url, opsi).addTo(this._map);
+        this._tile.bringToBack();
+    }
+
+    _gambar() {
+        if (!this._map) {
+            return;
+        }
+        if (this._lapisan) {
+            this._lapisan.remove();
+            this._lapisan = null;
+        }
+        // Data mentah (bukan proxy reaktif) agar Leaflet tidak membaca lewat proxy OWL.
+        const wilayah = toRaw(this.props.wilayah);
+        this._byId = new Map(wilayah.map((w) => [w.id, w]));
+        const features = wilayah
+            .filter((w) => w.geometri)
+            .map((w) => ({ type: "Feature", properties: { id: w.id }, geometry: toRaw(w.geometri) }));
+        if (!features.length) {
+            return;
+        }
+        this._lapisan = L.geoJSON(
+            { type: "FeatureCollection", features },
+            {
+                style: (f) => this._gaya(f.properties.id),
+                onEachFeature: (f, layer) => {
+                    const w = this._byId.get(f.properties.id);
+                    layer.bindTooltip(this._isiTooltip(w), {
+                        sticky: true,
+                        direction: "top",
+                        className: "sd-tooltip",
+                    });
+                    layer.on({
+                        mouseover: (e) => {
+                            e.target.setStyle({ weight: TEBAL_SOROT, color: "#111827" });
+                            e.target.bringToFront();
+                        },
+                        mouseout: (e) => this._lapisan && this._lapisan.resetStyle(e.target),
+                        click: () => this.props.onKlik(w.id),
+                    });
+                },
+            }
+        ).addTo(this._map);
+        this._map.fitBounds(this._lapisan.getBounds(), { padding: [16, 16] });
+    }
+
+    _gambarTitik() {
+        if (!this._map) {
+            return;
+        }
+        if (this._lapisanTitik) {
+            this._lapisanTitik.remove();
+            this._lapisanTitik = null;
+        }
+        const titik = toRaw(this.props.titik || []).filter((t) => t.lat || t.lng);
+        if (!titik.length) {
+            return;
+        }
+        // Pane penanda selalu di atas pane wilayah, jadi titik tidak tertutup saat
+        // wilayah digambar ulang atau disorot.
+        this._lapisanTitik = L.layerGroup(
+            titik.map((t) =>
+                L.circleMarker([t.lat, t.lng], {
+                    pane: "markerPane",
+                    radius: 5,
+                    weight: 2,
+                    color: "#111827",
+                    fillColor: "#ffffff",
+                    fillOpacity: 1,
+                }).bindTooltip(
+                    `<div class="sd-tooltip-nama">${escape(t.nama)}</div>` +
+                        (t.keterangan || [])
+                            .map((k) => `<div class="sd-tooltip-angka">${escape(k)}</div>`)
+                            .join(""),
+                    { direction: "top", className: "sd-tooltip", offset: [0, -4] }
+                )
+            )
+        ).addTo(this._map);
+    }
+
+    _sorot() {
+        if (!this._lapisan) {
+            return;
+        }
+        this._lapisan.setStyle((f) => this._gaya(f.properties.id));
+        this._lapisan.eachLayer((layer) => {
+            if (layer.feature.properties.id === this.props.terpilihId) {
+                layer.bringToFront();
+            }
+        });
+    }
+
+    _gaya(id) {
+        const w = this._byId.get(id);
+        const kelas = toRaw(this.props.kelas);
+        const terpilih = id === this.props.terpilihId;
+        const adaData = w && w.kelas >= 0;
+        return {
+            color: terpilih ? "#111827" : "#ffffff",
+            weight: terpilih ? TEBAL_SOROT : 1.2,
+            dashArray: adaData ? null : "4 3",
+            fillColor: adaData ? kelas[w.kelas].warna : this.props.warnaTanpaData,
+            fillOpacity: 0.70,
+        };
+    }
+
+    _isiTooltip(w) {
+        let angka;
+        if (this.props.teksNilai) {
+            angka = this.props.teksNilai(w);
+        } else {
+            angka = w.angka ? `${fmtAngka.format(w.angka.penduduk)} jiwa` : "Belum ada data";
+        }
+        return (
+            `<div class="sd-tooltip-nama">${escape(w.nama)}</div>` +
+            `<div class="sd-tooltip-angka">${angka}</div>` +
+            `<div class="sd-tooltip-petunjuk">${escape(this.props.petunjukKlik)}</div>`
+        );
+    }
+}

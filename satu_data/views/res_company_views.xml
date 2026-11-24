@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tab "Satu Data" pada form company bawaan (untuk administrator sistem) -->
+    <record id="view_res_company_form_satu_data" model="ir.ui.view">
+        <field name="name">res.company.form.satu_data</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Satu Data" name="satu_data">
+                    <group>
+                        <group string="Identitas Wilayah">
+                            <field name="sd_jenis_wilayah"/>
+                            <field name="sd_kode_wilayah" placeholder="Contoh: 16.71"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        Nama company dipakai sebagai nama wilayah, dan logo company sebagai logo wilayah.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Wizard identitas wilayah (dibuka dari menu Konfigurasi, untuk Admin Satu Data) -->
+    <record id="view_identitas_wizard_form" model="ir.ui.view">
+        <field name="name">satu_data.identitas.wizard.form</field>
+        <field name="model">satu_data.identitas.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Identitas Wilayah">
+                <sheet>
+                    <field name="logo" widget="image" class="oe_avatar"
+                           options="{'size': [100, 100]}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Contoh: Kabupaten Contoh"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="sd_jenis_wilayah"/>
+                            <field name="sd_kode_wilayah" placeholder="Contoh: 16.71"/>
+                        </group>
+                        <group string="Peta Dasar">
+                            <field name="carto_api_key" password="True"
+                                   placeholder="Tempel API key dari carto.com"/>
+                            <div colspan="2" class="text-muted small">
+                                Diperlukan untuk peta dasar Positron dan Voyager. Daftar gratis
+                                (cukup e-mail) di
+                                <a href="https://carto.com/basemaps/apikey" target="_blank">carto.com/basemaps/apikey</a>.
+                                Kosong = hanya peta dasar OpenStreetMap.
+                            </div>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        Nama dan logo wilayah adalah nama dan logo company yang sedang aktif;
+                        perubahan di sini juga mengubah nama dan logo company. Kecamatan,
+                        desa/kelurahan, dan data sektoral selalu terikat pada company (wilayah) ini.
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="Simpan" name="action_simpan" type="object" class="btn-primary"/>
+                    <button string="Batal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_identitas_wilayah" model="ir.actions.server">
+        <field name="name">Identitas Wilayah</field>
+        <field name="model_id" ref="model_satu_data_identitas_wizard"/>
+        <field name="group_ids" eval="[(4, ref('group_satu_data_admin'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_buka()</field>
+    </record>
+
+</odoo>

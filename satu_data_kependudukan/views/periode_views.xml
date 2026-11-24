@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_periode_form_kependudukan" model="ir.ui.view">
+        <field name="name">satu_data.periode.form.kependudukan</field>
+        <field name="model">satu_data.periode</field>
+        <field name="inherit_id" ref="satu_data.view_periode_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_lihat_kependudukan" type="object" class="oe_stat_button"
+                        icon="fa-users" invisible="not id">
+                    <field name="jumlah_kependudukan" widget="statinfo" string="Kependudukan"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

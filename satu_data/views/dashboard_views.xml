@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Kerangka dashboard: panel sidebar berisi dashboard tiap modul sektor
+         (registry JS "satu_data_dashboard"). -->
+    <record id="action_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">satu_data.dashboard</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Dashboard kependudukan tampil di panel sidebar menu Dashboard (modul satu_data),
+         didaftarkan lewat registry JS "satu_data_dashboard" di dashboard_peta.js. -->
+
+    <menuitem id="menu_satu_data_kependudukan" name="Kependudukan"
+              parent="satu_data.menu_satu_data_data" action="action_laporan_kependudukan"
+              groups="satu_data.group_satu_data_pengguna" sequence="1"/>
+
+</odoo>

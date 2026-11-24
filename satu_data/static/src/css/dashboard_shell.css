@@ -1,0 +1,294 @@
+/* Kerangka Dashboard: panel sidebar sektor (kiri) + isi dashboard sektor (kanan).
+ * Tata letak sidebar mengikuti dashboard modul digital_kamtibmas. */
+
+.sd-shell {
+    --sd-shell-aksen:      #71639e;  /* ungu Odoo, sama dengan bilah menu atas */
+    --sd-shell-aksen-muda: #ede9f6;
+    --sd-shell-garis:      #e5e7eb;
+    --sd-shell-teks:       #374151;
+    --sd-shell-redup:      #9ca3af;
+
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    background: #f3f5f8;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────────── */
+
+.sd-sidebar {
+    width: 210px;
+    min-width: 210px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #ffffff;
+    border-right: 1px solid var(--sd-shell-garis);
+    transition: width 0.22s ease, min-width 0.22s ease;
+}
+
+.sd-shell--lipat .sd-sidebar {
+    width: 52px;
+    min-width: 52px;
+}
+
+/* Logo wilayah: hampir selebar sidebar, rata tengah */
+.sd-sidebar-brand {
+    padding: 14px 14px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: padding 0.22s ease;
+}
+
+.sd-sidebar-logo {
+    width: 72%;
+    height: auto;
+    max-height: 150px;
+    object-fit: contain;
+    object-position: center;
+    transition: width 0.22s ease, opacity 0.15s ease, max-height 0.22s ease;
+}
+
+.sd-shell--lipat .sd-sidebar-brand {
+    padding: 0;
+    border-bottom: none;
+}
+
+.sd-shell--lipat .sd-sidebar-logo {
+    width: 0;
+    max-height: 0;
+    opacity: 0;
+}
+
+/* Judul seksi */
+.sd-sidebar-seksi {
+    padding: 10px 0 6px;
+}
+
+.sd-sidebar-judul {
+    padding: 0 18px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--sd-shell-redup);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+    overflow: hidden;
+    max-height: 24px;
+    transition: max-height 0.22s ease, opacity 0.15s ease, padding 0.22s ease;
+}
+
+.sd-shell--lipat .sd-sidebar-judul {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+}
+
+.sd-sidebar-daftar {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Item menu */
+.sd-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 15px;
+    border: 0;
+    border-left: 3px solid transparent;
+    background: transparent;
+    color: var(--sd-shell-teks);
+    font-size: 13px;
+    text-align: left;
+    user-select: none;
+    overflow: hidden;
+    transition: background 0.1s, padding 0.22s ease, gap 0.22s ease;
+}
+
+.sd-sidebar-item:hover {
+    background: #f9fafb;
+}
+
+.sd-sidebar-item:focus-visible {
+    outline: 2px solid var(--sd-shell-aksen);
+    outline-offset: -2px;
+}
+
+.sd-sidebar-item--aktif,
+.sd-sidebar-item--aktif:hover {
+    background: var(--sd-shell-aksen-muda);
+    color: var(--sd-shell-aksen);
+    border-left-color: var(--sd-shell-aksen);
+    font-weight: 600;
+}
+
+.sd-sidebar-item i {
+    width: 16px;
+    text-align: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.sd-sidebar-item > span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 160px;
+    transition: max-width 0.22s ease, opacity 0.15s ease;
+}
+
+.sd-shell--lipat .sd-sidebar-item {
+    padding: 10px 0;
+    gap: 0;
+    justify-content: center;
+    border-left: none;
+}
+
+.sd-shell--lipat .sd-sidebar-item > span {
+    max-width: 0;
+    opacity: 0;
+}
+
+/* Kaki: tombol ciut di bawah */
+.sd-sidebar-kaki {
+    margin-top: auto;
+    padding: 8px 10px;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sd-shell--lipat .sd-sidebar-kaki {
+    justify-content: center;
+    padding: 8px 0;
+}
+
+.sd-sidebar-lipat {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--sd-shell-redup);
+    font-size: 12px;
+    transition: background 0.1s, color 0.1s;
+}
+
+.sd-sidebar-lipat:hover {
+    background: #f3f4f6;
+    color: var(--sd-shell-aksen);
+}
+
+/* ── Isi ──────────────────────────────────────────────────────────────────── */
+
+.sd-shell-isi {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.sd-shell-kosong {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    color: #5b6474;
+    text-align: center;
+    padding: 2em;
+}
+
+/* ── Layar besar (ruang kendali): sidebar ikut membesar ──────────────────── */
+
+@media (min-width: 2560px) {
+    .sd-sidebar {
+        width: 300px;
+        min-width: 300px;
+    }
+    .sd-sidebar-item {
+        font-size: 18px;
+        padding: 12px 20px;
+    }
+    .sd-sidebar-item i {
+        width: 22px;
+        font-size: 19px;
+    }
+    .sd-sidebar-judul {
+        font-size: 13px;
+        padding-left: 23px;
+    }
+}
+
+/* ── Ponsel: sidebar menjadi deretan tab di atas ─────────────────────────── */
+
+@media (max-width: 767.98px) {
+    .sd-shell {
+        flex-direction: column;
+    }
+    .sd-sidebar,
+    .sd-shell--lipat .sd-sidebar {
+        width: 100%;
+        min-width: 0;
+        flex-direction: row;
+        align-items: center;
+        border-right: 0;
+        border-bottom: 1px solid var(--sd-shell-garis);
+        overflow-x: auto;
+    }
+    .sd-sidebar-brand,
+    .sd-shell--lipat .sd-sidebar-brand {
+        padding: 6px 4px 6px 10px;
+        border-bottom: 0;
+    }
+    .sd-sidebar-logo,
+    .sd-shell--lipat .sd-sidebar-logo {
+        width: 34px;
+        max-height: 34px;
+        opacity: 1;
+    }
+    .sd-sidebar-judul,
+    .sd-sidebar-kaki {
+        display: none;
+    }
+    .sd-sidebar-seksi {
+        padding: 0;
+    }
+    .sd-sidebar-daftar {
+        display: flex;
+    }
+    .sd-sidebar-item,
+    .sd-shell--lipat .sd-sidebar-item {
+        padding: 12px 14px;
+        gap: 8px;
+        border-left: 0;
+        border-bottom: 3px solid transparent;
+    }
+    .sd-shell--lipat .sd-sidebar-item > span {
+        max-width: 160px;
+        opacity: 1;
+    }
+    .sd-sidebar-item--aktif {
+        border-bottom-color: var(--sd-shell-aksen);
+    }
+    .sd-shell-isi {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+    }
+}

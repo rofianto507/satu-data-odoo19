@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_periode_form_kesehatan" model="ir.ui.view">
+        <field name="name">satu_data.periode.form.kesehatan</field>
+        <field name="model">satu_data.periode</field>
+        <field name="inherit_id" ref="satu_data.view_periode_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_lihat_sasaran_kesehatan" type="object" class="oe_stat_button"
+                        icon="fa-heartbeat" invisible="not id or frekuensi != 'tahunan'">
+                    <field name="jumlah_sasaran_kesehatan" widget="statinfo" string="Sasaran Kesehatan"/>
+                </button>
+                <button name="action_lihat_rekap_kesehatan" type="object" class="oe_stat_button"
+                        icon="fa-medkit" invisible="not id or frekuensi != 'bulanan'">
+                    <field name="jumlah_rekap_kesehatan" widget="statinfo" string="Rekap Kesehatan"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

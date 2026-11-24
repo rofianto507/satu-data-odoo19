@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Ajukan tahun ke Walidata (wizard generik modul inti) -->
+    <record id="action_ajukan_sasaran" model="ir.actions.act_window">
+        <field name="name">Ajukan ke Walidata</field>
+        <field name="res_model">satu_data.pengajuan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_sektor': 'kesehatan_sasaran'}</field>
+        <field name="group_ids" eval="[(4, ref('group_produsen_kesehatan'))]"/>
+    </record>
+
+    <record id="view_sasaran_list" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.sasaran.list</field>
+        <field name="model">satu_data.kesehatan.sasaran</field>
+        <field name="arch" type="xml">
+            <list string="Sasaran Program Kesehatan">
+                <header>
+                    <button name="%(action_ajukan_sasaran)d" type="action" string="Ajukan ke Walidata"
+                            class="btn-secondary" display="always"
+                            groups="satu_data_kesehatan.group_produsen_kesehatan"/>
+                </header>
+                <field name="periode_id"/>
+                <field name="kecamatan_id"/>
+                <field name="desa_id"/>
+                <field name="puskesmas_id" optional="show"/>
+                <field name="sasaran_ibu_hamil" string="Ibu Hamil" sum="Total"/>
+                <field name="sasaran_ibu_bersalin" string="Ibu Bersalin" sum="Total"/>
+                <field name="sasaran_bayi_baru_lahir" string="Bayi Baru Lahir" sum="Total"/>
+                <field name="sasaran_bayi" string="Bayi" sum="Total"/>
+                <field name="sasaran_balita" string="Balita" sum="Total"/>
+                <field name="sasaran_usia_dasar" string="Usia Dasar" sum="Total" optional="show"/>
+                <field name="sasaran_usia_produktif" string="Usia Produktif" sum="Total" optional="show"/>
+                <field name="sasaran_usia_lanjut" string="Usia Lanjut" sum="Total" optional="show"/>
+                <field name="sasaran_hipertensi" string="Hipertensi" sum="Total" optional="show"/>
+                <field name="sasaran_diabetes" string="DM" sum="Total" optional="show"/>
+                <field name="sasaran_odgj_berat" string="ODGJ Berat" sum="Total" optional="show"/>
+                <field name="sasaran_terduga_tbc" string="Terduga TBC" sum="Total" optional="show"/>
+                <field name="sasaran_risiko_hiv" string="Berisiko HIV" sum="Total" optional="show"/>
+                <field name="sumber" optional="hide"/>
+                <field name="sd_status" widget="badge" optional="show"
+                       decoration-info="sd_status == 'diajukan'" decoration-success="sd_status == 'terbit'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sasaran_form" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.sasaran.form</field>
+        <field name="model">satu_data.kesehatan.sasaran</field>
+        <field name="arch" type="xml">
+            <form string="Sasaran Program Kesehatan">
+                <header>
+                    <field name="sd_status" widget="statusbar" statusbar_visible="draf,diajukan,terbit"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info mb-3" role="status"
+                         invisible="sd_status not in ('diajukan', 'terbit')">
+                        Data tahun ini sedang diperiksa atau sudah terbit sehingga dikunci.
+                        Minta Walidata mengembalikannya (menu Pemeriksaan) bila perlu diperbaiki.
+                    </div>
+                    <div class="oe_title">
+                        <label for="desa_id"/>
+                        <h1><field name="desa_id" options="{'no_create': True}" placeholder="Pilih desa/kelurahan"/></h1>
+                    </div>
+                    <group>
+                        <group string="Wilayah dan Tahun">
+                            <field name="kecamatan_id"/>
+                            <field name="puskesmas_id" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="periode_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="sumber" placeholder="Mis. Proyeksi sasaran Dinkes 2026"/>
+                        </group>
+                    </group>
+                    <group string="Sasaran (jumlah orang)">
+                        <group>
+                            <field name="sasaran_ibu_hamil"/>
+                            <field name="sasaran_ibu_bersalin"/>
+                            <field name="sasaran_bayi_baru_lahir"/>
+                            <field name="sasaran_bayi"/>
+                            <field name="sasaran_balita"/>
+                            <field name="sasaran_usia_dasar"/>
+                            <field name="sasaran_usia_produktif"/>
+                        </group>
+                        <group>
+                            <field name="sasaran_usia_lanjut"/>
+                            <field name="sasaran_hipertensi"/>
+                            <field name="sasaran_diabetes"/>
+                            <field name="sasaran_odgj_berat"/>
+                            <field name="sasaran_terduga_tbc"/>
+                            <field name="sasaran_risiko_hiv"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        Hanya angka rekap per desa/kelurahan, tanpa data perorangan. Angka puskesmas,
+                        kecamatan, dan kabupaten/kota dihitung dari desa/kelurahan. Kecamatan dan puskesmas
+                        dicatat sesuai wilayah kerja saat data ini dibuat.
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sasaran_search" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.sasaran.search</field>
+        <field name="model">satu_data.kesehatan.sasaran</field>
+        <field name="arch" type="xml">
+            <search string="Cari Sasaran Kesehatan">
+                <field name="desa_id"/>
+                <field name="kecamatan_id"/>
+                <field name="puskesmas_id"/>
+                <field name="periode_id"/>
+                <separator/>
+                <filter string="Tanpa Puskesmas" name="tanpa_puskesmas" domain="[('puskesmas_id', '=', False)]"/>
+                <group>
+                    <filter string="Tahun" name="group_periode" context="{'group_by': 'periode_id'}"/>
+                    <filter string="Kecamatan" name="group_kecamatan" context="{'group_by': 'kecamatan_id'}"/>
+                    <filter string="Puskesmas" name="group_puskesmas" context="{'group_by': 'puskesmas_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sasaran_pivot" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.sasaran.pivot</field>
+        <field name="model">satu_data.kesehatan.sasaran</field>
+        <field name="arch" type="xml">
+            <pivot string="Sasaran Program Kesehatan">
+                <field name="puskesmas_id" type="row"/>
+                <field name="periode_id" type="col"/>
+                <field name="sasaran_ibu_hamil" type="measure"/>
+                <field name="sasaran_balita" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_sasaran" model="ir.actions.act_window">
+        <field name="name">Sasaran Program Kesehatan</field>
+        <field name="res_model">satu_data.kesehatan.sasaran</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="search_view_id" ref="view_sasaran_search"/>
+        <field name="context">{'search_default_group_periode': 1, 'search_default_group_puskesmas': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tambahkan sasaran program kesehatan</p>
+            <p>Sasaran tahunan per desa/kelurahan (penyebut capaian SPM kesehatan). Atur dulu wilayah
+               kerja puskesmas agar puskesmas terisi otomatis, dan buat periode tahunan di
+               Konfigurasi &gt; Periode Data.</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Daftar Data indikator kesehatan (dihitung dari rekap bulanan dan sasaran tahunan).
+    Dibuat dari konstanta INDIKATOR (models/indikator.py). noupdate: Walidata/Pembina Data
+    boleh melengkapi isian (mis. tingkat penyajian) tanpa tertimpa upgrade.
+-->
+<odoo noupdate="1">
+
+    <record id="data_spm_ibu_hamil" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Ibu Hamil</field>
+        <field name="kode">kesehatan.spm_ibu_hamil</field>
+        <field name="sequence">1</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase ibu hamil yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 1).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_ibu_bersalin" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Ibu Bersalin</field>
+        <field name="kode">kesehatan.spm_ibu_bersalin</field>
+        <field name="sequence">2</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase ibu bersalin yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 2).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_bayi_baru_lahir" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Bayi Baru Lahir</field>
+        <field name="kode">kesehatan.spm_bayi_baru_lahir</field>
+        <field name="sequence">3</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase bayi baru lahir yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 3).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_balita" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Balita</field>
+        <field name="kode">kesehatan.spm_balita</field>
+        <field name="sequence">4</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase balita yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 4).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_usia_dasar" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Usia Pendidikan Dasar</field>
+        <field name="kode">kesehatan.spm_usia_dasar</field>
+        <field name="sequence">5</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase usia pendidikan dasar yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 5).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_usia_produktif" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Usia Produktif</field>
+        <field name="kode">kesehatan.spm_usia_produktif</field>
+        <field name="sequence">6</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase usia produktif yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 6).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_usia_lanjut" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Usia Lanjut</field>
+        <field name="kode">kesehatan.spm_usia_lanjut</field>
+        <field name="sequence">7</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase usia lanjut yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 7).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_hipertensi" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Penderita Hipertensi</field>
+        <field name="kode">kesehatan.spm_hipertensi</field>
+        <field name="sequence">8</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase penderita hipertensi yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 8).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_diabetes" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Penderita Diabetes Melitus</field>
+        <field name="kode">kesehatan.spm_diabetes</field>
+        <field name="sequence">9</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase penderita dm yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 9).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_odgj_berat" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan ODGJ Berat</field>
+        <field name="kode">kesehatan.spm_odgj_berat</field>
+        <field name="sequence">10</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase odgj berat yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 10).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas; Bulan</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbatas</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_terduga_tbc" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Orang Terduga Tuberkulosis</field>
+        <field name="kode">kesehatan.spm_terduga_tbc</field>
+        <field name="sequence">11</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase terduga tbc yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 11).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_spm_risiko_hiv" model="satu_data.data">
+        <field name="name">Pelayanan Kesehatan Orang Berisiko Terinfeksi HIV</field>
+        <field name="kode">kesehatan.spm_risiko_hiv</field>
+        <field name="sequence">12</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase berisiko hiv yang mendapat pelayanan kesehatan sesuai standar dibanding sasaran tahunan (SPM 12).</field>
+        <field name="metode">Dilayani sesuai standar (kumulatif Januari s.d. bulan laporan) dibagi sasaran tahunan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas; Bulan</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbatas</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 6 Tahun 2024 tentang Standar Teknis Pemenuhan Standar Pelayanan Minimal Kesehatan</field>
+        <field name="tag">kesehatan, standar pelayanan minimal</field>
+    </record>
+
+    <record id="data_idl" model="satu_data.data">
+        <field name="name">Imunisasi Dasar Lengkap</field>
+        <field name="kode">kesehatan.idl</field>
+        <field name="sequence">13</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="True"/>
+        <field name="definisi">Persentase bayi 0–11 bulan yang mendapat imunisasi dasar lengkap dibanding sasaran bayi.</field>
+        <field name="metode">Bayi imunisasi dasar lengkap (kumulatif Januari s.d. bulan laporan) dibagi sasaran bayi, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Permenkes No 12 Tahun 2017 tentang Penyelenggaraan Imunisasi</field>
+        <field name="tag">kesehatan, imunisasi dan gizi</field>
+    </record>
+
+    <record id="data_stunting" model="satu_data.data">
+        <field name="name">Prevalensi Balita Stunting</field>
+        <field name="kode">kesehatan.stunting</field>
+        <field name="sequence">14</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="True"/>
+        <field name="definisi">Persentase balita pendek dan sangat pendek (TB/U &lt; -2 SD) dari balita yang diukur, memakai bulan pengukuran terakhir tiap desa/kelurahan.</field>
+        <field name="metode">Balita stunting dibagi balita diukur pada bulan pengukuran terakhir tiap desa/kelurahan, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Perpres No 72 Tahun 2021 tentang Percepatan Penurunan Stunting</field>
+        <field name="tag">kesehatan, imunisasi dan gizi</field>
+    </record>
+
+    <record id="data_kematian_ibu" model="satu_data.data">
+        <field name="name">Jumlah Kematian Ibu</field>
+        <field name="kode">kesehatan.kematian_ibu</field>
+        <field name="sequence">15</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Jumlah kematian ibu saat hamil, bersalin, atau nifas.</field>
+        <field name="metode">Penjumlahan kejadian dari rekap bulanan per desa/kelurahan. Kumulatif = Januari s.d. bulan laporan. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Kasus</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas; Bulan</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbatas</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Profil Kesehatan Indonesia (Kementerian Kesehatan): definisi kematian ibu dan bayi</field>
+        <field name="tag">kesehatan, kematian ibu dan bayi</field>
+    </record>
+
+    <record id="data_aki" model="satu_data.data">
+        <field name="name">Rasio Kematian Ibu</field>
+        <field name="kode">kesehatan.aki</field>
+        <field name="sequence">16</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="True"/>
+        <field name="definisi">Kematian ibu per 100.000 kelahiran hidup.</field>
+        <field name="metode">Kematian ibu dibagi lahir hidup, dikali 100.000. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Rasio</field>
+        <field name="satuan">per 100.000 KH</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas; Bulan</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbatas</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Profil Kesehatan Indonesia (Kementerian Kesehatan): definisi kematian ibu dan bayi</field>
+        <field name="tag">kesehatan, kematian ibu dan bayi</field>
+    </record>
+
+    <record id="data_kematian_bayi" model="satu_data.data">
+        <field name="name">Jumlah Kematian Bayi</field>
+        <field name="kode">kesehatan.kematian_bayi</field>
+        <field name="sequence">17</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Jumlah kematian bayi usia 0–11 bulan.</field>
+        <field name="metode">Penjumlahan kejadian dari rekap bulanan per desa/kelurahan. Kumulatif = Januari s.d. bulan laporan. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Kasus</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas; Bulan</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbatas</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Profil Kesehatan Indonesia (Kementerian Kesehatan): definisi kematian ibu dan bayi</field>
+        <field name="tag">kesehatan, kematian ibu dan bayi</field>
+    </record>
+
+    <record id="data_akb" model="satu_data.data">
+        <field name="name">Rasio Kematian Bayi</field>
+        <field name="kode">kesehatan.akb</field>
+        <field name="sequence">18</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="True"/>
+        <field name="definisi">Kematian bayi 0–11 bulan per 1.000 kelahiran hidup.</field>
+        <field name="metode">Kematian bayi dibagi lahir hidup, dikali 1.000. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Rasio</field>
+        <field name="satuan">per 1.000 KH</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas; Bulan</field>
+        <field name="tingkat_penyajian">kecamatan</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbatas</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Profil Kesehatan Indonesia (Kementerian Kesehatan): definisi kematian ibu dan bayi</field>
+        <field name="tag">kesehatan, kematian ibu dan bayi</field>
+    </record>
+
+    <record id="data_kasus_dbd" model="satu_data.data">
+        <field name="name">Jumlah Kasus DBD</field>
+        <field name="kode">kesehatan.kasus_dbd</field>
+        <field name="sequence">19</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Jumlah kasus Demam Berdarah Dengue.</field>
+        <field name="metode">Penjumlahan kejadian dari rekap bulanan per desa/kelurahan. Kumulatif = Januari s.d. bulan laporan. Angka puskesmas, kecamatan, dan kabupaten/kota adalah penjumlahan desa/kelurahan.</field>
+        <field name="ukuran">Jumlah</field>
+        <field name="satuan">Kasus</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Pedoman Pencegahan dan Pengendalian Demam Berdarah Dengue di Indonesia (Kementerian Kesehatan)</field>
+        <field name="tag">kesehatan, penyakit menular</field>
+    </record>
+
+    <record id="data_ir_dbd" model="satu_data.data">
+        <field name="name">Angka Kesakitan DBD</field>
+        <field name="kode">kesehatan.ir_dbd</field>
+        <field name="sequence">20</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Kasus DBD per 100.000 penduduk (incidence rate). Penduduk dari data kependudukan terbit terakhir.</field>
+        <field name="metode">Kasus DBD dibagi penduduk, dikali 100.000. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Rasio</field>
+        <field name="satuan">per 100.000 penduduk</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Pedoman Pencegahan dan Pengendalian Demam Berdarah Dengue di Indonesia (Kementerian Kesehatan)</field>
+        <field name="tag">kesehatan, penyakit menular</field>
+    </record>
+
+    <record id="data_cfr_dbd" model="satu_data.data">
+        <field name="name">Angka Kematian DBD</field>
+        <field name="kode">kesehatan.cfr_dbd</field>
+        <field name="sequence">21</field>
+        <field name="sektor">kesehatan</field>
+        <field name="jenis">indikator</field>
+        <field name="instansi_id" ref="instansi_dinkes"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="kegiatan_id" ref="kegiatan_laporan_bulanan"/>
+        <field name="topik_id" ref="satu_data.topik_kesehatan"/>
+        <field name="urusan_id" ref="satu_data.urusan_1_02"/>
+        <field name="prioritas" eval="False"/>
+        <field name="definisi">Persentase kematian di antara kasus DBD (case fatality rate).</field>
+        <field name="metode">Kematian DBD dibagi kasus dbd, dikali 100. Untuk wilayah yang lebih besar, pembilang dan penyebut desa/kelurahan dijumlahkan dulu baru dibagi (bukan rata-rata rasio).</field>
+        <field name="ukuran">Persentase</field>
+        <field name="satuan">Persen</field>
+        <field name="klasifikasi_penyajian">Kabupaten/Kota, Kecamatan, Puskesmas, Desa/Kelurahan; Bulan</field>
+        <field name="tingkat_penyajian">desa</field>
+        <field name="frekuensi">bulanan</field>
+        <field name="batas_hari">10</field>
+        <field name="acuan_batas">akhir</field>
+        <field name="akses">terbuka</field>
+        <field name="kode_referensi">Kode wilayah administrasi pemerintahan Kemendagri; kode fasilitas pelayanan kesehatan Kemenkes</field>
+        <field name="versi_kode_referensi">Kepmendagri No 300.2.2-2430 Tahun 2025</field>
+        <field name="sumber_referensi">Pedoman Pencegahan dan Pengendalian Demam Berdarah Dengue di Indonesia (Kementerian Kesehatan)</field>
+        <field name="tag">kesehatan, penyakit menular</field>
+    </record>
+
+</odoo>

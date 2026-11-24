@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_desa_list_kesehatan" model="ir.ui.view">
+        <field name="name">satu_data.desa.list.kesehatan</field>
+        <field name="model">satu_data.desa</field>
+        <field name="inherit_id" ref="satu_data.view_desa_list"/>
+        <field name="arch" type="xml">
+            <field name="kecamatan_id" position="after">
+                <field name="sd_puskesmas_id" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_desa_form_kesehatan" model="ir.ui.view">
+        <field name="name">satu_data.desa.form.kesehatan</field>
+        <field name="model">satu_data.desa</field>
+        <field name="inherit_id" ref="satu_data.view_desa_form"/>
+        <field name="arch" type="xml">
+            <field name="kecamatan_id" position="after">
+                <field name="sd_puskesmas_id" invisible="not sd_puskesmas_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_desa_search_kesehatan" model="ir.ui.view">
+        <field name="name">satu_data.desa.search.kesehatan</field>
+        <field name="model">satu_data.desa</field>
+        <field name="inherit_id" ref="satu_data.view_desa_search"/>
+        <field name="arch" type="xml">
+            <field name="kecamatan_id" position="after">
+                <field name="sd_puskesmas_id" string="Puskesmas"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

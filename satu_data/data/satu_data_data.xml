@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Topik data mengikuti topik di portal data.go.id -->
+    <record id="topik_ekonomi" model="satu_data.topik">
+        <field name="name">Ekonomi dan Industri</field>
+        <field name="sequence">10</field>
+        <field name="ikon">fa-line-chart</field>
+    </record>
+    <record id="topik_lingkungan" model="satu_data.topik">
+        <field name="name">Lingkungan dan Sumber Daya Alam</field>
+        <field name="sequence">20</field>
+        <field name="ikon">fa-leaf</field>
+    </record>
+    <record id="topik_budaya" model="satu_data.topik">
+        <field name="name">Budaya dan Agama</field>
+        <field name="sequence">30</field>
+        <field name="ikon">fa-university</field>
+    </record>
+    <record id="topik_kesehatan" model="satu_data.topik">
+        <field name="name">Perlindungan Sosial dan Kesehatan</field>
+        <field name="sequence">40</field>
+        <field name="ikon">fa-heartbeat</field>
+    </record>
+    <record id="topik_pembangunan_daerah" model="satu_data.topik">
+        <field name="name">Pembangunan Daerah</field>
+        <field name="sequence">50</field>
+        <field name="ikon">fa-road</field>
+    </record>
+    <record id="topik_pendidikan" model="satu_data.topik">
+        <field name="name">Pendidikan dan Tenaga Kerja</field>
+        <field name="sequence">60</field>
+        <field name="ikon">fa-graduation-cap</field>
+    </record>
+    <record id="topik_pemerintahan" model="satu_data.topik">
+        <field name="name">Pemerintahan Umum</field>
+        <field name="sequence">70</field>
+        <field name="ikon">fa-building</field>
+    </record>
+    <record id="topik_pendukung" model="satu_data.topik">
+        <field name="name">Pendukung Umum</field>
+        <field name="sequence">80</field>
+        <field name="ikon">fa-cogs</field>
+    </record>
+    <record id="topik_ketertiban" model="satu_data.topik">
+        <field name="name">Ketertiban Umum dan Keselamatan</field>
+        <field name="sequence">90</field>
+        <field name="ikon">fa-shield</field>
+    </record>
+    <record id="topik_pertahanan" model="satu_data.topik">
+        <field name="name">Pertahanan dan Luar Negeri</field>
+        <field name="sequence">100</field>
+        <field name="ikon">fa-globe</field>
+    </record>
+
+    <!-- Walidata wilayah utama (nama bisa disesuaikan di Konfigurasi > Instansi) -->
+    <record id="instansi_walidata" model="satu_data.instansi">
+        <field name="name">Dinas Komunikasi dan Informatika</field>
+        <field name="singkatan">Diskominfo</field>
+        <field name="jenis">opd</field>
+        <field name="peran">walidata</field>
+        <field name="sequence">1</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="urusan_ids" eval="[(6, 0, [ref('urusan_2_16'), ref('urusan_2_20'), ref('urusan_2_21')])]"/>
+    </record>
+
+    <!-- Sekretariat Satu Data: koordinator Forum Satu Data dan penyebarluasan
+         data ke luar pemerintah daerah. -->
+    <record id="instansi_sekretariat" model="satu_data.instansi">
+        <field name="name">Badan Perencanaan Pembangunan Daerah</field>
+        <field name="singkatan">Bappeda</field>
+        <field name="jenis">opd</field>
+        <field name="peran">sekretariat</field>
+        <field name="sequence">2</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="urusan_ids" eval="[(6, 0, [ref('urusan_5_01'), ref('urusan_5_05')])]"/>
+    </record>
+
+</odoo>

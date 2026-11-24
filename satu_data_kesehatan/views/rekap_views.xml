@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Ajukan bulan ke Walidata (wizard generik modul inti) -->
+    <record id="action_ajukan_rekap" model="ir.actions.act_window">
+        <field name="name">Ajukan ke Walidata</field>
+        <field name="res_model">satu_data.pengajuan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_sektor': 'kesehatan'}</field>
+        <field name="group_ids" eval="[(4, ref('group_produsen_kesehatan'))]"/>
+    </record>
+
+    <!-- Siapkan baris kosong untuk desa wilayah kerja puskesmas -->
+    <record id="view_rekap_wizard_form" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.rekap.wizard.form</field>
+        <field name="model">satu_data.kesehatan.rekap.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Siapkan Rekap Bulan">
+                <group>
+                    <field name="company_id" invisible="1"/>
+                    <field name="periode_id" options="{'no_create': True}"/>
+                    <field name="puskesmas_id" options="{'no_create': True}"
+                           placeholder="Semua desa/kelurahan"/>
+                </group>
+                <div class="text-muted">
+                    Membuat baris rekap kosong untuk setiap desa/kelurahan di wilayah kerja puskesmas
+                    (yang belum ada), lalu membuka daftar isian. Baris yang sudah ada tidak diubah.
+                </div>
+                <footer>
+                    <button string="Siapkan dan Isi" name="action_siapkan" type="object" class="btn-primary"/>
+                    <button string="Batal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rekap_wizard" model="ir.actions.act_window">
+        <field name="name">Siapkan Rekap Bulan</field>
+        <field name="res_model">satu_data.kesehatan.rekap.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="group_ids" eval="[(4, ref('group_produsen_kesehatan'))]"/>
+    </record>
+
+    <record id="view_rekap_list" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.rekap.list</field>
+        <field name="model">satu_data.kesehatan.rekap</field>
+        <field name="arch" type="xml">
+            <list string="Rekap Layanan Kesehatan Bulanan">
+                <header>
+                    <button name="%(action_rekap_wizard)d" type="action" string="Siapkan Rekap Bulan"
+                            class="btn-secondary" display="always"
+                            groups="satu_data_kesehatan.group_produsen_kesehatan"/>
+                    <button name="%(action_ajukan_rekap)d" type="action" string="Ajukan ke Walidata"
+                            class="btn-secondary" display="always"
+                            groups="satu_data_kesehatan.group_produsen_kesehatan"/>
+                </header>
+                <field name="periode_id"/>
+                <field name="kecamatan_id" optional="show"/>
+                <field name="puskesmas_id" optional="show"/>
+                <field name="desa_id"/>
+                <field name="layanan_ibu_hamil" string="Bumil" sum="Total"/>
+                <field name="layanan_ibu_bersalin" string="Bersalin" sum="Total"/>
+                <field name="layanan_balita" string="Balita" sum="Total"/>
+                <field name="bayi_idl" string="IDL" sum="Total"/>
+                <field name="balita_diukur" string="Diukur" sum="Total" optional="show"/>
+                <field name="balita_stunting" string="Stunting" sum="Total" optional="show"/>
+                <field name="kematian_ibu" string="Kem. Ibu" sum="Total" optional="show"/>
+                <field name="kematian_bayi" string="Kem. Bayi" sum="Total" optional="show"/>
+                <field name="kasus_dbd" string="DBD" sum="Total" optional="show"/>
+                <field name="sd_status" widget="badge" optional="show"
+                       decoration-info="sd_status == 'diajukan'" decoration-success="sd_status == 'terbit'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Daftar isian cepat (dibuka dari "Siapkan Rekap Bulan"): semua angka, edit langsung di baris. -->
+    <record id="view_rekap_list_isian" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.rekap.list.isian</field>
+        <field name="model">satu_data.kesehatan.rekap</field>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <list string="Isian Rekap Kesehatan" editable="bottom" create="0">
+                <header>
+                    <button name="%(action_ajukan_rekap)d" type="action" string="Ajukan ke Walidata"
+                            class="btn-secondary" display="always"
+                            groups="satu_data_kesehatan.group_produsen_kesehatan"/>
+                </header>
+                <field name="sd_status" column_invisible="1"/>
+                <field name="desa_id" readonly="1"/>
+                <field name="puskesmas_id" optional="hide"/>
+                <field name="layanan_ibu_hamil" string="Bumil" sum="Total"/>
+                <field name="layanan_ibu_bersalin" string="Bersalin" sum="Total"/>
+                <field name="layanan_bayi_baru_lahir" string="BBL" sum="Total"/>
+                <field name="layanan_balita" string="Balita" sum="Total"/>
+                <field name="layanan_usia_dasar" string="Usia Dasar" sum="Total"/>
+                <field name="layanan_usia_produktif" string="Produktif" sum="Total"/>
+                <field name="layanan_usia_lanjut" string="Lansia" sum="Total"/>
+                <field name="layanan_hipertensi" string="HT" sum="Total"/>
+                <field name="layanan_diabetes" string="DM" sum="Total"/>
+                <field name="layanan_odgj_berat" string="ODGJ" sum="Total"/>
+                <field name="layanan_terduga_tbc" string="TBC" sum="Total"/>
+                <field name="layanan_risiko_hiv" string="HIV" sum="Total"/>
+                <field name="bayi_idl" string="IDL" sum="Total"/>
+                <field name="balita_diukur" string="Diukur" sum="Total"/>
+                <field name="balita_stunting" string="Stunting" sum="Total"/>
+                <field name="lahir_hidup" string="Lahir Hidup" sum="Total"/>
+                <field name="kematian_ibu" string="Kem. Ibu" sum="Total"/>
+                <field name="kematian_bayi" string="Kem. Bayi" sum="Total"/>
+                <field name="kasus_dbd" string="DBD" sum="Total"/>
+                <field name="kematian_dbd" string="Kem. DBD" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rekap_form" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.rekap.form</field>
+        <field name="model">satu_data.kesehatan.rekap</field>
+        <field name="arch" type="xml">
+            <form string="Rekap Layanan Kesehatan Bulanan">
+                <header>
+                    <field name="sd_status" widget="statusbar" statusbar_visible="draf,diajukan,terbit"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info mb-3" role="status"
+                         invisible="sd_status not in ('diajukan', 'terbit')">
+                        Data bulan ini sedang diperiksa atau sudah terbit sehingga dikunci.
+                        Minta Walidata mengembalikannya (menu Pemeriksaan) bila perlu diperbaiki.
+                    </div>
+                    <div class="oe_title">
+                        <label for="desa_id"/>
+                        <h1><field name="desa_id" options="{'no_create': True}" placeholder="Pilih desa/kelurahan"/></h1>
+                    </div>
+                    <group>
+                        <group string="Wilayah dan Bulan">
+                            <field name="kecamatan_id"/>
+                            <field name="puskesmas_id" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="periode_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="sumber" placeholder="Mis. Laporan bulanan Puskesmas Kaliwates"/>
+                        </group>
+                    </group>
+                    <group string="Pelayanan Sesuai Standar (SPM Kesehatan)">
+                        <group>
+                            <field name="layanan_ibu_hamil"/>
+                            <field name="layanan_ibu_bersalin"/>
+                            <field name="layanan_bayi_baru_lahir"/>
+                            <field name="layanan_balita"/>
+                            <field name="layanan_usia_dasar"/>
+                            <field name="layanan_usia_produktif"/>
+                        </group>
+                        <group>
+                            <field name="layanan_usia_lanjut"/>
+                            <field name="layanan_hipertensi"/>
+                            <field name="layanan_diabetes"/>
+                            <field name="layanan_odgj_berat"/>
+                            <field name="layanan_terduga_tbc"/>
+                            <field name="layanan_risiko_hiv"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Imunisasi dan Gizi">
+                            <field name="bayi_idl"/>
+                            <field name="balita_diukur"/>
+                            <field name="balita_stunting"/>
+                        </group>
+                        <group string="Kelahiran, Kematian, dan DBD">
+                            <field name="lahir_hidup"/>
+                            <field name="kematian_ibu"/>
+                            <field name="kematian_bayi"/>
+                            <field name="kasus_dbd"/>
+                            <field name="kematian_dbd"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        Angka kejadian/layanan pada bulan ini saja (bukan kumulatif), per desa/kelurahan
+                        tempat tinggal sasaran, tanpa data perorangan. Balita diukur dan stunting adalah
+                        hasil pengukuran bulan ini.
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rekap_search" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.rekap.search</field>
+        <field name="model">satu_data.kesehatan.rekap</field>
+        <field name="arch" type="xml">
+            <search string="Cari Rekap Kesehatan">
+                <field name="desa_id"/>
+                <field name="kecamatan_id"/>
+                <field name="puskesmas_id"/>
+                <field name="periode_id"/>
+                <separator/>
+                <filter string="Ada Kematian Ibu/Bayi" name="ada_kematian"
+                        domain="['|', ('kematian_ibu', '>', 0), ('kematian_bayi', '>', 0)]"/>
+                <filter string="Ada Kasus DBD" name="ada_dbd" domain="[('kasus_dbd', '>', 0)]"/>
+                <filter string="Tanpa Puskesmas" name="tanpa_puskesmas" domain="[('puskesmas_id', '=', False)]"/>
+                <group>
+                    <filter string="Bulan" name="group_periode" context="{'group_by': 'periode_id'}"/>
+                    <filter string="Kecamatan" name="group_kecamatan" context="{'group_by': 'kecamatan_id'}"/>
+                    <filter string="Puskesmas" name="group_puskesmas" context="{'group_by': 'puskesmas_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_rekap_pivot" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.rekap.pivot</field>
+        <field name="model">satu_data.kesehatan.rekap</field>
+        <field name="arch" type="xml">
+            <pivot string="Rekap Layanan Kesehatan">
+                <field name="puskesmas_id" type="row"/>
+                <field name="periode_id" type="col"/>
+                <field name="layanan_ibu_hamil" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_rekap_graph" model="ir.ui.view">
+        <field name="name">satu_data.kesehatan.rekap.graph</field>
+        <field name="model">satu_data.kesehatan.rekap</field>
+        <field name="arch" type="xml">
+            <graph string="Rekap Layanan Kesehatan" type="line">
+                <field name="periode_id"/>
+                <field name="kasus_dbd" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_rekap" model="ir.actions.act_window">
+        <field name="name">Rekap Bulanan</field>
+        <field name="res_model">satu_data.kesehatan.rekap</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="search_view_id" ref="view_rekap_search"/>
+        <field name="context">{'search_default_group_periode': 1, 'search_default_group_puskesmas': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada rekap kesehatan bulanan</p>
+            <p>Tekan "Siapkan Rekap Bulan", pilih bulan dan puskesmas: baris untuk setiap desa/kelurahan
+               wilayah kerjanya dibuat dan bisa langsung diisi. Buat dulu periode bulanan di
+               Konfigurasi &gt; Periode Data (Buat Periode Baku).</p>
+        </field>
+    </record>
+
+</odoo>

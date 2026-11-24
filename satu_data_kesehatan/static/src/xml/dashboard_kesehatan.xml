@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="satu_data_kesehatan.Dashboard">
+<div class="o_satu_data sd-dash sd-kes" t-ref="root" t-att-class="{ 'sd-dash--layar-penuh': state.layarPenuh }">
+
+    <!-- ── Kepala: level wilayah (kiri), pilihan indikator/bulan/mode (kanan) ── -->
+    <header class="sd-kepala">
+        <nav class="sd-jejak" aria-label="Level wilayah">
+            <button t-if="state.kecamatanId" class="btn btn-sm btn-primary sd-kembali" t-on-click="kembali"
+                    t-att-disabled="state.memuat">
+                <i class="fa fa-arrow-left" aria-hidden="true"/> Kembali
+            </button>
+            <span class="sd-jejak-item" t-att-class="{ 'sd-jejak-item--aktif': !state.kecamatanId }">
+                Semua kecamatan
+            </span>
+            <t t-if="state.data and state.data.kecamatan">
+                <i class="fa fa-angle-right text-muted" aria-hidden="true"/>
+                <span class="sd-jejak-item sd-jejak-item--aktif">
+                    Kecamatan <t t-esc="state.data.kecamatan.nama"/>
+                </span>
+            </t>
+        </nav>
+
+        <div class="sd-kontrol" t-if="state.data">
+            <label class="sd-periode sd-kes-indikator">
+                <span>Indikator</span>
+                <select class="form-select form-select-sm" t-att-disabled="state.memuat"
+                        t-on-change="(ev) => this.pilihIndikator(ev.target.value)">
+                    <optgroup t-foreach="kelompokIndikator" t-as="k" t-key="k.nama" t-att-label="k.nama">
+                        <option t-foreach="k.isi" t-as="i" t-key="i.kode" t-att-value="i.kode"
+                                t-att-selected="state.indikator === i.kode" t-esc="i.nama"/>
+                    </optgroup>
+                </select>
+            </label>
+            <label t-if="state.data.daftar_periode.length" class="sd-periode">
+                <span>Bulan</span>
+                <select class="form-select form-select-sm" t-on-change="pilihPeriode" t-att-disabled="state.memuat">
+                    <option t-foreach="state.data.daftar_periode" t-as="p" t-key="p.id" t-att-value="p.id"
+                            t-att-selected="state.periodeId === p.id" t-esc="p.label"/>
+                </select>
+            </label>
+            <div t-if="!ind.tanpa_mode" class="btn-group btn-group-sm sd-kes-mode" role="group" aria-label="Cara hitung">
+                <button class="btn" t-att-class="state.mode === 'bulan' ? 'btn-primary' : 'btn-light'"
+                        t-att-disabled="state.memuat" t-on-click="() => this.pilihMode('bulan')">Bulan ini</button>
+                <button class="btn" t-att-class="state.mode === 'kumulatif' ? 'btn-primary' : 'btn-light'"
+                        t-att-disabled="state.memuat" t-on-click="() => this.pilihMode('kumulatif')"
+                        title="Januari s.d. bulan terpilih">Kumulatif</button>
+            </div>
+            <button class="btn btn-sm btn-light" t-on-click="toggleLayarPenuh"
+                    t-att-title="state.layarPenuh ? 'Keluar dari layar penuh' : 'Layar penuh'">
+                <i t-att-class="state.layarPenuh ? 'fa fa-compress' : 'fa fa-expand'" aria-hidden="true"/>
+                <span class="sd-label-tombol" t-esc="state.layarPenuh ? ' Keluar' : ' Layar penuh'"/>
+            </button>
+            <button class="btn btn-sm btn-light" t-on-click="muat" t-att-disabled="state.memuat" title="Muat ulang">
+                <i t-att-class="state.memuat ? 'fa fa-refresh fa-spin' : 'fa fa-refresh'" aria-hidden="true"/>
+            </button>
+        </div>
+    </header>
+
+    <div t-if="state.galat" class="alert alert-danger sd-galat" role="alert">
+        <div><i class="fa fa-exclamation-circle" aria-hidden="true"/> <t t-esc="state.galat"/></div>
+        <button class="btn btn-sm btn-outline-danger" t-on-click="muat">Coba lagi</button>
+    </div>
+
+    <div t-if="!state.data and state.memuat" class="sd-memuat">
+        <i class="fa fa-circle-o-notch fa-spin" aria-hidden="true"/> Memuat data kesehatan...
+    </div>
+
+    <t t-if="state.data">
+        <div t-if="!adaDataPeriode" class="alert alert-info sd-info" role="status">
+            Belum ada data kesehatan bulanan yang terbit. Isi rekap di menu Data › Kesehatan › Rekap Bulanan,
+            lalu ajukan ke Walidata.
+            <button class="btn btn-sm btn-link" t-on-click="bukaRekap">Buka rekap bulanan</button>
+        </div>
+        <div t-if="state.data.tersembunyi" class="alert alert-warning sd-info" role="status">
+            <i class="fa fa-lock" aria-hidden="true"/>
+            <t t-esc="ind.nama"/> termasuk data terbatas dan disajikan paling rendah tingkat kecamatan,
+            sehingga tidak dirinci per desa/kelurahan.
+        </div>
+
+        <!-- KPI: indikator terpilih + indikator kunci -->
+        <t t-set="d" t-value="detail"/>
+        <section class="sd-kpi" t-att-class="{ 'sd-kpi--memuat': state.memuat }" aria-label="Ringkasan">
+            <div class="sd-kpi-kartu sd-kpi-kartu--utama">
+                <div class="sd-kpi-label"><span class="sd-kpi-ikon"><i class="fa fa-heartbeat" aria-hidden="true"/></span><t t-esc="ind.nama"/></div>
+                <div class="sd-kpi-nilai">
+                    <t t-esc="nilai(state.data.ringkasan.nilai)"/><small t-if="state.data.ringkasan.nilai !== null" class="sd-kes-satuan" t-esc="satuan()"/>
+                </div>
+                <div class="sd-kpi-sub"><t t-esc="judulCakupan"/> · <t t-esc="labelMode"/></div>
+            </div>
+            <button t-foreach="kpi" t-as="k" t-key="k.kode" class="sd-kpi-kartu sd-kes-kpi"
+                    t-att-class="{ 'sd-kes-kpi--aktif': k.kode === state.indikator }"
+                    t-on-click="() => this.pilihIndikator(k.kode)" t-att-disabled="state.memuat"
+                    t-att-title="'Tampilkan ' + k.nama + ' di peta'">
+                <div class="sd-kpi-label"><span class="sd-kpi-ikon"><i t-att-class="'fa ' + k.ikon" aria-hidden="true"/></span><t t-esc="k.nama"/></div>
+                <div class="sd-kpi-nilai" t-esc="k.teks"/>
+                <div class="sd-kpi-sub" t-esc="k.satuan"/>
+            </button>
+        </section>
+
+        <div class="sd-isi">
+            <section class="sd-kartu sd-kartu-peta" aria-label="Peta">
+                <SatuDataPeta
+                    wilayah="state.data.wilayah"
+                    kelas="state.data.kelas"
+                    warnaTanpaData="state.data.warna_tanpa_data"
+                    terpilihId="state.terpilihId"
+                    petaDasar="petaDasarAktif"
+                    petunjukKlik="petunjukKlik"
+                    judulLegenda="judulLegenda"
+                    teksNilai="teksNilai"
+                    titik="titikPuskesmas"
+                    judulTitik="'Puskesmas'"
+                    onKlik.bind="klikWilayah"/>
+                <div class="sd-peta-dasar sd-kes-lapisan">
+                    <label class="sd-kes-cek" title="Tampilkan lokasi puskesmas">
+                        <input type="checkbox" class="form-check-input" t-att-checked="state.tampilPuskesmas"
+                               t-on-change="togglePuskesmas"/> Puskesmas
+                    </label>
+                    <label title="Pilih peta dasar di bawah warna wilayah">
+                        <i class="fa fa-globe" aria-hidden="true"/>
+                        <span class="visually-hidden">Peta dasar</span>
+                        <select class="form-select form-select-sm" t-on-change="pilihPetaDasar" aria-label="Peta dasar">
+                            <t t-foreach="state.data.peta_dasar.pilihan" t-as="p" t-key="p.kode">
+                                <option t-att-value="p.kode" t-att-selected="state.petaDasar === p.kode" t-esc="p.nama"/>
+                            </t>
+                            <option value="tanpa" t-att-selected="state.petaDasar === 'tanpa'">Tanpa peta dasar</option>
+                        </select>
+                    </label>
+                </div>
+                <div t-if="state.memuat" class="sd-peta-memuat">
+                    <i class="fa fa-circle-o-notch fa-spin" aria-hidden="true"/>
+                </div>
+            </section>
+
+            <aside class="sd-panel">
+                <section class="sd-kartu sd-detail" aria-live="polite">
+                    <div class="sd-detail-kepala">
+                        <div class="sd-detail-judul">
+                            <div class="sd-eyebrow" t-esc="d.jenis"/>
+                            <h2 class="sd-detail-nama" t-esc="d.nama"/>
+                            <div t-if="d.kode" class="sd-detail-kode">Kode <t t-esc="d.kode"/></div>
+                            <div t-if="d.puskesmas" class="sd-detail-kode"><i class="fa fa-hospital-o" aria-hidden="true"/> <t t-esc="d.puskesmas"/></div>
+                        </div>
+                        <button t-if="state.terpilihId" class="btn btn-sm btn-light" t-on-click="tutupDetail"
+                                title="Kembali ke ringkasan kecamatan">
+                            <i class="fa fa-times" aria-hidden="true"/>
+                        </button>
+                    </div>
+
+                    <div class="sd-kes-nilai">
+                        <span class="sd-kes-nilai-angka" t-esc="nilai(d.nilai)"/>
+                        <span t-if="d.nilai !== null" class="sd-kes-nilai-satuan" t-esc="ind.satuan"/>
+                    </div>
+                    <div class="sd-kes-nilai-ket"><t t-esc="ind.nama"/> · <t t-esc="labelMode"/></div>
+
+                    <dl t-if="d.pembilang !== null and d.pembilang !== undefined" class="sd-detail-angka">
+                        <dt t-esc="ind.label_pembilang or ind.nama"/><dd t-esc="angka(d.pembilang)"/>
+                        <t t-if="ind.jenis === 'rasio'">
+                            <dt t-esc="ind.label_penyebut"/><dd t-esc="angka(d.penyebut)"/>
+                        </t>
+                    </dl>
+                    <p t-if="d.desa" class="sd-catatan">
+                        <t t-esc="d.lapor"/> dari <t t-esc="d.desa"/> desa/kelurahan melapor pada <t t-esc="state.data.periode.label"/>.
+                    </p>
+                    <p t-if="ind.jenis === 'rasio' and d.pembilang and !d.penyebut" class="sd-catatan">
+                        Penyebut belum tersedia (mis. sasaran tahun ini belum terbit).
+                    </p>
+                    <p class="sd-catatan sd-kes-definisi" t-esc="ind.definisi"/>
+                    <button t-if="adaDataPeriode" class="btn btn-sm btn-outline-primary sd-buka-data" t-on-click="bukaData">
+                        <i class="fa fa-table" aria-hidden="true"/> Lihat data
+                    </button>
+                </section>
+
+                <section class="sd-kartu sd-daftar">
+                    <h3 class="sd-daftar-judul">
+                        <t t-if="state.data.level === 'kecamatan'">Kecamatan</t>
+                        <t t-else="">Desa/kelurahan</t>
+                        <span class="text-muted">(<t t-esc="state.data.wilayah.length"/>)</span>
+                        <small class="sd-kes-urut">perlu perhatian di atas</small>
+                    </h3>
+                    <ul class="sd-daftar-isi">
+                        <li t-foreach="daftarUrut" t-as="w" t-key="w.id">
+                            <button class="sd-daftar-item" t-att-class="{ 'sd-daftar-item--aktif': w.id === state.terpilihId }"
+                                    t-on-click="() => this.klikWilayah(w.id)" t-att-disabled="state.memuat">
+                                <span class="sd-daftar-warna" t-attf-style="background: {{ warnaWilayah(w) }}"/>
+                                <span class="sd-daftar-nama">
+                                    <t t-esc="w.nama"/>
+                                    <small t-if="!w.geometri" class="text-muted" title="Batas wilayah belum diisi"> · tanpa peta</small>
+                                    <small t-if="w.arsip" class="text-muted"> · diarsipkan/dipindah</small>
+                                </span>
+                                <span class="sd-daftar-nilai" t-esc="nilai(w.nilai)"/>
+                                <i t-if="state.data.level === 'kecamatan'" class="fa fa-angle-right text-muted" aria-hidden="true"/>
+                            </button>
+                        </li>
+                    </ul>
+                </section>
+            </aside>
+        </div>
+
+        <!-- Grafik: capaian 12 SPM dan tren indikator terpilih -->
+        <div class="sd-kes-grafik-ganda">
+            <section class="sd-kartu sd-grafik" aria-label="Capaian Standar Pelayanan Minimal">
+                <div class="sd-grafik-kepala">
+                    <h2 class="sd-grafik-judul">Capaian 12 SPM Kesehatan · <t t-esc="judulCakupan"/></h2>
+                    <span class="sd-grafik-sub">
+                        <t t-esc="state.data.periode.label"/> · <t t-esc="state.data.mode === 'bulan' ? 'bulan ini' : 'kumulatif'"/>
+                    </span>
+                </div>
+                <SatuDataGrafik opsi="opsiSpm" adaData="adaSpm" onKlik="klikSpm" kelasKanvas="'sd-kes-kanvas-spm'"
+                                pesanKosong="'Belum ada data SPM (rekap atau sasaran belum terbit).'"/>
+            </section>
+            <section class="sd-kartu sd-grafik" aria-label="Tren bulanan">
+                <div class="sd-grafik-kepala">
+                    <h2 class="sd-grafik-judul">Tren <t t-esc="ind.singkat"/> · <t t-esc="judulCakupan"/></h2>
+                    <span class="sd-grafik-sub" t-esc="labelMode"/>
+                </div>
+                <SatuDataGrafik opsi="opsiTren" adaData="adaTren" kelasKanvas="'sd-kes-kanvas-spm'"
+                                pesanKosong="'Belum ada data untuk tren tahun ini.'"/>
+            </section>
+        </div>
+    </t>
+</div>
+</t>
+
+</templates>

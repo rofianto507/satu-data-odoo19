@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Buka atau buat Laporan Semester (wizard generik modul inti) -->
+    <record id="action_ajukan_kependudukan" model="ir.actions.act_window">
+        <field name="name">Buka Laporan Semester</field>
+        <field name="res_model">satu_data.pengajuan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_sektor': 'kependudukan'}</field>
+        <field name="group_ids" eval="[(4, ref('group_produsen_kependudukan'))]"/>
+    </record>
+
+    <record id="view_kependudukan_list" model="ir.ui.view">
+        <field name="name">satu_data.kependudukan.list</field>
+        <field name="model">satu_data.kependudukan</field>
+        <field name="arch" type="xml">
+            <list string="Rekap Kependudukan" create="0">
+                <field name="periode_id"/>
+                <field name="kecamatan_id"/>
+                <field name="desa_id"/>
+                <field name="jumlah_laki_laki" sum="Total"/>
+                <field name="jumlah_perempuan" sum="Total"/>
+                <field name="jumlah_penduduk" sum="Total"/>
+                <field name="jumlah_kk" sum="Total"/>
+                <field name="luas_km2" sum="Total" optional="show"/>
+                <field name="kepadatan" optional="show"/>
+                <field name="sumber" optional="hide"/>
+                <field name="sd_status" widget="badge" optional="show"
+                       decoration-info="sd_status == 'diajukan'" decoration-success="sd_status == 'terbit'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_kependudukan_form" model="ir.ui.view">
+        <field name="name">satu_data.kependudukan.form</field>
+        <field name="model">satu_data.kependudukan</field>
+        <field name="arch" type="xml">
+            <form string="Rekap Kependudukan" create="0">
+                <header>
+                    <field name="sd_status" widget="statusbar" statusbar_visible="draf,diajukan,terbit"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info mb-3" role="status"
+                         invisible="sd_status not in ('diajukan', 'terbit')">
+                        Data periode ini sedang diperiksa atau sudah terbit sehingga dikunci.
+                        Minta Walidata mengembalikannya (menu Pemeriksaan) bila perlu diperbaiki.
+                    </div>
+                    <div class="oe_title">
+                        <label for="desa_id"/>
+                        <h1><field name="desa_id" options="{'no_create': True}" placeholder="Pilih desa/kelurahan"/></h1>
+                    </div>
+                    <group>
+                        <group string="Wilayah dan Periode">
+                            <field name="kecamatan_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="periode_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="sumber" placeholder="Contoh: rekap Dukcapil Semester I"/>
+                        </group>
+                        <group string="Angka Rekap">
+                            <field name="jumlah_laki_laki"/>
+                            <field name="jumlah_perempuan"/>
+                            <field name="jumlah_penduduk"/>
+                            <field name="jumlah_kk"/>
+                            <field name="luas_km2" string="Luas desa (km²)"/>
+                            <field name="kepadatan" invisible="not luas_km2"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        Hanya angka rekap per desa/kelurahan. Jangan mengisi data perorangan.
+                        Angka kecamatan dan kabupaten/kota dihitung otomatis dari desa/kelurahan.
+                        Luas diambil dari master desa/kelurahan; kecamatan dicatat sesuai kecamatan
+                        desa saat data ini dibuat.
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_kependudukan_search" model="ir.ui.view">
+        <field name="name">satu_data.kependudukan.search</field>
+        <field name="model">satu_data.kependudukan</field>
+        <field name="arch" type="xml">
+            <search string="Cari Rekap Kependudukan">
+                <field name="desa_id"/>
+                <field name="kecamatan_id"/>
+                <field name="periode_id"/>
+                <separator/>
+                <filter string="Tanpa Luas" name="tanpa_luas" domain="[('luas_km2', '=', 0)]"/>
+                <group>
+                    <filter string="Periode" name="group_periode" context="{'group_by': 'periode_id'}"/>
+                    <filter string="Kecamatan" name="group_kecamatan" context="{'group_by': 'kecamatan_id'}"/>
+                    <filter string="Desa/Kelurahan" name="group_desa" context="{'group_by': 'desa_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_kependudukan_pivot" model="ir.ui.view">
+        <field name="name">satu_data.kependudukan.pivot</field>
+        <field name="model">satu_data.kependudukan</field>
+        <field name="arch" type="xml">
+            <pivot string="Rekap Kependudukan">
+                <field name="kecamatan_id" type="row"/>
+                <field name="periode_id" type="col"/>
+                <field name="jumlah_penduduk" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_kependudukan_graph" model="ir.ui.view">
+        <field name="name">satu_data.kependudukan.graph</field>
+        <field name="model">satu_data.kependudukan</field>
+        <field name="arch" type="xml">
+            <graph string="Rekap Kependudukan" type="bar" stacked="1">
+                <field name="kecamatan_id"/>
+                <field name="jumlah_laki_laki" type="measure"/>
+                <field name="jumlah_perempuan" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ══ Laporan Semester: satu layar untuk mengisi, mengirim, dan memeriksa ══ -->
+
+    <record id="view_laporan_kependudukan_list" model="ir.ui.view">
+        <field name="name">satu_data.pengajuan.list.kependudukan</field>
+        <field name="model">satu_data.pengajuan</field>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <list string="Laporan Semester" create="0" delete="0">
+                <header>
+                    <button name="%(action_ajukan_kependudukan)d" type="action" string="Buka Laporan Semester"
+                            class="btn-primary" display="always"
+                            groups="satu_data_kependudukan.group_produsen_kependudukan"/>
+                </header>
+                <field name="periode_id"/>
+                <field name="jumlah_terisi"/>
+                <field name="jumlah_kosong"/>
+                <field name="batas_pengajuan" optional="show"/>
+                <field name="ketepatan" widget="badge" optional="show"
+                       decoration-success="ketepatan == 'tepat'" decoration-danger="ketepatan == 'terlambat'"/>
+                <field name="perlu_perbaikan" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'diajukan'"
+                       decoration-success="state == 'terbit'"
+                       decoration-warning="state == 'draf' and perlu_perbaikan"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Tabel isian per desa langsung di form laporan -->
+    <record id="view_pengajuan_form_kependudukan" model="ir.ui.view">
+        <field name="name">satu_data.pengajuan.form.kependudukan</field>
+        <field name="model">satu_data.pengajuan</field>
+        <field name="inherit_id" ref="satu_data.view_pengajuan_form"/>
+        <field name="arch" type="xml">
+            <!-- Setelah catatan: catatan Walidata tidak boleh tertimbun di bawah ratusan baris. -->
+            <xpath expr="//group[@name='catatan']" position="after">
+                <div invisible="sektor != 'kependudukan'" class="mb-3">
+                    <h5>Data per Desa/Kelurahan</h5>
+                    <field name="kependudukan_ids" nolabel="1" readonly="state != 'draf'">
+                        <list editable="bottom" create="0" delete="0" limit="500"
+                              decoration-warning="jumlah_penduduk == 0">
+                            <field name="kecamatan_id" readonly="1"/>
+                            <field name="desa_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="jumlah_laki_laki" sum="Total"/>
+                            <field name="jumlah_perempuan" sum="Total"/>
+                            <field name="jumlah_penduduk" sum="Total" readonly="1"/>
+                            <field name="jumlah_kk" sum="Total"/>
+                            <field name="sumber" optional="hide"/>
+                        </list>
+                    </field>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_laporan_kependudukan" model="ir.actions.act_window">
+        <field name="name">Laporan Kependudukan</field>
+        <field name="res_model">satu_data.pengajuan</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_laporan_kependudukan_list"/>
+        <field name="domain">[('sektor', '=', 'kependudukan')]</field>
+        <field name="context">{'default_sektor': 'kependudukan'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada laporan semester</p>
+            <p>Tekan "Buka Laporan Semester", pilih semester, lalu isi tabel desa/kelurahan
+               dan kirim ke Walidata dari layar yang sama.</p>
+        </field>
+    </record>
+
+    <record id="action_kependudukan" model="ir.actions.act_window">
+        <field name="name">Rekap Kependudukan</field>
+        <field name="res_model">satu_data.kependudukan</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+        <field name="search_view_id" ref="view_kependudukan_search"/>
+        <field name="context">{'search_default_group_periode': 1, 'search_default_group_kecamatan': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tambahkan rekap kependudukan pertama</p>
+            <p>Isi angka rekap per desa/kelurahan per periode. Total kecamatan dan kabupaten/kota dihitung otomatis.</p>
+        </field>
+    </record>
+
+</odoo>

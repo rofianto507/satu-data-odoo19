@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    CONTOH (fiktif), bukan data resmi. Puskesmas demo Kabupaten Jember: satu per kecamatan,
+    dua untuk kecamatan dengan 12 desa/kelurahan atau lebih. Nama puskesmas mengikuti
+    desa/kelurahan lokasinya; koordinat = titik tengah batas desa lokasi.
+-->
+<odoo>
+    <record id="faskes_3509012003" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Jombang</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509012003"/>
+        <field name="latitude">-8.244459</field>
+        <field name="longitude">113.348333</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509012001'), ref('satu_data.jember_desa_3509012002'), ref('satu_data.jember_desa_3509012003'), ref('satu_data.jember_desa_3509012004'), ref('satu_data.jember_desa_3509012005'), ref('satu_data.jember_desa_3509012006')])]"/>
+    </record>
+    <record id="faskes_3509022004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Kencong</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509022004"/>
+        <field name="latitude">-8.262379</field>
+        <field name="longitude">113.368031</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509022001'), ref('satu_data.jember_desa_3509022002'), ref('satu_data.jember_desa_3509022003'), ref('satu_data.jember_desa_3509022004'), ref('satu_data.jember_desa_3509022005')])]"/>
+    </record>
+    <record id="faskes_3509032006" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Sumberagung</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509032006"/>
+        <field name="latitude">-8.169894</field>
+        <field name="longitude">113.387243</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509032001'), ref('satu_data.jember_desa_3509032002'), ref('satu_data.jember_desa_3509032003'), ref('satu_data.jember_desa_3509032004'), ref('satu_data.jember_desa_3509032005'), ref('satu_data.jember_desa_3509032006'), ref('satu_data.jember_desa_3509032007'), ref('satu_data.jember_desa_3509032008'), ref('satu_data.jember_desa_3509032009'), ref('satu_data.jember_desa_3509032010')])]"/>
+    </record>
+    <record id="faskes_3509042003" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Gumukmas</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509042003"/>
+        <field name="latitude">-8.315048</field>
+        <field name="longitude">113.395854</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509042001'), ref('satu_data.jember_desa_3509042002'), ref('satu_data.jember_desa_3509042003'), ref('satu_data.jember_desa_3509042004'), ref('satu_data.jember_desa_3509042005'), ref('satu_data.jember_desa_3509042006'), ref('satu_data.jember_desa_3509042007'), ref('satu_data.jember_desa_3509042008')])]"/>
+    </record>
+    <record id="faskes_3509052006" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Umbulsari</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509052006"/>
+        <field name="latitude">-8.248055</field>
+        <field name="longitude">113.444594</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509052001'), ref('satu_data.jember_desa_3509052002'), ref('satu_data.jember_desa_3509052003'), ref('satu_data.jember_desa_3509052004'), ref('satu_data.jember_desa_3509052005'), ref('satu_data.jember_desa_3509052006'), ref('satu_data.jember_desa_3509052007'), ref('satu_data.jember_desa_3509052008'), ref('satu_data.jember_desa_3509052009'), ref('satu_data.jember_desa_3509052010')])]"/>
+    </record>
+    <record id="faskes_3509062005" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Manggisan</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509062005"/>
+        <field name="latitude">-8.069548</field>
+        <field name="longitude">113.501289</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509062001'), ref('satu_data.jember_desa_3509062002'), ref('satu_data.jember_desa_3509062003'), ref('satu_data.jember_desa_3509062004'), ref('satu_data.jember_desa_3509062005'), ref('satu_data.jember_desa_3509062006'), ref('satu_data.jember_desa_3509062007'), ref('satu_data.jember_desa_3509062008')])]"/>
+    </record>
+    <record id="faskes_3509072004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Semboro</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509072004"/>
+        <field name="latitude">-8.195222</field>
+        <field name="longitude">113.441053</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509072001'), ref('satu_data.jember_desa_3509072002'), ref('satu_data.jember_desa_3509072003'), ref('satu_data.jember_desa_3509072004'), ref('satu_data.jember_desa_3509072005'), ref('satu_data.jember_desa_3509072006')])]"/>
+    </record>
+    <record id="faskes_3509082004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Pugerkulon</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509082004"/>
+        <field name="latitude">-8.477716</field>
+        <field name="longitude">113.335926</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509082001'), ref('satu_data.jember_desa_3509082002'), ref('satu_data.jember_desa_3509082003'), ref('satu_data.jember_desa_3509082004'), ref('satu_data.jember_desa_3509082005'), ref('satu_data.jember_desa_3509082006')])]"/>
+    </record>
+    <record id="faskes_3509082010" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Jambearum</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">non_rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509082010"/>
+        <field name="latitude">-8.297589</field>
+        <field name="longitude">113.500762</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509082007'), ref('satu_data.jember_desa_3509082008'), ref('satu_data.jember_desa_3509082009'), ref('satu_data.jember_desa_3509082010'), ref('satu_data.jember_desa_3509082011'), ref('satu_data.jember_desa_3509082012')])]"/>
+    </record>
+    <record id="faskes_3509092003" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Bangsalsari</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509092003"/>
+        <field name="latitude">-8.207404</field>
+        <field name="longitude">113.530646</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509092001'), ref('satu_data.jember_desa_3509092002'), ref('satu_data.jember_desa_3509092003'), ref('satu_data.jember_desa_3509092004'), ref('satu_data.jember_desa_3509092005'), ref('satu_data.jember_desa_3509092006'), ref('satu_data.jember_desa_3509092007'), ref('satu_data.jember_desa_3509092008'), ref('satu_data.jember_desa_3509092009'), ref('satu_data.jember_desa_3509092010'), ref('satu_data.jember_desa_3509092011')])]"/>
+    </record>
+    <record id="faskes_3509102005" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Balunglor</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509102005"/>
+        <field name="latitude">-8.271256</field>
+        <field name="longitude">113.539686</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509102001'), ref('satu_data.jember_desa_3509102002'), ref('satu_data.jember_desa_3509102003'), ref('satu_data.jember_desa_3509102004'), ref('satu_data.jember_desa_3509102005'), ref('satu_data.jember_desa_3509102006'), ref('satu_data.jember_desa_3509102007'), ref('satu_data.jember_desa_3509102008')])]"/>
+    </record>
+    <record id="faskes_3509112004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Dukuhdempok</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509112004"/>
+        <field name="latitude">-8.33013</field>
+        <field name="longitude">113.543168</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509112001'), ref('satu_data.jember_desa_3509112002'), ref('satu_data.jember_desa_3509112003'), ref('satu_data.jember_desa_3509112004'), ref('satu_data.jember_desa_3509112005'), ref('satu_data.jember_desa_3509112006'), ref('satu_data.jember_desa_3509112007')])]"/>
+    </record>
+    <record id="faskes_3509122004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Ambulu</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509122004"/>
+        <field name="latitude">-8.345061</field>
+        <field name="longitude">113.618909</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509122001'), ref('satu_data.jember_desa_3509122002'), ref('satu_data.jember_desa_3509122003'), ref('satu_data.jember_desa_3509122004'), ref('satu_data.jember_desa_3509122005'), ref('satu_data.jember_desa_3509122006'), ref('satu_data.jember_desa_3509122007')])]"/>
+    </record>
+    <record id="faskes_3509132006" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Rambipuji</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509132006"/>
+        <field name="latitude">-8.211349</field>
+        <field name="longitude">113.604788</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509132001'), ref('satu_data.jember_desa_3509132002'), ref('satu_data.jember_desa_3509132003'), ref('satu_data.jember_desa_3509132004'), ref('satu_data.jember_desa_3509132005'), ref('satu_data.jember_desa_3509132006'), ref('satu_data.jember_desa_3509132007'), ref('satu_data.jember_desa_3509132008')])]"/>
+    </record>
+    <record id="faskes_3509142003" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Panti</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509142003"/>
+        <field name="latitude">-8.144195</field>
+        <field name="longitude">113.613769</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509142001'), ref('satu_data.jember_desa_3509142002'), ref('satu_data.jember_desa_3509142003'), ref('satu_data.jember_desa_3509142004'), ref('satu_data.jember_desa_3509142005'), ref('satu_data.jember_desa_3509142006'), ref('satu_data.jember_desa_3509142007')])]"/>
+    </record>
+    <record id="faskes_3509152003" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Sukorambi</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509152003"/>
+        <field name="latitude">-8.136556</field>
+        <field name="longitude">113.659123</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509152001'), ref('satu_data.jember_desa_3509152002'), ref('satu_data.jember_desa_3509152003'), ref('satu_data.jember_desa_3509152004'), ref('satu_data.jember_desa_3509152005')])]"/>
+    </record>
+    <record id="faskes_3509162003" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Jenggawah</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509162003"/>
+        <field name="latitude">-8.259229</field>
+        <field name="longitude">113.673059</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509162001'), ref('satu_data.jember_desa_3509162002'), ref('satu_data.jember_desa_3509162003'), ref('satu_data.jember_desa_3509162004'), ref('satu_data.jember_desa_3509162005'), ref('satu_data.jember_desa_3509162006'), ref('satu_data.jember_desa_3509162007'), ref('satu_data.jember_desa_3509162008')])]"/>
+    </record>
+    <record id="faskes_3509172004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Ajung</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509172004"/>
+        <field name="latitude">-8.214606</field>
+        <field name="longitude">113.669865</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509172001'), ref('satu_data.jember_desa_3509172002'), ref('satu_data.jember_desa_3509172003'), ref('satu_data.jember_desa_3509172004'), ref('satu_data.jember_desa_3509172005'), ref('satu_data.jember_desa_3509172006'), ref('satu_data.jember_desa_3509172007')])]"/>
+    </record>
+    <record id="faskes_3509182002" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Tempurejo</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509182002"/>
+        <field name="latitude">-8.303578</field>
+        <field name="longitude">113.696894</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509182001'), ref('satu_data.jember_desa_3509182002'), ref('satu_data.jember_desa_3509182003'), ref('satu_data.jember_desa_3509182004'), ref('satu_data.jember_desa_3509182005'), ref('satu_data.jember_desa_3509182006'), ref('satu_data.jember_desa_3509182007'), ref('satu_data.jember_desa_3509182008')])]"/>
+    </record>
+    <record id="faskes_3509191004" model="satu_data.faskes">
+        <field name="name">Puskesmas Kelurahan Kaliwates</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">non_rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509191004"/>
+        <field name="latitude">-8.180772</field>
+        <field name="longitude">113.675681</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509191001'), ref('satu_data.jember_desa_3509191002'), ref('satu_data.jember_desa_3509191003'), ref('satu_data.jember_desa_3509191004'), ref('satu_data.jember_desa_3509191005'), ref('satu_data.jember_desa_3509191006'), ref('satu_data.jember_desa_3509191007')])]"/>
+    </record>
+    <record id="faskes_3509201007" model="satu_data.faskes">
+        <field name="name">Puskesmas Kelurahan Patrang</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">non_rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509201007"/>
+        <field name="latitude">-8.146169</field>
+        <field name="longitude">113.713125</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509201001'), ref('satu_data.jember_desa_3509201002'), ref('satu_data.jember_desa_3509201003'), ref('satu_data.jember_desa_3509201004'), ref('satu_data.jember_desa_3509201005'), ref('satu_data.jember_desa_3509201006'), ref('satu_data.jember_desa_3509201007'), ref('satu_data.jember_desa_3509201008')])]"/>
+    </record>
+    <record id="faskes_3509211002" model="satu_data.faskes">
+        <field name="name">Puskesmas Kelurahan Sumbersari</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">non_rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509211002"/>
+        <field name="latitude">-8.170829</field>
+        <field name="longitude">113.717111</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509211001'), ref('satu_data.jember_desa_3509211002'), ref('satu_data.jember_desa_3509211003'), ref('satu_data.jember_desa_3509211004'), ref('satu_data.jember_desa_3509211005'), ref('satu_data.jember_desa_3509211006'), ref('satu_data.jember_desa_3509211007')])]"/>
+    </record>
+    <record id="faskes_3509222003" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Arjasa</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509222003"/>
+        <field name="latitude">-8.108533</field>
+        <field name="longitude">113.736831</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509222001'), ref('satu_data.jember_desa_3509222002'), ref('satu_data.jember_desa_3509222003'), ref('satu_data.jember_desa_3509222004'), ref('satu_data.jember_desa_3509222005'), ref('satu_data.jember_desa_3509222006')])]"/>
+    </record>
+    <record id="faskes_3509232004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Mumbulsari</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509232004"/>
+        <field name="latitude">-8.253704</field>
+        <field name="longitude">113.73274</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509232001'), ref('satu_data.jember_desa_3509232002'), ref('satu_data.jember_desa_3509232003'), ref('satu_data.jember_desa_3509232004'), ref('satu_data.jember_desa_3509232005'), ref('satu_data.jember_desa_3509232006'), ref('satu_data.jember_desa_3509232007')])]"/>
+    </record>
+    <record id="faskes_3509242007" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Pakusari</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509242007"/>
+        <field name="latitude">-8.174151</field>
+        <field name="longitude">113.78213</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509242001'), ref('satu_data.jember_desa_3509242002'), ref('satu_data.jember_desa_3509242003'), ref('satu_data.jember_desa_3509242004'), ref('satu_data.jember_desa_3509242005'), ref('satu_data.jember_desa_3509242006'), ref('satu_data.jember_desa_3509242007')])]"/>
+    </record>
+    <record id="faskes_3509252004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Jelbuk</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509252004"/>
+        <field name="latitude">-8.078624</field>
+        <field name="longitude">113.764007</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509252001'), ref('satu_data.jember_desa_3509252002'), ref('satu_data.jember_desa_3509252003'), ref('satu_data.jember_desa_3509252004'), ref('satu_data.jember_desa_3509252005'), ref('satu_data.jember_desa_3509252006')])]"/>
+    </record>
+    <record id="faskes_3509262002" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Mayang</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509262002"/>
+        <field name="latitude">-8.189175</field>
+        <field name="longitude">113.785553</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509262001'), ref('satu_data.jember_desa_3509262002'), ref('satu_data.jember_desa_3509262003'), ref('satu_data.jember_desa_3509262004'), ref('satu_data.jember_desa_3509262005'), ref('satu_data.jember_desa_3509262006'), ref('satu_data.jember_desa_3509262007')])]"/>
+    </record>
+    <record id="faskes_3509272004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Sumberkalong</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509272004"/>
+        <field name="latitude">-8.088357</field>
+        <field name="longitude">113.793254</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509272001'), ref('satu_data.jember_desa_3509272002'), ref('satu_data.jember_desa_3509272003'), ref('satu_data.jember_desa_3509272004'), ref('satu_data.jember_desa_3509272005'), ref('satu_data.jember_desa_3509272006')])]"/>
+    </record>
+    <record id="faskes_3509272007" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Kalisat</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">non_rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509272007"/>
+        <field name="latitude">-8.115118</field>
+        <field name="longitude">113.808462</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509272007'), ref('satu_data.jember_desa_3509272008'), ref('satu_data.jember_desa_3509272009'), ref('satu_data.jember_desa_3509272010'), ref('satu_data.jember_desa_3509272011'), ref('satu_data.jember_desa_3509272012')])]"/>
+    </record>
+    <record id="faskes_3509282006" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Ledokombo</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509282006"/>
+        <field name="latitude">-8.125629</field>
+        <field name="longitude">113.868674</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509282001'), ref('satu_data.jember_desa_3509282002'), ref('satu_data.jember_desa_3509282003'), ref('satu_data.jember_desa_3509282004'), ref('satu_data.jember_desa_3509282005'), ref('satu_data.jember_desa_3509282006'), ref('satu_data.jember_desa_3509282007'), ref('satu_data.jember_desa_3509282008'), ref('satu_data.jember_desa_3509282009'), ref('satu_data.jember_desa_3509282010')])]"/>
+    </record>
+    <record id="faskes_3509292004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Sukowono</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509292004"/>
+        <field name="latitude">-8.061103</field>
+        <field name="longitude">113.833177</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509292001'), ref('satu_data.jember_desa_3509292002'), ref('satu_data.jember_desa_3509292003'), ref('satu_data.jember_desa_3509292004'), ref('satu_data.jember_desa_3509292005'), ref('satu_data.jember_desa_3509292006')])]"/>
+    </record>
+    <record id="faskes_3509292010" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Pocangan</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">non_rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509292010"/>
+        <field name="latitude">-8.032814</field>
+        <field name="longitude">113.856785</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509292007'), ref('satu_data.jember_desa_3509292008'), ref('satu_data.jember_desa_3509292009'), ref('satu_data.jember_desa_3509292010'), ref('satu_data.jember_desa_3509292011'), ref('satu_data.jember_desa_3509292012')])]"/>
+    </record>
+    <record id="faskes_3509302004" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Silo</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509302004"/>
+        <field name="latitude">-8.228939</field>
+        <field name="longitude">113.866736</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509302001'), ref('satu_data.jember_desa_3509302002'), ref('satu_data.jember_desa_3509302003'), ref('satu_data.jember_desa_3509302004'), ref('satu_data.jember_desa_3509302005'), ref('satu_data.jember_desa_3509302006'), ref('satu_data.jember_desa_3509302007'), ref('satu_data.jember_desa_3509302008'), ref('satu_data.jember_desa_3509302009')])]"/>
+    </record>
+    <record id="faskes_3509312006" model="satu_data.faskes">
+        <field name="name">Puskesmas Desa Sumberjambe</field>
+        <field name="jenis">puskesmas</field>
+        <field name="kategori">rawat_inap</field>
+        <field name="desa_id" ref="satu_data.jember_desa_3509312006"/>
+        <field name="latitude">-8.067213</field>
+        <field name="longitude">113.900801</field>
+        <field name="wilayah_kerja_ids" eval="[(6, 0, [ref('satu_data.jember_desa_3509312001'), ref('satu_data.jember_desa_3509312002'), ref('satu_data.jember_desa_3509312003'), ref('satu_data.jember_desa_3509312004'), ref('satu_data.jember_desa_3509312005'), ref('satu_data.jember_desa_3509312006'), ref('satu_data.jember_desa_3509312007'), ref('satu_data.jember_desa_3509312008'), ref('satu_data.jember_desa_3509312009')])]"/>
+    </record>
+</odoo>

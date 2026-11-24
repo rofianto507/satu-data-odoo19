@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- Tata letak sidebar mengikuti dashboard modul digital_kamtibmas. -->
+<t t-name="satu_data.DashboardShell">
+<div class="sd-shell" t-att-class="{ 'sd-shell--lipat': state.lipat }">
+
+    <nav class="sd-sidebar" aria-label="Pilih dashboard">
+
+        <!-- Logo wilayah = logo company aktif (Konfigurasi > Identitas Wilayah) -->
+        <div class="sd-sidebar-brand">
+            <img t-if="!state.tanpaLogo" class="sd-sidebar-logo" t-att-src="urlLogo"
+                 t-att-alt="namaWilayah ? 'Logo ' + namaWilayah : 'Logo wilayah'"
+                 t-att-title="namaWilayah" t-on-error="() => this.state.tanpaLogo = true"/>
+        </div>
+
+        <div class="sd-sidebar-seksi">
+            <div class="sd-sidebar-judul">Dashboard</div>
+            <ul class="sd-sidebar-daftar">
+                <li t-foreach="daftarSektor" t-as="s" t-key="s.kode">
+                    <button type="button" class="sd-sidebar-item"
+                            t-att-class="{ 'sd-sidebar-item--aktif': s.kode === state.aktif }"
+                            t-att-aria-current="s.kode === state.aktif ? 'page' : false"
+                            t-att-title="s.nama" t-on-click="() => this.pilih(s.kode)">
+                        <i t-attf-class="fa {{ s.ikon or 'fa-bar-chart' }}" aria-hidden="true"/>
+                        <span t-esc="s.nama"/>
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tombol ciut di paling bawah -->
+        <div class="sd-sidebar-kaki">
+            <button type="button" class="sd-sidebar-lipat" t-on-click="toggleLipat"
+                    t-att-title="state.lipat ? 'Buka sidebar' : 'Tutup sidebar'"
+                    t-att-aria-expanded="state.lipat ? 'false' : 'true'">
+                <i t-att-class="state.lipat ? 'fa fa-chevron-right' : 'fa fa-chevron-left'" aria-hidden="true"/>
+            </button>
+        </div>
+    </nav>
+
+    <main class="sd-shell-isi">
+        <t t-if="sektorAktif">
+            <t t-component="sektorAktif.Component" t-key="sektorAktif.kode"/>
+        </t>
+        <div t-else="" class="sd-shell-kosong">
+            <i class="fa fa-bar-chart fa-3x" aria-hidden="true"/>
+            <p class="mb-1">Belum ada dashboard data sektor yang terpasang.</p>
+            <p class="text-muted">Pasang modul sektor, misalnya Satu Data - Kependudukan.</p>
+        </div>
+    </main>
+
+</div>
+</t>
+
+</templates>

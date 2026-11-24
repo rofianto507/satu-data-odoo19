@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Wizard: buat periode baku satu tahun (12 bulan, 4 triwulan, 2 semester, 1 tahun) -->
+    <record id="view_periode_generator_form" model="ir.ui.view">
+        <field name="name">satu_data.periode.generator.form</field>
+        <field name="model">satu_data.periode.generator</field>
+        <field name="arch" type="xml">
+            <form string="Buat Periode Baku">
+                <group>
+                    <field name="tahun" options="{'format': false}"/>
+                    <field name="frekuensi"/>
+                </group>
+                <div class="text-muted">
+                    Periode yang sudah ada (nama atau rentang tanggal sama) dilewati.
+                    Contoh nama: "Januari 2026", "2026 Triwulan I", "2026 Semester I", "Tahun 2026".
+                </div>
+                <footer>
+                    <button string="Buat" name="action_buat" type="object" class="btn-primary"/>
+                    <button string="Batal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_periode_generator" model="ir.actions.act_window">
+        <field name="name">Buat Periode Baku</field>
+        <field name="res_model">satu_data.periode.generator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="group_ids" eval="[(4, ref('group_satu_data_admin'))]"/>
+    </record>
+
+    <record id="view_periode_list" model="ir.ui.view">
+        <field name="name">satu_data.periode.list</field>
+        <field name="model">satu_data.periode</field>
+        <field name="arch" type="xml">
+            <list string="Periode Data">
+                <header>
+                    <button name="%(action_periode_generator)d" type="action" string="Buat Periode Baku"
+                            class="btn-secondary" display="always" groups="satu_data.group_satu_data_admin"/>
+                </header>
+                <field name="name"/>
+                <field name="frekuensi"/>
+                <field name="tanggal_mulai"/>
+                <field name="tanggal_akhir"/>
+                <field name="jumlah_data"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_periode_form" model="ir.ui.view">
+        <field name="name">satu_data.periode.form</field>
+        <field name="model">satu_data.periode</field>
+        <field name="arch" type="xml">
+            <form string="Periode Data">
+                <sheet>
+                    <!-- Modul sektor menambahkan tombol data per periode di sini. -->
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Diarsipkan" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Contoh: 2026 Semester I"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="frekuensi"/>
+                            <field name="tanggal_mulai"/>
+                            <field name="tanggal_akhir"/>
+                            <field name="tahun" options="{'format': false}"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        Periode berlaku untuk semua wilayah. Rentang tanggal tidak boleh bertumpuk dengan
+                        periode lain yang frekuensinya sama (periode bulanan boleh berada di dalam semester).
+                        Periode yang sudah dipakai data tidak bisa dihapus; arsipkan saja.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_periode_search" model="ir.ui.view">
+        <field name="name">satu_data.periode.search</field>
+        <field name="model">satu_data.periode</field>
+        <field name="arch" type="xml">
+            <search string="Cari Periode">
+                <field name="name"/>
+                <field name="tahun"/>
+                <separator/>
+                <filter string="Bulanan" name="bulanan" domain="[('frekuensi', '=', 'bulanan')]"/>
+                <filter string="Triwulanan" name="triwulanan" domain="[('frekuensi', '=', 'triwulanan')]"/>
+                <filter string="Semesteran" name="semesteran" domain="[('frekuensi', '=', 'semesteran')]"/>
+                <filter string="Tahunan" name="tahunan" domain="[('frekuensi', '=', 'tahunan')]"/>
+                <separator/>
+                <filter string="Diarsipkan" name="arsip" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Frekuensi" name="group_frekuensi" context="{'group_by': 'frekuensi'}"/>
+                    <filter string="Tahun" name="group_tahun" context="{'group_by': 'tahun'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_periode" model="ir.actions.act_window">
+        <field name="name">Periode Data</field>
+        <field name="res_model">satu_data.periode</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_periode_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tambahkan periode data pertama</p>
+            <p>Pakai tombol "Buat Periode Baku" untuk membuat 12 periode bulanan, triwulan,
+               semester, atau tahunan sekaligus. Periode dipilih saat mengisi data sektoral.</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="satu_data.GeojsonPetaField">
+<div class="sd-geo">
+    <div class="sd-geo-alat" role="toolbar" aria-label="Alat edit batas wilayah">
+        <t t-if="bisaEdit">
+            <button type="button" class="btn btn-sm btn-light" t-on-click="batalkan"
+                    t-att-disabled="!state.bisaUndo" title="Batalkan perubahan terakhir (Ctrl+Z)">
+                <i class="fa fa-undo" aria-hidden="true"/> Batalkan
+            </button>
+            <button type="button" class="btn btn-sm btn-light" t-on-click="hapusTitikTerpilih"
+                    t-att-disabled="!state.terpilih" title="Hapus titik terpilih (Delete)">
+                <i class="fa fa-times-circle" aria-hidden="true"/> Hapus titik
+            </button>
+            <button type="button" class="btn btn-sm btn-light" t-on-click="hapusBagian"
+                    t-att-disabled="!state.terpilih"
+                    title="Buang seluruh bagian area (pulau atau lubang) tempat titik terpilih berada">
+                <i class="fa fa-trash" aria-hidden="true"/> Hapus bagian
+            </button>
+            <button t-if="!state.menggambar" type="button" class="btn btn-sm btn-light" t-on-click="mulaiGambar"
+                    title="Gambar bagian area baru dengan klik di peta">
+                <i class="fa fa-pencil" aria-hidden="true"/> Gambar bagian baru
+            </button>
+            <button t-else="" type="button" class="btn btn-sm btn-primary" t-on-click="selesaiGambar"
+                    title="Selesai menggambar (Esc)">
+                <i class="fa fa-check" aria-hidden="true"/> Selesai menggambar
+            </button>
+        </t>
+        <span class="sd-geo-alat-pemisah"/>
+        <button type="button" class="btn btn-sm btn-light" t-on-click="paskan"
+                t-att-disabled="!state.jumlahTitik" title="Paskan peta ke batas wilayah">
+            <i class="fa fa-crosshairs" aria-hidden="true"/> Paskan
+        </button>
+        <button type="button" class="btn btn-sm" t-att-class="state.modeTeks ? 'btn-secondary' : 'btn-light'"
+                t-on-click="toggleTeks" title="Tampilkan atau sembunyikan teks GeoJSON">
+            <i class="fa fa-code" aria-hidden="true"/> Teks GeoJSON
+        </button>
+    </div>
+
+    <div t-if="bisaEdit" class="sd-geo-petunjuk">
+        <t t-if="state.menggambar">
+            Klik di peta untuk menambah titik. Klik titik pertama, tombol "Selesai menggambar",
+            atau Esc untuk menutup area.
+        </t>
+        <t t-else="">
+            Seret titik untuk memindah. Klik titik kecil di tengah garis untuk menambah titik
+            (bisa langsung diseret). Klik kanan titik, atau pilih lalu tekan Delete, untuk menghapus.
+        </t>
+    </div>
+
+    <div t-if="state.galat" class="alert alert-warning py-2 mb-2" role="alert" t-esc="state.galat"/>
+
+    <div class="sd-geo-bingkai">
+        <div class="sd-geo-peta" t-att-class="{ 'sd-geo-peta--gambar': state.menggambar }"
+             t-ref="peta" tabindex="0"/>
+        <label t-if="state.pilihanPetaDasar.length" class="sd-geo-peta-dasar" title="Peta dasar">
+            <i class="fa fa-globe" aria-hidden="true"/>
+            <select class="form-select form-select-sm" t-on-change="pilihPetaDasar">
+                <t t-foreach="state.pilihanPetaDasar" t-as="pd" t-key="pd.kode">
+                    <option t-att-value="pd.kode" t-att-selected="pd.kode === state.petaDasar" t-esc="pd.nama"/>
+                </t>
+                <option value="tanpa" t-att-selected="state.petaDasar === 'tanpa'">Tanpa peta dasar</option>
+            </select>
+        </label>
+        <div t-if="state.terlaluBanyak and bisaEdit" class="sd-geo-info">
+            <i class="fa fa-search-plus" aria-hidden="true"/> Perbesar peta untuk menampilkan titik yang bisa diedit.
+        </div>
+        <div t-if="state.tanpaLeaflet" class="sd-geo-info">Pustaka peta (Leaflet) tidak termuat.</div>
+    </div>
+
+    <div class="sd-geo-ringkas">
+        <t t-if="state.jumlahTitik">
+            <t t-esc="state.jumlahTitik"/> titik · <t t-esc="state.jumlahPoligon"/> bagian area
+        </t>
+        <t t-else="">Belum ada batas wilayah. Pakai "Gambar bagian baru" atau tempel teks GeoJSON.</t>
+        <span class="sd-geo-legenda">
+            <span class="sd-geo-legenda-garis sd-geo-legenda-garis--acuan"/> wilayah sekitar
+        </span>
+    </div>
+
+    <textarea t-if="state.modeTeks" class="form-control font-monospace sd-geo-teks" rows="8"
+              t-att-value="nilai || ''" t-att-readonly="!bisaEdit" t-on-change="ubahTeks"
+              placeholder='{"type": "Polygon", "coordinates": [[[bujur, lintang], ...]]}'/>
+</div>
+</t>
+
+</templates>

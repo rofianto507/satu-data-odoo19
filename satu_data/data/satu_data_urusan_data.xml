@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Urusan pemerintahan daerah (UU 23/2014). Kode mengikuti klasifikasi urusan
+    Permendagri 90/2019 dan pemutakhirannya. noupdate: boleh disesuaikan admin.
+-->
+<odoo noupdate="1">
+
+    <!-- Urusan wajib pelayanan dasar -->
+    <record id="urusan_1_01" model="satu_data.urusan">
+        <field name="kode">1.01</field>
+        <field name="name">Pendidikan</field>
+        <field name="jenis">wajib_dasar</field>
+    </record>
+    <record id="urusan_1_02" model="satu_data.urusan">
+        <field name="kode">1.02</field>
+        <field name="name">Kesehatan</field>
+        <field name="jenis">wajib_dasar</field>
+    </record>
+    <record id="urusan_1_03" model="satu_data.urusan">
+        <field name="kode">1.03</field>
+        <field name="name">Pekerjaan Umum dan Penataan Ruang</field>
+        <field name="jenis">wajib_dasar</field>
+    </record>
+    <record id="urusan_1_04" model="satu_data.urusan">
+        <field name="kode">1.04</field>
+        <field name="name">Perumahan Rakyat dan Kawasan Permukiman</field>
+        <field name="jenis">wajib_dasar</field>
+    </record>
+    <record id="urusan_1_05" model="satu_data.urusan">
+        <field name="kode">1.05</field>
+        <field name="name">Ketenteraman dan Ketertiban Umum serta Pelindungan Masyarakat</field>
+        <field name="jenis">wajib_dasar</field>
+    </record>
+    <record id="urusan_1_06" model="satu_data.urusan">
+        <field name="kode">1.06</field>
+        <field name="name">Sosial</field>
+        <field name="jenis">wajib_dasar</field>
+    </record>
+
+    <!-- Urusan wajib non-pelayanan dasar -->
+    <record id="urusan_2_07" model="satu_data.urusan">
+        <field name="kode">2.07</field>
+        <field name="name">Tenaga Kerja</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_08" model="satu_data.urusan">
+        <field name="kode">2.08</field>
+        <field name="name">Pemberdayaan Perempuan dan Pelindungan Anak</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_09" model="satu_data.urusan">
+        <field name="kode">2.09</field>
+        <field name="name">Pangan</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_10" model="satu_data.urusan">
+        <field name="kode">2.10</field>
+        <field name="name">Pertanahan</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_11" model="satu_data.urusan">
+        <field name="kode">2.11</field>
+        <field name="name">Lingkungan Hidup</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_12" model="satu_data.urusan">
+        <field name="kode">2.12</field>
+        <field name="name">Administrasi Kependudukan dan Pencatatan Sipil</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_13" model="satu_data.urusan">
+        <field name="kode">2.13</field>
+        <field name="name">Pemberdayaan Masyarakat dan Desa</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_14" model="satu_data.urusan">
+        <field name="kode">2.14</field>
+        <field name="name">Pengendalian Penduduk dan Keluarga Berencana</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_15" model="satu_data.urusan">
+        <field name="kode">2.15</field>
+        <field name="name">Perhubungan</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_16" model="satu_data.urusan">
+        <field name="kode">2.16</field>
+        <field name="name">Komunikasi dan Informatika</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_17" model="satu_data.urusan">
+        <field name="kode">2.17</field>
+        <field name="name">Koperasi, Usaha Kecil, dan Menengah</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_18" model="satu_data.urusan">
+        <field name="kode">2.18</field>
+        <field name="name">Penanaman Modal</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_19" model="satu_data.urusan">
+        <field name="kode">2.19</field>
+        <field name="name">Kepemudaan dan Olahraga</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_20" model="satu_data.urusan">
+        <field name="kode">2.20</field>
+        <field name="name">Statistik</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_21" model="satu_data.urusan">
+        <field name="kode">2.21</field>
+        <field name="name">Persandian</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_22" model="satu_data.urusan">
+        <field name="kode">2.22</field>
+        <field name="name">Kebudayaan</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_23" model="satu_data.urusan">
+        <field name="kode">2.23</field>
+        <field name="name">Perpustakaan</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+    <record id="urusan_2_24" model="satu_data.urusan">
+        <field name="kode">2.24</field>
+        <field name="name">Kearsipan</field>
+        <field name="jenis">wajib_non_dasar</field>
+    </record>
+
+    <!-- Urusan pilihan -->
+    <record id="urusan_3_25" model="satu_data.urusan">
+        <field name="kode">3.25</field>
+        <field name="name">Kelautan dan Perikanan</field>
+        <field name="jenis">pilihan</field>
+    </record>
+    <record id="urusan_3_26" model="satu_data.urusan">
+        <field name="kode">3.26</field>
+        <field name="name">Pariwisata</field>
+        <field name="jenis">pilihan</field>
+    </record>
+    <record id="urusan_3_27" model="satu_data.urusan">
+        <field name="kode">3.27</field>
+        <field name="name">Pertanian</field>
+        <field name="jenis">pilihan</field>
+    </record>
+    <record id="urusan_3_28" model="satu_data.urusan">
+        <field name="kode">3.28</field>
+        <field name="name">Kehutanan</field>
+        <field name="jenis">pilihan</field>
+    </record>
+    <record id="urusan_3_29" model="satu_data.urusan">
+        <field name="kode">3.29</field>
+        <field name="name">Energi dan Sumber Daya Mineral</field>
+        <field name="jenis">pilihan</field>
+    </record>
+    <record id="urusan_3_30" model="satu_data.urusan">
+        <field name="kode">3.30</field>
+        <field name="name">Perdagangan</field>
+        <field name="jenis">pilihan</field>
+    </record>
+    <record id="urusan_3_31" model="satu_data.urusan">
+        <field name="kode">3.31</field>
+        <field name="name">Perindustrian</field>
+        <field name="jenis">pilihan</field>
+    </record>
+    <record id="urusan_3_32" model="satu_data.urusan">
+        <field name="kode">3.32</field>
+        <field name="name">Transmigrasi</field>
+        <field name="jenis">pilihan</field>
+    </record>
+
+    <!-- Unsur penunjang, pengawas, kewilayahan, dan lainnya -->
+    <record id="urusan_4_01" model="satu_data.urusan">
+        <field name="kode">4.01</field>
+        <field name="name">Sekretariat Daerah</field>
+        <field name="jenis">penunjang</field>
+    </record>
+    <record id="urusan_4_02" model="satu_data.urusan">
+        <field name="kode">4.02</field>
+        <field name="name">Sekretariat DPRD</field>
+        <field name="jenis">penunjang</field>
+    </record>
+    <record id="urusan_5_01" model="satu_data.urusan">
+        <field name="kode">5.01</field>
+        <field name="name">Perencanaan</field>
+        <field name="jenis">penunjang</field>
+    </record>
+    <record id="urusan_5_02" model="satu_data.urusan">
+        <field name="kode">5.02</field>
+        <field name="name">Keuangan</field>
+        <field name="jenis">penunjang</field>
+    </record>
+    <record id="urusan_5_03" model="satu_data.urusan">
+        <field name="kode">5.03</field>
+        <field name="name">Kepegawaian</field>
+        <field name="jenis">penunjang</field>
+    </record>
+    <record id="urusan_5_04" model="satu_data.urusan">
+        <field name="kode">5.04</field>
+        <field name="name">Pendidikan dan Pelatihan</field>
+        <field name="jenis">penunjang</field>
+    </record>
+    <record id="urusan_5_05" model="satu_data.urusan">
+        <field name="kode">5.05</field>
+        <field name="name">Penelitian dan Pengembangan</field>
+        <field name="jenis">penunjang</field>
+    </record>
+    <record id="urusan_6_01" model="satu_data.urusan">
+        <field name="kode">6.01</field>
+        <field name="name">Inspektorat Daerah</field>
+        <field name="jenis">penunjang</field>
+    </record>
+    <record id="urusan_7_01" model="satu_data.urusan">
+        <field name="kode">7.01</field>
+        <field name="name">Kecamatan</field>
+        <field name="jenis">penunjang</field>
+    </record>
+    <record id="urusan_8_01" model="satu_data.urusan">
+        <field name="kode">8.01</field>
+        <field name="name">Kesatuan Bangsa dan Politik</field>
+        <field name="jenis">penunjang</field>
+    </record>
+
+</odoo>

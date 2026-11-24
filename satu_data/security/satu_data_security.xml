@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Peran Satu Data Indonesia (Perpres 39/2019):
+        Pengguna Data < Produsen Data < Walidata < Admin (berjenjang), dan Pembina Data
+        (privilege terpisah). Hak tulis data tiap sektor diberikan lewat grup
+        "Produsen Data <Sektor>" milik modul sektor, yang di-imply oleh Walidata.
+    -->
+    <data noupdate="1">
+
+        <record id="module_category_satu_data" model="ir.module.category">
+            <field name="name">Satu Data</field>
+            <field name="sequence">60</field>
+        </record>
+
+        <!-- Odoo 19: grup dikelompokkan lewat res.groups.privilege -->
+        <record id="privilege_satu_data" model="res.groups.privilege">
+            <field name="name">Satu Data</field>
+            <field name="category_id" ref="module_category_satu_data"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="privilege_satu_data_pembina" model="res.groups.privilege">
+            <field name="name">Satu Data: Pembina Data</field>
+            <field name="category_id" ref="module_category_satu_data"/>
+            <field name="sequence">90</field>
+        </record>
+
+        <!-- Pengguna Data: membaca data terbit, dashboard, dan Daftar Data -->
+        <record id="group_satu_data_pengguna" model="res.groups">
+            <field name="name">Pengguna Data</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="privilege_satu_data"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Produsen Data: petugas OPD; mengajukan data untuk diperiksa. Hak tulis
+             data sektor lewat grup "Produsen Data <Sektor>" dari modul sektor. -->
+        <record id="group_satu_data_operator" model="res.groups">
+            <field name="name">Produsen Data</field>
+            <field name="sequence">20</field>
+            <field name="privilege_id" ref="privilege_satu_data"/>
+            <field name="implied_ids" eval="[(4, ref('group_satu_data_pengguna'))]"/>
+        </record>
+
+        <!-- Walidata (Diskominfo): memeriksa, menerbitkan/mengembalikan data,
+             mengelola Daftar Data dan metadata -->
+        <record id="group_satu_data_walidata" model="res.groups">
+            <field name="name">Walidata</field>
+            <field name="sequence">25</field>
+            <field name="privilege_id" ref="privilege_satu_data"/>
+            <field name="implied_ids" eval="[(4, ref('group_satu_data_operator'))]"/>
+        </record>
+
+        <!-- Admin: master wilayah, periode, instansi, identitas wilayah -->
+        <record id="group_satu_data_admin" model="res.groups">
+            <field name="name">Admin</field>
+            <field name="sequence">30</field>
+            <field name="privilege_id" ref="privilege_satu_data"/>
+            <field name="implied_ids" eval="[(4, ref('group_satu_data_walidata'))]"/>
+            <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <!-- Pembina Data (mis. BPS kabupaten): membaca dan memperbaiki standar data/metadata -->
+        <record id="group_satu_data_pembina" model="res.groups">
+            <field name="name">Pembina Data</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="privilege_satu_data_pembina"/>
+            <field name="implied_ids" eval="[(4, ref('group_satu_data_pengguna'))]"/>
+        </record>
+
+    </data>
+
+    <!-- Record rule berbasis company. Global (tanpa grup) agar berlaku untuk semua user. -->
+    <data>
+
+        <record id="rule_kecamatan_company" model="ir.rule">
+            <field name="name">Satu Data: kecamatan sesuai company</field>
+            <field name="model_id" ref="model_satu_data_kecamatan"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_desa_company" model="ir.rule">
+            <field name="name">Satu Data: desa/kelurahan sesuai company</field>
+            <field name="model_id" ref="model_satu_data_desa"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_instansi_company" model="ir.rule">
+            <field name="name">Satu Data: instansi sesuai company</field>
+            <field name="model_id" ref="model_satu_data_instansi"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_kegiatan_company" model="ir.rule">
+            <field name="name">Satu Data: metadata kegiatan sesuai company</field>
+            <field name="model_id" ref="model_satu_data_kegiatan"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_data_company" model="ir.rule">
+            <field name="name">Satu Data: daftar data sesuai company</field>
+            <field name="model_id" ref="model_satu_data_data"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_pengajuan_company" model="ir.rule">
+            <field name="name">Satu Data: pengajuan sesuai company</field>
+            <field name="model_id" ref="model_satu_data_pengajuan"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="rule_forum_company" model="ir.rule">
+            <field name="name">Satu Data: forum satu data sesuai company</field>
+            <field name="model_id" ref="model_satu_data_forum"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+    </data>
+</odoo>

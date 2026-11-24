@@ -1,0 +1,135 @@
+/* Editor peta batas wilayah (widget sd_geojson_peta) */
+
+.sd-geo {
+    width: 100%;
+    min-width: 0;
+}
+
+.sd-geo-alat {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.5rem;
+}
+
+.sd-geo-alat .btn-light {
+    background-color: #ffffff;
+    border-color: #d8dde6;
+}
+
+.sd-geo-alat-pemisah {
+    flex: 1 1 auto;
+}
+
+.sd-geo-petunjuk {
+    color: #6b7280;
+    font-size: 0.85em;
+    margin-bottom: 0.5rem;
+}
+
+.sd-geo-bingkai {
+    position: relative;
+    border: 1px solid #d8dde6;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.sd-geo-peta {
+    height: clamp(360px, 60vh, 720px);
+    background: #f3f4f6;
+    outline: none;
+}
+
+.sd-geo-peta:focus-visible {
+    box-shadow: inset 0 0 0 2px #2563eb;
+}
+
+.sd-geo-peta--gambar,
+.sd-geo-peta--gambar .leaflet-interactive {
+    cursor: crosshair;
+}
+
+.sd-geo-peta .sd-tile-abu {
+    filter: grayscale(1) contrast(0.9) brightness(1.05);
+}
+
+.sd-geo-peta-dasar {
+    position: absolute;
+    top: 0.6em;
+    right: 0.6em;
+    z-index: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    margin: 0;
+    padding: 0.2em 0.3em 0.2em 0.6em;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #d8dde6;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    color: #6b7280;
+    font-size: 0.85em;
+}
+
+.sd-geo-peta-dasar .form-select {
+    width: auto;
+    border: 0;
+    background-color: transparent;
+    box-shadow: none;
+    font-size: inherit;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+}
+
+.sd-geo-info {
+    position: absolute;
+    left: 50%;
+    bottom: 1.2em;
+    transform: translateX(-50%);
+    z-index: 800;
+    padding: 0.35em 0.8em;
+    background: rgba(17, 24, 39, 0.85);
+    color: #ffffff;
+    border-radius: 999px;
+    font-size: 0.85em;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.sd-geo-ringkas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5em;
+    margin: 0.4rem 0 0.5rem;
+    color: #6b7280;
+    font-size: 0.85em;
+}
+
+.sd-geo-legenda {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+}
+
+.sd-geo-legenda-garis {
+    display: inline-block;
+    width: 1.6em;
+    border-top: 1px dashed #6b7280;
+}
+
+.sd-geo-teks {
+    font-size: 0.8em;
+}
+
+@media (max-width: 575.98px) {
+    .sd-geo-peta {
+        height: 55vh;
+    }
+    .sd-geo-info {
+        white-space: normal;
+        width: 85%;
+        text-align: center;
+    }
+}

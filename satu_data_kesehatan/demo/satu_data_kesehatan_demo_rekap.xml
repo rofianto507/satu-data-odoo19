@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    CONTOH (fiktif), bukan data resmi. Periode bulanan/tahunan 2025–2026, sasaran tahunan
+    per desa, rekap bulanan per desa Januari 2025 s.d. Oktober 2026, dan pengajuan terbit.
+    Dibangkitkan oleh satu_data.kesehatan.demo._sd_demo_kesehatan (deterministik; tidak
+    mengisi ulang bila rekap sudah ada).
+-->
+<odoo>
+    <function model="satu_data.kesehatan.demo" name="_sd_demo_kesehatan"/>
+</odoo>

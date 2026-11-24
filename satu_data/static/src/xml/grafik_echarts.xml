@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="satu_data.Grafik">
+        <div class="sd-grafik-wadah">
+            <div t-ref="grafik" t-att-class="'sd-grafik-kanvas ' + (props.kelasKanvas or '') + (adaData ? '' : ' invisible')"/>
+            <div t-if="state.galat" class="sd-grafik-pesan">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"/> Pustaka grafik (ECharts) gagal dimuat.
+            </div>
+            <div t-elif="!adaData" class="sd-grafik-pesan">
+                <i class="fa fa-bar-chart" aria-hidden="true"/> <t t-esc="props.pesanKosong or 'Belum ada data.'"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

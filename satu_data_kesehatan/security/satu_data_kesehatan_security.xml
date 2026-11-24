@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="privilege_kesehatan" model="res.groups.privilege">
+            <field name="name">Satu Data: Kesehatan</field>
+            <field name="category_id" ref="satu_data.module_category_satu_data"/>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- Produsen Data sektor kesehatan (petugas Dinas Kesehatan): mengelola fasilitas
+             kesehatan, wilayah kerja puskesmas, dan data kesehatan, lalu mengajukannya. -->
+        <record id="group_produsen_kesehatan" model="res.groups">
+            <field name="name">Produsen Data Kesehatan</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="privilege_kesehatan"/>
+            <field name="implied_ids" eval="[(4, ref('satu_data.group_satu_data_operator'))]"/>
+        </record>
+    </data>
+
+    <!-- Walidata boleh memperbaiki data semua sektor (grup inti noupdate: pakai <function>). -->
+    <function model="res.groups" name="write"
+              eval="[[ref('satu_data.group_satu_data_walidata')],
+                     {'implied_ids': [(4, ref('group_produsen_kesehatan'))]}]"/>
+
+    <!-- Global (tanpa grup) agar berlaku untuk semua user. -->
+    <record id="rule_faskes_company" model="ir.rule">
+        <field name="name">Satu Data: fasilitas kesehatan sesuai company</field>
+        <field name="model_id" ref="model_satu_data_faskes"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_sasaran_company" model="ir.rule">
+        <field name="name">Satu Data: sasaran kesehatan sesuai company</field>
+        <field name="model_id" ref="model_satu_data_kesehatan_sasaran"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_rekap_company" model="ir.rule">
+        <field name="name">Satu Data: rekap kesehatan sesuai company</field>
+        <field name="model_id" ref="model_satu_data_kesehatan_rekap"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

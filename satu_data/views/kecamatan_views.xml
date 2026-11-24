@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_kecamatan_list" model="ir.ui.view">
+        <field name="name">satu_data.kecamatan.list</field>
+        <field name="model">satu_data.kecamatan</field>
+        <field name="arch" type="xml">
+            <list string="Kecamatan">
+                <field name="kode"/>
+                <field name="name"/>
+                <field name="jumlah_desa"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_kecamatan_form" model="ir.ui.view">
+        <field name="name">satu_data.kecamatan.form</field>
+        <field name="model">satu_data.kecamatan</field>
+        <field name="arch" type="xml">
+            <form string="Kecamatan">
+                <sheet>
+                    <widget name="web_ribbon" title="Diarsipkan" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Nama kecamatan"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="kode"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" invisible="1" groups="!base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="jumlah_desa"/>
+                            <field name="luas_km2"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Desa/Kelurahan" name="desa">
+                            <field name="desa_ids" readonly="1">
+                                <list>
+                                    <field name="kode"/>
+                                    <field name="name"/>
+                                    <field name="jenis"/>
+                                    <field name="luas_km2"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Batas Wilayah (GeoJSON)" name="geojson">
+                            <field name="geojson" nolabel="1" widget="sd_geojson_peta"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_kecamatan_search" model="ir.ui.view">
+        <field name="name">satu_data.kecamatan.search</field>
+        <field name="model">satu_data.kecamatan</field>
+        <field name="arch" type="xml">
+            <search string="Cari Kecamatan">
+                <field name="name" string="Nama atau Kode" filter_domain="['|', ('name', 'ilike', self), ('kode', 'ilike', self)]"/>
+                <separator/>
+                <filter string="Tanpa Batas Wilayah" name="tanpa_geojson" domain="[('geojson', '=', False)]"/>
+                <filter string="Diarsipkan" name="arsip" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_kecamatan" model="ir.actions.act_window">
+        <field name="name">Kecamatan</field>
+        <field name="res_model">satu_data.kecamatan</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_kecamatan_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tambahkan kecamatan pertama</p>
+            <p>Kecamatan menjadi wilayah tingkat pertama pada peta. Isi batas wilayahnya dalam format GeoJSON.</p>
+        </field>
+    </record>
+
+</odoo>

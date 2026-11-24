@@ -1,0 +1,633 @@
+/* Satu Data: dashboard peta kependudukan.
+ * Skala huruf dan jarak memakai clamp() agar terbaca dari ponsel (≈360 px)
+ * sampai layar ruang kendali (≥ 3840 px). */
+
+.o_satu_data {
+    --sd-bg:        #f3f5f8;
+    --sd-kartu:     #ffffff;
+    --sd-garis:     #e3e7ee;
+    --sd-teks:      #1f2937;
+    --sd-teks-2:    #5b6474;
+    --sd-aksen:     #2c7fb8;
+    --sd-laki:      #2c7fb8;
+    --sd-perempuan: #d95f8e;
+    --sd-radius:    clamp(4px, 0.25vw, 7px);
+    --sd-jarak:     clamp(10px, 1vw, 28px);
+
+    height: 100%;
+    /* Lebar selalu mengikuti layar, bukan lebar isi; tanpa ini header yang
+     * panjang bisa membuat seluruh dashboard melebar dan terpotong di kanan. */
+    width: 100%;
+    min-width: 0;
+    overflow: auto;
+    background: var(--sd-bg);
+    color: var(--sd-teks);
+    padding: var(--sd-jarak);
+    font-size: clamp(13px, 0.55vw + 7px, 26px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sd-jarak);
+}
+
+.o_satu_data:fullscreen {
+    background: var(--sd-bg);
+}
+
+/* ── Kepala ─────────────────────────────────────────────────────────────── */
+
+.o_satu_data .sd-kepala {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sd-jarak);
+}
+
+.o_satu_data .sd-eyebrow {
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sd-teks-2);
+}
+
+.o_satu_data .sd-kontrol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.o_satu_data .sd-kontrol .btn,
+.o_satu_data .sd-kontrol .form-select {
+    font-size: 0.9em;
+}
+
+.o_satu_data .sd-periode {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0;
+    color: var(--sd-teks-2);
+}
+
+.o_satu_data .sd-periode .form-select {
+    width: auto;
+    min-width: 11em;
+    /* Putih agar kontras dengan latar dashboard yang abu-abu muda */
+    background-color: #ffffff;
+    border-color: var(--sd-garis);
+    color: var(--sd-teks);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Pilihan peta dasar di pojok kanan atas kartu peta (gaya sama dengan legenda) */
+.o_satu_data .sd-peta-dasar {
+    position: absolute;
+    top: 0.8em;
+    right: 0.8em;
+    z-index: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    margin: 0;
+    padding: 0.25em 0.3em 0.25em 0.6em;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--sd-garis);
+    border-radius: var(--sd-radius);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    color: var(--sd-teks-2);
+    font-size: 0.85em;
+}
+
+.o_satu_data .sd-peta-dasar .form-select {
+    width: auto;
+    border: 0;
+    background-color: transparent;
+    box-shadow: none;
+    font-size: inherit;
+    padding-top: 0.15em;
+    padding-bottom: 0.15em;
+}
+
+/* ── Jejak level ────────────────────────────────────────────────────────── */
+
+.o_satu_data .sd-jejak {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6em;
+    color: var(--sd-teks-2);
+}
+
+.o_satu_data .sd-kembali {
+    font-size: 0.9em;
+}
+
+.o_satu_data .sd-jejak-item--aktif {
+    color: var(--sd-teks);
+    font-weight: 600;
+}
+
+.o_satu_data .sd-galat,
+.o_satu_data .sd-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6em;
+    margin: 0;
+}
+
+.o_satu_data .sd-memuat,
+.o_satu_data .sd-kosong {
+    padding: calc(var(--sd-jarak) * 3) var(--sd-jarak);
+    text-align: center;
+    color: var(--sd-teks-2);
+}
+
+/* ── KPI ────────────────────────────────────────────────────────────────── */
+
+.o_satu_data .sd-kpi {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--sd-jarak);
+    transition: opacity 0.15s;
+}
+
+.o_satu_data .sd-kpi--memuat {
+    opacity: 0.55;
+}
+
+.o_satu_data .sd-kpi-kartu,
+.o_satu_data .sd-kartu {
+    background: var(--sd-kartu);
+    border: 1px solid var(--sd-garis);
+    border-radius: var(--sd-radius);
+}
+
+.o_satu_data .sd-kpi-kartu {
+    padding: calc(var(--sd-jarak) * 0.9);
+    min-width: 0;
+}
+
+.o_satu_data .sd-kpi-label {
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    color: var(--sd-teks-2);
+    font-size: 0.85em;
+}
+
+/* Ikon di depan label KPI: kotak kecil berwarna lembut */
+.o_satu_data .sd-kpi-ikon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 1.9em;
+    height: 1.9em;
+    border-radius: calc(var(--sd-radius) * 0.8);
+    background: #e8f1f8;
+    color: var(--sd-aksen);
+    font-size: 0.95em;
+}
+
+.o_satu_data .sd-kpi-ikon--laki {
+    background: #e6f0f8;
+    color: var(--sd-laki);
+}
+
+.o_satu_data .sd-kpi-ikon--perempuan {
+    background: #fbeaf1;
+    color: var(--sd-perempuan);
+}
+
+.o_satu_data .sd-kpi-ikon--kk {
+    background: #fff3e0;
+    color: #c2410c;
+}
+
+.o_satu_data .sd-kpi-ikon--padat {
+    background: #eef2ee;
+    color: #3f6f4f;
+}
+
+.o_satu_data .sd-kpi-nilai {
+    font-size: 1.9em;
+    font-weight: 700;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.o_satu_data .sd-kpi-sub {
+    color: var(--sd-teks-2);
+    font-size: 0.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── Isi: peta + panel ──────────────────────────────────────────────────── */
+
+.o_satu_data .sd-isi {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(300px, 26vw, 900px);
+    gap: var(--sd-jarak);
+    min-height: 0;
+    flex: 1 0 auto;
+}
+
+.o_satu_data .sd-kartu-peta {
+    position: relative;
+    overflow: hidden;
+    min-height: clamp(380px, calc(100vh - 330px), 3000px);
+}
+
+.o_satu_data.sd-dash--layar-penuh .sd-kartu-peta {
+    min-height: calc(100vh - 300px);
+}
+
+.o_satu_data .sd-peta,
+.o_satu_data .sd-peta-kanvas {
+    position: absolute;
+    inset: 0;
+}
+
+.o_satu_data .sd-peta-kanvas {
+    background: #eef2f6;
+    font-size: inherit;
+}
+
+.o_satu_data .sd-peta-pesan {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 500;
+    max-width: 80%;
+    padding: 0.8em 1em;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--sd-garis);
+    border-radius: var(--sd-radius);
+    color: var(--sd-teks-2);
+    text-align: center;
+}
+
+.o_satu_data .sd-peta-memuat {
+    position: absolute;
+    top: 0.8em;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 900;
+    padding: 0.3em 0.8em;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    color: var(--sd-aksen);
+}
+
+/* Legenda */
+.o_satu_data .sd-legenda {
+    position: absolute;
+    right: 0.8em;
+    bottom: 1.8em;
+    z-index: 800;
+    padding: 0.6em 0.8em;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--sd-garis);
+    border-radius: var(--sd-radius);
+    font-size: 0.85em;
+    line-height: 1.5;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.o_satu_data .sd-legenda-judul {
+    font-weight: 600;
+    margin-bottom: 0.2em;
+}
+
+.o_satu_data .sd-legenda-baris {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-variant-numeric: tabular-nums;
+}
+
+.o_satu_data .sd-legenda-kotak {
+    width: 1.1em;
+    height: 1.1em;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    flex: none;
+}
+
+.o_satu_data .sd-legenda-kotak--kosong {
+    border-style: dashed;
+}
+
+/* Titik (mis. puskesmas) di atas wilayah */
+.o_satu_data .sd-legenda-titik {
+    width: 0.8em;
+    height: 0.8em;
+    margin: 0 0.15em;
+    border-radius: 50%;
+    border: 2px solid #111827;
+    background: #ffffff;
+    flex: none;
+}
+
+/* Peta dasar abu-abu: hanya data yang berwarna, nama tempat tetap terbaca */
+.o_satu_data .sd-tile-abu {
+    filter: grayscale(1) contrast(0.9) brightness(1.05);
+}
+
+/* Leaflet mengikuti skala huruf dashboard (penting di layar besar) */
+.o_satu_data .leaflet-container {
+    font: inherit;
+}
+
+.o_satu_data .leaflet-control-zoom a {
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    font-size: 1.2em;
+}
+
+.o_satu_data .sd-tooltip {
+    font-size: 1em;
+    padding: 0.4em 0.6em;
+}
+
+.o_satu_data .sd-tooltip-nama {
+    font-weight: 700;
+}
+
+.o_satu_data .sd-tooltip-angka {
+    font-variant-numeric: tabular-nums;
+}
+
+.o_satu_data .sd-tooltip-petunjuk {
+    color: var(--sd-teks-2);
+    font-size: 0.85em;
+}
+
+/* ── Panel ──────────────────────────────────────────────────────────────── */
+
+.o_satu_data .sd-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sd-jarak);
+    min-width: 0;
+    min-height: 0;
+}
+
+.o_satu_data .sd-detail,
+.o_satu_data .sd-daftar {
+    padding: var(--sd-jarak);
+}
+
+.o_satu_data .sd-detail-kepala {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5em;
+}
+
+.o_satu_data .sd-detail-judul {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.o_satu_data .sd-detail-nama {
+    font-size: 1.35em;
+    font-weight: 700;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.o_satu_data .sd-detail-kode {
+    color: var(--sd-teks-2);
+    font-size: 0.85em;
+}
+
+.o_satu_data .sd-detail-angka {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.35em 1em;
+    margin: 0.8em 0;
+}
+
+.o_satu_data .sd-detail-angka dt {
+    font-weight: 400;
+    color: var(--sd-teks-2);
+}
+
+.o_satu_data .sd-detail-angka dd {
+    margin: 0;
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.o_satu_data .sd-batang-lp {
+    display: flex;
+    height: 0.7em;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--sd-perempuan);
+}
+
+.o_satu_data .sd-batang-l {
+    background: var(--sd-laki);
+}
+
+.o_satu_data .sd-batang-p {
+    flex: 1;
+    background: var(--sd-perempuan);
+}
+
+.o_satu_data .sd-batang-keterangan {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+    color: var(--sd-teks-2);
+    margin-top: 0.2em;
+}
+
+.o_satu_data .sd-catatan {
+    color: var(--sd-teks-2);
+    font-size: 0.85em;
+    margin: 0.6em 0 0;
+}
+
+.o_satu_data .sd-buka-data {
+    margin-top: 0.8em;
+    font-size: 0.9em;
+}
+
+.o_satu_data .sd-daftar {
+    flex: 1 1 0;
+    min-height: 12em;
+    display: flex;
+    flex-direction: column;
+}
+
+.o_satu_data .sd-daftar-judul {
+    font-size: 1em;
+    font-weight: 700;
+    margin: 0 0 0.5em;
+}
+
+/* ── Kartu grafik lebar penuh (ECharts) ─────────────────────────────────── */
+
+.o_satu_data .sd-grafik {
+    padding: var(--sd-jarak);
+    flex: none;
+    min-width: 0;
+}
+
+.o_satu_data .sd-grafik-kepala {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25em 1em;
+    margin-bottom: 0.5em;
+}
+
+.o_satu_data .sd-grafik-judul {
+    font-size: 1em;
+    font-weight: 700;
+    margin: 0;
+}
+
+.o_satu_data .sd-grafik-sub {
+    color: var(--sd-teks-2);
+    font-size: 0.85em;
+}
+
+.o_satu_data .sd-grafik-wadah {
+    position: relative;
+}
+
+.o_satu_data .sd-grafik-kanvas {
+    width: 100%;
+    height: clamp(300px, 38vh, 720px);
+}
+
+.o_satu_data .sd-grafik-pesan {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    color: var(--sd-teks-2);
+}
+
+.o_satu_data .sd-daftar-isi {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    flex: 1 1 0;
+}
+
+.o_satu_data .sd-daftar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    width: 100%;
+    padding: 0.5em 0.4em;
+    border: 0;
+    border-bottom: 1px solid var(--sd-garis);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.o_satu_data .sd-daftar-item:hover,
+.o_satu_data .sd-daftar-item:focus-visible {
+    background: #eef4fa;
+}
+
+.o_satu_data .sd-daftar-item--aktif {
+    background: #e1edf7;
+    font-weight: 600;
+}
+
+.o_satu_data .sd-daftar-warna {
+    width: 0.9em;
+    height: 0.9em;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    flex: none;
+}
+
+.o_satu_data .sd-daftar-nama {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.o_satu_data .sd-daftar-nilai {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* ── Responsif ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 1199.98px) {
+    .o_satu_data .sd-kpi {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991.98px) {
+    .o_satu_data .sd-isi {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .o_satu_data .sd-kartu-peta {
+        min-height: max(320px, 60vh);
+    }
+    .o_satu_data .sd-daftar {
+        flex: none;
+    }
+    .o_satu_data .sd-daftar-isi {
+        max-height: 50vh;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .o_satu_data {
+        padding: 10px;
+        gap: 10px;
+    }
+    .o_satu_data .sd-kpi {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+    .o_satu_data .sd-kpi-kartu--utama {
+        grid-column: 1 / -1;
+    }
+    .o_satu_data .sd-label-tombol {
+        display: none;
+    }
+    .o_satu_data .sd-periode > span {
+        display: none;
+    }
+    .o_satu_data .sd-legenda {
+        right: 0.5em;
+        bottom: 1.6em;
+        font-size: 0.78em;
+    }
+    .o_satu_data .sd-peta-dasar {
+        top: 0.5em;
+        right: 0.5em;
+        font-size: 0.78em;
+    }
+}

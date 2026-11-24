@@ -1,0 +1,29 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kecamatan_pengguna,kecamatan pengguna,model_satu_data_kecamatan,group_satu_data_pengguna,1,0,0,0
+access_kecamatan_admin,kecamatan admin,model_satu_data_kecamatan,group_satu_data_admin,1,1,1,1
+access_desa_pengguna,desa pengguna,model_satu_data_desa,group_satu_data_pengguna,1,0,0,0
+access_desa_admin,desa admin,model_satu_data_desa,group_satu_data_admin,1,1,1,1
+access_periode_pengguna,periode pengguna,model_satu_data_periode,group_satu_data_pengguna,1,0,0,0
+access_periode_admin,periode admin,model_satu_data_periode,group_satu_data_admin,1,1,1,1
+access_periode_generator_admin,periode generator admin,model_satu_data_periode_generator,group_satu_data_admin,1,1,1,0
+access_identitas_wizard_admin,identitas wizard admin,model_satu_data_identitas_wizard,group_satu_data_admin,1,1,1,0
+access_instansi_pengguna,instansi pengguna,model_satu_data_instansi,group_satu_data_pengguna,1,0,0,0
+access_instansi_admin,instansi admin,model_satu_data_instansi,group_satu_data_admin,1,1,1,1
+access_topik_pengguna,topik pengguna,model_satu_data_topik,group_satu_data_pengguna,1,0,0,0
+access_topik_admin,topik admin,model_satu_data_topik,group_satu_data_admin,1,1,1,1
+access_kegiatan_pengguna,kegiatan pengguna,model_satu_data_kegiatan,group_satu_data_pengguna,1,0,0,0
+access_kegiatan_walidata,kegiatan walidata,model_satu_data_kegiatan,group_satu_data_walidata,1,1,1,0
+access_kegiatan_admin,kegiatan admin,model_satu_data_kegiatan,group_satu_data_admin,1,1,1,1
+access_data_pengguna,data pengguna,model_satu_data_data,group_satu_data_pengguna,1,0,0,0
+access_data_pembina,data pembina,model_satu_data_data,group_satu_data_pembina,1,1,0,0
+access_data_walidata,data walidata,model_satu_data_data,group_satu_data_walidata,1,1,1,0
+access_data_admin,data admin,model_satu_data_data,group_satu_data_admin,1,1,1,1
+access_pengajuan_pengguna,pengajuan pengguna,model_satu_data_pengajuan,group_satu_data_pengguna,1,0,0,0
+access_pengajuan_operator,pengajuan produsen,model_satu_data_pengajuan,group_satu_data_operator,1,1,1,0
+access_pengajuan_admin,pengajuan admin,model_satu_data_pengajuan,group_satu_data_admin,1,1,1,1
+access_pengajuan_wizard_operator,pengajuan wizard produsen,model_satu_data_pengajuan_wizard,group_satu_data_operator,1,1,1,0
+access_urusan_pengguna,urusan pengguna,model_satu_data_urusan,group_satu_data_pengguna,1,0,0,0
+access_urusan_admin,urusan admin,model_satu_data_urusan,group_satu_data_admin,1,1,1,1
+access_forum_pengguna,forum pengguna,model_satu_data_forum,group_satu_data_pengguna,1,0,0,0
+access_forum_walidata,forum walidata,model_satu_data_forum,group_satu_data_walidata,1,1,1,0
+access_forum_admin,forum admin,model_satu_data_forum,group_satu_data_admin,1,1,1,1
