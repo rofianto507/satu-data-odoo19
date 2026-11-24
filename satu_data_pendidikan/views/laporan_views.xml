@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Laporan Penduduk Usia Sekolah Tahunan: satu layar untuk mengisi, mengirim, dan memeriksa,
+         memakai model pengajuan modul inti (pola yang sama dengan kependudukan dan kesehatan). -->
+
+    <record id="action_buka_laporan_usia_sekolah" model="ir.actions.act_window">
+        <field name="name">Buka Laporan</field>
+        <field name="res_model">satu_data.pengajuan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_sektor': 'pendidikan_usia_sekolah'}</field>
+        <field name="group_ids" eval="[(4, ref('group_produsen_pendidikan'))]"/>
+    </record>
+
+    <record id="view_laporan_usia_sekolah_list" model="ir.ui.view">
+        <field name="name">satu_data.pengajuan.list.usia_sekolah</field>
+        <field name="model">satu_data.pengajuan</field>
+        <field name="priority">42</field>
+        <field name="arch" type="xml">
+            <list string="Laporan Penduduk Usia Sekolah" create="0" delete="0">
+                <header>
+                    <button name="%(action_buka_laporan_usia_sekolah)d" type="action"
+                            string="Buka Laporan Usia Sekolah" class="btn-primary" display="always"
+                            groups="satu_data_pendidikan.group_produsen_pendidikan"/>
+                </header>
+                <field name="periode_id" string="Tahun"/>
+                <field name="jumlah_terisi"/>
+                <field name="jumlah_kosong"/>
+                <field name="batas_pengajuan" optional="show"/>
+                <field name="ketepatan" widget="badge" optional="show"
+                       decoration-success="ketepatan == 'tepat'" decoration-danger="ketepatan == 'terlambat'"/>
+                <field name="perlu_perbaikan" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'diajukan'"
+                       decoration-success="state == 'terbit'"
+                       decoration-warning="state == 'draf' and perlu_perbaikan"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Tabel isian per desa langsung di form laporan -->
+    <record id="view_pengajuan_form_pendidikan" model="ir.ui.view">
+        <field name="name">satu_data.pengajuan.form.pendidikan</field>
+        <field name="model">satu_data.pengajuan</field>
+        <field name="inherit_id" ref="satu_data.view_pengajuan_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='catatan']" position="after">
+                <div invisible="sektor != 'pendidikan_usia_sekolah'" class="mb-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h5 class="m-0">Data per Desa/Kelurahan</h5>
+                        <button name="action_lihat_data" type="object" class="btn btn-secondary btn-sm"
+                                icon="fa-map-o" string="Isi per Kecamatan"/>
+                    </div>
+                    <field name="usia_sekolah_ids" nolabel="1" readonly="state != 'draf'">
+                        <list editable="bottom" create="0" delete="0" limit="500">
+                            <field name="terisi" readonly="1" string="Terisi"/>
+                            <field name="kecamatan_id" readonly="1"/>
+                            <field name="desa_id" readonly="1" options="{'no_open': True}"/>
+                            <field name="usia_5_6" sum="Total"/>
+                            <field name="usia_7_12" sum="Total"/>
+                            <field name="usia_13_15" sum="Total"/>
+                            <field name="usia_16_18" sum="Total"/>
+                        </list>
+                    </field>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_laporan_usia_sekolah" model="ir.actions.act_window">
+        <field name="name">Laporan Penduduk Usia Sekolah</field>
+        <field name="res_model">satu_data.pengajuan</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_laporan_usia_sekolah_list"/>
+        <field name="domain">[('sektor', '=', 'pendidikan_usia_sekolah')]</field>
+        <field name="context">{'default_sektor': 'pendidikan_usia_sekolah'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada laporan</p>
+            <p>Tekan "Buka Laporan Usia Sekolah", pilih tahun, lalu isi penduduk usia sekolah per
+               desa/kelurahan dan kirim ke Walidata dari layar yang sama.</p>
+        </field>
+    </record>
+
+</odoo>

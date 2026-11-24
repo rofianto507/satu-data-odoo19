@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="privilege_pendidikan" model="res.groups.privilege">
+            <field name="name">Satu Data: Pendidikan</field>
+            <field name="category_id" ref="satu_data.module_category_satu_data"/>
+            <field name="sequence">40</field>
+        </record>
+
+        <!-- Produsen Data sektor pendidikan (petugas Dinas Pendidikan, juga Kemenag untuk
+             madrasah): mengelola satuan pendidikan dan data pendidikan, lalu mengirimnya. -->
+        <record id="group_produsen_pendidikan" model="res.groups">
+            <field name="name">Produsen Data Pendidikan</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="privilege_pendidikan"/>
+            <field name="implied_ids" eval="[(4, ref('satu_data.group_satu_data_operator'))]"/>
+        </record>
+    </data>
+
+    <!-- Walidata boleh memperbaiki data semua sektor (grup inti noupdate: pakai <function>). -->
+    <function model="res.groups" name="write"
+              eval="[[ref('satu_data.group_satu_data_walidata')],
+                     {'implied_ids': [(4, ref('group_produsen_pendidikan'))]}]"/>
+
+    <!-- Global (tanpa grup) agar berlaku untuk semua user. -->
+    <record id="rule_sekolah_company" model="ir.rule">
+        <field name="name">Satu Data: satuan pendidikan sesuai company</field>
+        <field name="model_id" ref="model_satu_data_sekolah"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_usia_sekolah_company" model="ir.rule">
+        <field name="name">Satu Data: penduduk usia sekolah sesuai company</field>
+        <field name="model_id" ref="model_satu_data_pendidikan_usia_sekolah"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

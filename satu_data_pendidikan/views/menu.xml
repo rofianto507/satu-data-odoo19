@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_satu_data_pendidikan" name="Pendidikan"
+              parent="satu_data.menu_satu_data_data" sequence="30"/>
+    <menuitem id="menu_satu_data_laporan_usia_sekolah" name="Laporan Penduduk Usia Sekolah"
+              parent="menu_satu_data_pendidikan" action="action_laporan_usia_sekolah"
+              groups="satu_data.group_satu_data_pengguna" sequence="10"/>
+    <menuitem id="menu_satu_data_sekolah" name="Satuan Pendidikan"
+              parent="menu_satu_data_pendidikan" action="action_sekolah"
+              groups="satu_data.group_satu_data_pengguna" sequence="20"/>
+    <menuitem id="menu_satu_data_analisis_usia_sekolah" name="Analisis Usia Sekolah"
+              parent="menu_satu_data_pendidikan" action="action_usia_sekolah"
+              groups="satu_data.group_satu_data_pengguna" sequence="30"/>
+
+</odoo>

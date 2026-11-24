@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sekolah_pengguna,sekolah pengguna,model_satu_data_sekolah,satu_data.group_satu_data_pengguna,1,0,0,0
+access_sekolah_produsen,sekolah produsen pendidikan,model_satu_data_sekolah,group_produsen_pendidikan,1,1,1,1
+access_usia_sekolah_pengguna,usia sekolah pengguna,model_satu_data_pendidikan_usia_sekolah,satu_data.group_satu_data_pengguna,1,0,0,0
+access_usia_sekolah_produsen,usia sekolah produsen pendidikan,model_satu_data_pendidikan_usia_sekolah,group_produsen_pendidikan,1,1,1,1

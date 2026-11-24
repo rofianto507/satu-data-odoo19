@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sekolah_list" model="ir.ui.view">
+        <field name="name">satu_data.sekolah.list</field>
+        <field name="model">satu_data.sekolah</field>
+        <field name="arch" type="xml">
+            <list string="Satuan Pendidikan" decoration-muted="not active">
+                <field name="name"/>
+                <field name="npsn" optional="show"/>
+                <field name="jenjang"/>
+                <field name="status"/>
+                <field name="pembina" optional="show"/>
+                <field name="kecamatan_id"/>
+                <field name="desa_id"/>
+                <field name="akreditasi" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sekolah_form" model="ir.ui.view">
+        <field name="name">satu_data.sekolah.form</field>
+        <field name="model">satu_data.sekolah</field>
+        <field name="arch" type="xml">
+            <form string="Satuan Pendidikan">
+                <sheet>
+                    <widget name="web_ribbon" title="Diarsipkan" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Mis. SDN Pontang 1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identitas">
+                            <field name="npsn" placeholder="8 angka"/>
+                            <field name="jenjang"/>
+                            <field name="kelompok"/>
+                            <field name="status" widget="radio" options="{'horizontal': true}"/>
+                            <field name="pembina"/>
+                            <field name="akreditasi"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Lokasi">
+                            <field name="desa_id" options="{'no_create': True}"/>
+                            <field name="kecamatan_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="alamat"/>
+                            <field name="telepon" widget="phone"/>
+                            <label for="latitude" string="Koordinat"/>
+                            <div class="o_row">
+                                <field name="latitude" placeholder="Lintang"/>
+                                <field name="longitude" placeholder="Bujur"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sekolah_search" model="ir.ui.view">
+        <field name="name">satu_data.sekolah.search</field>
+        <field name="model">satu_data.sekolah</field>
+        <field name="arch" type="xml">
+            <search string="Cari Satuan Pendidikan">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('npsn', 'ilike', self)]"
+                       string="Nama atau NPSN"/>
+                <field name="kecamatan_id"/>
+                <field name="desa_id"/>
+                <separator/>
+                <filter string="PAUD/TK" name="paud" domain="[('kelompok', '=', 'paud')]"/>
+                <filter string="SD/MI" name="sd_mi" domain="[('kelompok', '=', 'sd_mi')]"/>
+                <filter string="SMP/MTs" name="smp_mts" domain="[('kelompok', '=', 'smp_mts')]"/>
+                <filter string="SMA/SMK/MA" name="sma_smk_ma" domain="[('kelompok', '=', 'sma_smk_ma')]"/>
+                <separator/>
+                <filter string="Negeri" name="negeri" domain="[('status', '=', 'negeri')]"/>
+                <filter string="Swasta" name="swasta" domain="[('status', '=', 'swasta')]"/>
+                <separator/>
+                <filter string="Dinas Pendidikan" name="disdik" domain="[('pembina', '=', 'disdik')]"/>
+                <filter string="Kementerian Agama" name="kemenag" domain="[('pembina', '=', 'kemenag')]"/>
+                <separator/>
+                <filter string="Tanpa Koordinat" name="tanpa_koordinat"
+                        domain="[('latitude', '=', 0), ('longitude', '=', 0)]"/>
+                <filter string="Tanpa NPSN" name="tanpa_npsn" domain="[('npsn', '=', False)]"/>
+                <filter string="Diarsipkan" name="arsip" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Jenjang" name="group_jenjang" context="{'group_by': 'jenjang'}"/>
+                    <filter string="Kecamatan" name="group_kecamatan" context="{'group_by': 'kecamatan_id'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Pembina" name="group_pembina" context="{'group_by': 'pembina'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sekolah_pivot" model="ir.ui.view">
+        <field name="name">satu_data.sekolah.pivot</field>
+        <field name="model">satu_data.sekolah</field>
+        <field name="arch" type="xml">
+            <pivot string="Satuan Pendidikan">
+                <field name="kecamatan_id" type="row"/>
+                <field name="kelompok" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_sekolah" model="ir.actions.act_window">
+        <field name="name">Satuan Pendidikan</field>
+        <field name="res_model">satu_data.sekolah</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="search_view_id" ref="view_sekolah_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tambahkan satuan pendidikan</p>
+            <p>Sekolah, madrasah, PAUD, dan sejenisnya beserta jenjang, pembina, dan lokasi desanya.</p>
+        </field>
+    </record>
+
+</odoo>

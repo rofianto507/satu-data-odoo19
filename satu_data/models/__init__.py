@@ -8,4 +8,5 @@ from . import instansi
 from . import forum
 from . import daftar_data
 from . import pengajuan
+from . import rekap_desa
 from . import identitas_wizard
