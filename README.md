@@ -234,14 +234,6 @@ Seluruh data demo bersifat **fiktif** dan hanya contoh, bukan data resmi:
 - Angka penduduk, data kesehatan, dan data pendidikan dibangkitkan secara acak dengan pola yang masuk akal.
 - Nama sekolah dan NPSN pada data demo pendidikan adalah rekaan (NPSN berawalan 9), bukan sekolah sungguhan.
 
-## Rencana pengembangan
-
-- Integrasi API: sistem tiap OPD mengirim angka rekap langsung ke Satu Data, dengan kode wilayah
-  Kemendagri sebagai kunci desa dan tetap melewati pemeriksaan Walidata
-- Penanda angka yang tidak wajar untuk membantu pemeriksaan Walidata
-- Notifikasi email ke Walidata untuk permintaan data baru
-- Modul sektor lain (OPD berikutnya)
-
 ## Lisensi
 
 LGPL-3.0, sesuai Odoo. Leaflet, plugin markercluster, dan ECharts memiliki lisensinya sendiri
