@@ -51,7 +51,6 @@ class SatuDataBeranda(http.Controller):
         kata = [t.name for t in sorted(faset['topik'], key=lambda t: (t.sequence, t.name))]
         return request.render('satu_data_portal.beranda', {
             'nama_wilayah': Data._sd_nama_wilayah(company),
-            'logo': f'/logo.png?company={company.id}' if company.sudo().logo else False,
             'angka': {k: format_angka(v) for k, v in angka.items()},
             'angka_mentah': angka,
             'kata': kata,

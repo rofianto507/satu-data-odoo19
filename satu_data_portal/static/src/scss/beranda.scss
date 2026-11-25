@@ -1,6 +1,7 @@
 // Beranda portal Satu Data: hero beranimasi, ilustrasi vektor, dan bagian-bagian landing page.
 // Aksen mengikuti warna utama website (--o-color-1); teal dipakai sebagai pasangan gradien.
-$sd-teal: #0d9488;
+// Pasangan warna utama: Color 2 palet website (merah muda ikon aplikasi).
+$sd-teal: var(--o-color-2);
 $sd-tinta: #0f172a;
 $sd-teks-2: #4b5563;
 $sd-garis: #e5e7eb;
@@ -115,7 +116,7 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
         padding: 3.5rem 0 6.5rem;
         background:
             radial-gradient(circle at 1px 1px, sd-campur(14%) 1.2px, transparent 1.4px) 0 0 / 26px 26px,
-            linear-gradient(135deg, sd-campur(9%, #fff) 0%, #fff 55%, color-mix(in srgb, #{$sd-teal} 8%, #fff) 100%);
+            linear-gradient(135deg, sd-campur(10%, #fff) 0%, #fff 55%, color-mix(in srgb, #{$sd-teal} 9%, #fff) 100%);
         border-bottom: 0;
 
         @media (max-width: 991.98px) {
@@ -135,8 +136,8 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
         animation: sd-melayang 14s ease-in-out infinite alternate;
     }
     .sd-blob--1 { width: 360px; height: 360px; left: -80px; top: -100px; background: sd-campur(38%); }
-    .sd-blob--2 { width: 300px; height: 300px; right: 6%; top: 30%; background: color-mix(in srgb, #{$sd-teal} 34%, transparent); animation-duration: 18s; animation-delay: -4s; }
-    .sd-blob--3 { width: 240px; height: 240px; left: 38%; bottom: -120px; background: rgba(245, 158, 11, 0.3); animation-duration: 16s; animation-delay: -8s; }
+    .sd-blob--2 { width: 300px; height: 300px; right: 6%; top: 30%; background: color-mix(in srgb, #{$sd-teal} 30%, transparent); animation-duration: 18s; animation-delay: -4s; }
+    .sd-blob--3 { width: 240px; height: 240px; left: 38%; bottom: -120px; background: rgba(196, 181, 253, 0.55); animation-duration: 16s; animation-delay: -8s; }
 
     .sd-merek {
         display: flex;
@@ -165,14 +166,6 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
             font-size: 0.8125rem;
         }
     }
-    .sd-merek-lambang {
-        height: 44px;
-        width: auto;
-        margin-left: auto;
-        padding-left: 0.75rem;
-        border-left: 1px solid $sd-garis;
-    }
-
     .sd-hero-judul {
         font-size: clamp(2.1rem, 5vw, 3.4rem);
         font-weight: 800;
@@ -274,7 +267,9 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     }
     .sd-ilus-latar { fill: sd-campur(8%); }
     .sd-ilus-titik { fill: sd-campur(30%); }
-    .sd-ilus-titik--2 { fill: rgba(245, 158, 11, 0.45); }
+    .sd-ilus-titik--2 { fill: color-mix(in srgb, #{$sd-teal} 45%, transparent); }
+    .sd-ilus-aksen { fill: var(--o-color-2); }
+    .sd-ilus-lencana-bg { fill: var(--o-color-1); }
     .sd-ilus-judul { font-size: 14px; font-weight: 700; fill: $sd-tinta; }
     .sd-ilus-kecil { font-size: 12px; font-weight: 600; fill: $sd-tinta; }
     .sd-ilus-lencana { font-size: 12px; font-weight: 700; fill: #fff; }
@@ -323,7 +318,7 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
         animation-delay: var(--tunda, 0s);
     }
     .sd-sel--2 { fill: $sd-teal; }
-    .sd-sel--3 { fill: #f59e0b; }
+    .sd-sel--3 { fill: #c4b5fd; }
 
     .sd-batang {
         fill: sd-campur(80%);
@@ -335,7 +330,7 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     .sd-batang--2 { fill: $sd-teal; }
     .sd-ilus-garis-data {
         fill: none;
-        stroke: #f59e0b;
+        stroke: var(--o-color-2);
         stroke-width: 2.6;
         stroke-linecap: round;
         stroke-linejoin: round;
@@ -489,9 +484,9 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
         box-shadow: 0 8px 18px sd-campur(30%);
         transition: transform 0.3s $sd-ease;
     }
-    .sd-kartu-fitur--2 .sd-kartu-fitur-ikon { background: linear-gradient(135deg, #{$sd-teal}, #0f766e); box-shadow: 0 8px 18px rgba(13, 148, 136, 0.3); }
-    .sd-kartu-fitur--3 .sd-kartu-fitur-ikon { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 18px rgba(217, 119, 6, 0.3); }
-    .sd-kartu-fitur--4 .sd-kartu-fitur-ikon { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 8px 18px rgba(99, 102, 241, 0.3); }
+    .sd-kartu-fitur--2 .sd-kartu-fitur-ikon { background: linear-gradient(135deg, var(--o-color-2), #{color-mix(in srgb, var(--o-color-2) 65%, #000)}); box-shadow: 0 8px 18px color-mix(in srgb, var(--o-color-2) 32%, transparent); }
+    .sd-kartu-fitur--3 .sd-kartu-fitur-ikon { background: linear-gradient(135deg, #7c3aed, #4c1d95); box-shadow: 0 8px 18px rgba(124, 58, 237, 0.3); }
+    .sd-kartu-fitur--4 .sd-kartu-fitur-ikon { background: linear-gradient(135deg, #c026d3, #86198f); box-shadow: 0 8px 18px rgba(192, 38, 211, 0.3); }
 
     .sd-kartu-tema {
         transition: transform 0.3s $sd-ease, box-shadow 0.3s $sd-ease, border-color 0.3s ease;

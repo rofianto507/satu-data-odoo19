@@ -8,6 +8,15 @@ _logger = logging.getLogger(__name__)
 
 PARAM_DISIAPKAN = 'satu_data_portal.website_disiapkan'
 PARAM_FAVICON = 'satu_data_portal.favicon_disiapkan'
+PARAM_WARNA = 'satu_data_portal.warna_disiapkan'
+# Palet website mengikuti ikon aplikasi: ungu tua, merah muda, dan lavender.
+PALET_IKON = {
+    'o-color-1': '#5b21b6',   # primer (ungu tua)
+    'o-color-2': '#ff005c',   # sekunder (merah muda)
+    'o-color-3': '#f5f3ff',   # latar terang (lavender sangat muda)
+    'o-color-4': '#ffffff',
+    'o-color-5': '#1e1033',   # gelap (ungu kehitaman)
+}
 IKON_APLIKASI = 'satu_data/static/description/icon.png'
 BERANDA = '/beranda'
 BAHASA = 'id_ID'
@@ -40,6 +49,16 @@ class Website(models.Model):
         self.sudo().search([]).write({'favicon': ikon})
         param.set_param(PARAM_FAVICON, '1')
 
+    @api.model
+    def _sd_siapkan_warna(self):
+        """Palet warna website mengikuti ikon aplikasi (Color 1 ungu, Color 2 merah muda); sekali saja."""
+        param = self.env['ir.config_parameter'].sudo()
+        if param.get_param(PARAM_WARNA):
+            return
+        self.env['website.assets'].make_scss_customization(
+            '/website/static/src/scss/options/colors/user_color_palette.scss', PALET_IKON)
+        param.set_param(PARAM_WARNA, '1')
+
     # ── Penyiapan sekali saat modul dipasang ─────────────────────────────────
 
     @api.model
@@ -52,6 +71,7 @@ class Website(models.Model):
         """
         param = self.env['ir.config_parameter'].sudo()
         self._sd_siapkan_favicon()
+        self._sd_siapkan_warna()
         if param.get_param(PARAM_DISIAPKAN):
             return
         websites = self.sudo().search([])

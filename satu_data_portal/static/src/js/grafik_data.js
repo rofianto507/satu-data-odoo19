@@ -7,12 +7,12 @@ const URL_ECHARTS = "/satu_data/static/lib/echarts/echarts.min.js";
 // Warna utama website (Color 1 pada palet website; Admin dapat mengubahnya di penyunting website); cadangan biru bila tak terbaca.
 function warnaUtama() {
     const w = getComputedStyle(document.documentElement).getPropertyValue("--o-color-1").trim();
-    return w || "#1d4ed8";
+    return w || "#5b21b6";
 }
 function warnaTipis(hex, alfa) {
     const m = /^#?([0-9a-f]{6})$/i.exec(hex);
     if (!m) {
-        return "rgba(29, 78, 216, " + alfa + ")";
+        return "rgba(91, 33, 182, " + alfa + ")";
     }
     const n = parseInt(m[1], 16);
     return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${alfa})`;
