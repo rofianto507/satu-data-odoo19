@@ -1,7 +1,8 @@
 /* Dashboard pendidikan: tambahan di atas gaya bersama satu_data (dashboard_peta.css). */
 
 .o_satu_data.sd-pdd .sd-kpi {
-    grid-template-columns: minmax(0, 1.6fr) repeat(5, minmax(0, 1fr));
+    /* Enam kartu sama lebar (kartu utama tidak lagi lebih lebar) */
+    grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 /* Kartu KPI kecil bisa diklik untuk menampilkan indikatornya di peta */
