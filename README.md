@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/banner.png" alt="Satu Data untuk Odoo 19" width="100%">
+  <img src="docs/banner.png" alt="Satu Data untuk Odoo 19: portal data wilayah dengan dashboard peta per sektor (kependudukan, kesehatan, pendidikan) dan portal publik berisi katalog, unduhan, dan API" width="100%">
 </p>
 
 <p align="center">
