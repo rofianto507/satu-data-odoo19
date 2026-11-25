@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -240,3 +242,68 @@ class SatuDataData(models.Model):
             tahun = sorted(set(terbit.periode_id.mapped('tahun')))
             rec.tahun_tersedia = ', '.join(map(str, tahun)) or False
             rec.terakhir_terbit = max(terbit.mapped('tanggal_diperiksa'), default=False)
+
+    # ── Nilai untuk penyebarluasan (portal publik, unduhan, API) ─────────────
+    #
+    # Hanya data terbit, paling rendah tingkat kecamatan. Modul sektor menimpa
+    # ``_sd_nilai_publik`` untuk indikator agar angka publik sama dengan dashboard.
+
+    def _sd_periode_publik(self):
+        """Periode yang data ini sudah terbit (frekuensi sama), terlama lebih dulu."""
+        self.ensure_one()
+        if not self.sektor:
+            return self.env['satu_data.periode']
+        periode = self.env['satu_data.pengajuan']._sd_periode_terbit(self.sektor, self.company_id)
+        if self.frekuensi:
+            periode = periode.filtered(lambda p: p.frekuensi == self.frekuensi)
+        return periode.sorted('tanggal_mulai')
+
+    def _sd_nilai_publik(self, periode):
+        """Nilai per kecamatan dan total kab/kota untuk satu periode terbit.
+
+        :return: ``{kecamatan_id: nilai, False: nilai kab/kota}``. Kecamatan tanpa data tidak
+            dimuat; nilai ``None`` berarti tidak dapat dihitung.
+
+        Bawaan: jumlah field rekap sektor yang namanya sama dengan bagian akhir kode data
+        (mis. ``kesehatan.sasaran_bayi`` -> field ``sasaran_bayi``). Hanya benar untuk angka
+        yang bisa dijumlahkan; rasio harus ditimpa modul sektornya.
+        """
+        self.ensure_one()
+        info = self.env['satu_data.pengajuan']._sd_info_sektor().get(self.sektor)
+        if not info:
+            return {}
+        Model = self.env[info['model']].sudo()
+        field = Model._fields.get(self.kode.rpartition('.')[2])
+        if not field or field.type not in ('integer', 'float') or not field.store:
+            return {}
+        company = self.company_id
+        domain = ([('company_id', '=', company.id), ('periode_id', '=', periode.id)]
+                  + Model._sd_domain_terbit(company) + Model._sd_domain_terisi())
+        hasil = {kec.id: jumlah or 0 for kec, jumlah in Model._read_group(
+            domain, ['kecamatan_id'], [f'{field.name}:sum']) if kec}
+        if hasil:
+            hasil[False] = Model._read_group(domain, [], [f'{field.name}:sum'])[0][0] or 0
+        return hasil
+
+    @api.model
+    def _sd_nilai_per_kecamatan(self, dasar, hitung):
+        """Bantu modul sektor: angka dasar per desa -> nilai per kecamatan dan total.
+
+        :param dasar: ``{(kecamatan_id, desa_id): {kunci: angka}}``
+        :param hitung: fungsi ``angka -> nilai`` (mis. rumus indikator)
+        """
+        per_kec = defaultdict(lambda: defaultdict(int))
+        total = defaultdict(int)
+        for (kec, _desa), angka in dasar.items():
+            for k, v in angka.items():
+                per_kec[kec][k] += v
+                total[k] += v
+        hasil = {kec: hitung(dict(a)) for kec, a in per_kec.items() if kec}
+        if per_kec:
+            hasil[False] = hitung(dict(total))
+        return hasil
+
+    def _sd_catatan_publik(self):
+        """Catatan cara membaca angka (mis. kumulatif), ditampilkan bersama tabel."""
+        self.ensure_one()
+        return False

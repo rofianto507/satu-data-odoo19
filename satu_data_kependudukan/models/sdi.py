@@ -51,3 +51,19 @@ class SatuDataData(models.Model):
 
     sektor = fields.Selection(selection_add=[('kependudukan', 'Kependudukan')],
                               ondelete={'kependudukan': 'set null'})
+
+    def _sd_nilai_publik(self, periode):
+        if self.sektor != 'kependudukan' or self.kode != 'kependudukan.kepadatan':
+            return super()._sd_nilai_publik(periode)
+        # Kepadatan = penduduk / luas, hanya bila semua desa berdata punya luas (sama dengan
+        # dashboard).
+        Rekap = self.env['satu_data.kependudukan'].sudo()
+        company = self.company_id
+        domain = ([('company_id', '=', company.id), ('periode_id', '=', periode.id)]
+                  + Rekap._sd_domain_terbit(company) + Rekap._sd_domain_terisi())
+        hasil = {kec: angka['kepadatan'] or None
+                 for kec, angka in Rekap._sd_agregat(domain, 'kecamatan_id').items() if kec}
+        if hasil:
+            total = Rekap._sd_agregat(domain, False).get(None)
+            hasil[False] = (total or {}).get('kepadatan') or None
+        return hasil

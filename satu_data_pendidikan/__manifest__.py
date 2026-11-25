@@ -1,6 +1,6 @@
 {
     'name': 'Satu Data - Pendidikan',
-    'version': '19.0.1.2.1',
+    'version': '19.0.1.3.0',
     'summary': 'Satuan pendidikan (sekolah) dan penduduk usia sekolah per desa',
     'description': """
 Satu Data: Pendidikan

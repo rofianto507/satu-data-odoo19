@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_statistik_walidata,statistik portal walidata,model_satu_data_portal_statistik,satu_data.group_satu_data_walidata,1,0,0,0
+access_statistik_pembina,statistik portal pembina,model_satu_data_portal_statistik,satu_data.group_satu_data_pembina,1,0,0,0
+access_statistik_admin,statistik portal admin,model_satu_data_portal_statistik,satu_data.group_satu_data_admin,1,0,0,1

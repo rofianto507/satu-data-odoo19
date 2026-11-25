@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_statistik_list" model="ir.ui.view">
+        <field name="name">satu_data.portal.statistik.list</field>
+        <field name="model">satu_data.portal.statistik</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false">
+                <field name="tanggal"/>
+                <field name="data_id"/>
+                <field name="instansi_id" optional="show"/>
+                <field name="kunjungan" sum="Total"/>
+                <field name="unduhan" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_statistik_pivot" model="ir.ui.view">
+        <field name="name">satu_data.portal.statistik.pivot</field>
+        <field name="model">satu_data.portal.statistik</field>
+        <field name="arch" type="xml">
+            <pivot string="Statistik Portal">
+                <field name="data_id" type="row"/>
+                <field name="tanggal" interval="month" type="col"/>
+                <field name="kunjungan" type="measure"/>
+                <field name="unduhan" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_statistik_graph" model="ir.ui.view">
+        <field name="name">satu_data.portal.statistik.graph</field>
+        <field name="model">satu_data.portal.statistik</field>
+        <field name="arch" type="xml">
+            <graph string="Statistik Portal" type="line">
+                <field name="tanggal" interval="day"/>
+                <field name="kunjungan" type="measure"/>
+                <field name="unduhan" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_statistik_search" model="ir.ui.view">
+        <field name="name">satu_data.portal.statistik.search</field>
+        <field name="model">satu_data.portal.statistik</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="data_id"/>
+                <field name="instansi_id"/>
+                <filter name="filter_30_hari" string="30 Hari Terakhir"
+                        domain="[('tanggal', '&gt;=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="group_data" string="Data" context="{'group_by': 'data_id'}"/>
+                <filter name="group_instansi" string="Produsen Data" context="{'group_by': 'instansi_id'}"/>
+                <filter name="group_bulan" string="Bulan" context="{'group_by': 'tanggal:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_statistik" model="ir.actions.act_window">
+        <field name="name">Statistik Portal</field>
+        <field name="res_model">satu_data.portal.statistik</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{'search_default_filter_30_hari': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada kunjungan atau unduhan di portal publik.</p>
+            <p>Angka bertambah saat pengunjung membuka atau mengunduh data di halaman /data.
+               Hanya angka agregat per hari; identitas pengunjung tidak disimpan.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_statistik_portal" name="Statistik Portal"
+              parent="satu_data.menu_satu_data_katalog" action="action_statistik"
+              groups="satu_data.group_satu_data_walidata,satu_data.group_satu_data_pembina"
+              sequence="20"/>
+</odoo>

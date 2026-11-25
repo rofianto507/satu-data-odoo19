@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 
+from .indikator import INDIKATOR_BY_KODE, nilai_indikator
 from .rekap import KELOMPOK_REKAP
 
 SEKTOR = [
@@ -129,3 +130,32 @@ class SatuDataData(models.Model):
     _inherit = 'satu_data.data'
 
     sektor = fields.Selection(selection_add=SEKTOR, ondelete=ONDELETE_DATA)
+
+    def _sd_indikator_pendidikan(self):
+        """Definisi indikator (lihat ``indikator.INDIKATOR``) untuk data ini, bila ada."""
+        self.ensure_one()
+        if self.sektor != 'pendidikan':
+            return None
+        return INDIKATOR_BY_KODE.get(self.kode.rpartition('.')[2])
+
+    def _sd_nilai_publik(self, periode):
+        ind = self._sd_indikator_pendidikan()
+        if not ind:
+            return super()._sd_nilai_publik(periode)
+        # Sama dengan dashboard tanpa pilihan jenjang (semua jenjang, kecuali partisipasi
+        # yang jenjangnya sudah tertentu).
+        Dashboard = self.env['satu_data.pendidikan.dashboard'].sudo()
+        dasar = Dashboard._sd_angka_dasar(periode, ind.get('jenjang_tetap') or False,
+                                          self.company_id)
+        return self._sd_nilai_per_kecamatan(dasar, lambda angka: nilai_indikator(ind, angka))
+
+    def _sd_catatan_publik(self):
+        ind = self._sd_indikator_pendidikan()
+        if not ind:
+            return super()._sd_catatan_publik()
+        if ind['kelompok'] == 'Partisipasi':
+            return self.env._('Peserta didik dihitung menurut lokasi sekolah, bukan tempat '
+                              'tinggal siswa. Penyebut: penduduk usia sekolah tahun yang sama.')
+        if ind['kelompok'] == 'Keberlanjutan':
+            return self.env._('Angka tahun ajaran dari rekap Semester I tahun yang sama.')
+        return self.env._('Seluruh jenjang (PAUD/TK sampai SMA/SMK/MA), negeri dan swasta.')

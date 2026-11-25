@@ -1,6 +1,6 @@
 {
     'name': 'Satu Data',
-    'version': '19.0.3.4.2',
+    'version': '19.0.3.5.0',
     'summary': 'Inti Satu Data: wilayah kabupaten/kota, kecamatan, desa, periode, dan peta',
     'description': """
 Satu Data

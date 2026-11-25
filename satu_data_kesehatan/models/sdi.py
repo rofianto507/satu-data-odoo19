@@ -1,5 +1,7 @@
 from odoo import api, fields, models
 
+from .indikator import INDIKATOR_BY_KODE, nilai_indikator
+
 SEKTOR = [
     ('kesehatan',         'Kesehatan: Rekap Bulanan'),
     ('kesehatan_sasaran', 'Kesehatan: Sasaran Tahunan'),
@@ -92,3 +94,28 @@ class SatuDataData(models.Model):
     _inherit = 'satu_data.data'
 
     sektor = fields.Selection(selection_add=SEKTOR, ondelete=ONDELETE_DATA)
+
+    def _sd_indikator_kesehatan(self):
+        """Definisi indikator (lihat ``indikator.INDIKATOR``) untuk data ini, bila ada."""
+        self.ensure_one()
+        if self.sektor != 'kesehatan':
+            return None
+        return INDIKATOR_BY_KODE.get(self.kode.rpartition('.')[2])
+
+    def _sd_nilai_publik(self, periode):
+        ind = self._sd_indikator_kesehatan()
+        if not ind:
+            return super()._sd_nilai_publik(periode)
+        # Sama dengan dashboard (mode kumulatif): Januari s.d. bulan tersebut.
+        Dashboard = self.env['satu_data.kesehatan.dashboard'].sudo()
+        dasar = Dashboard._sd_angka_dasar(periode, 'kumulatif', self.company_id)
+        return self._sd_nilai_per_kecamatan(dasar, lambda angka: nilai_indikator(ind, angka))
+
+    def _sd_catatan_publik(self):
+        ind = self._sd_indikator_kesehatan()
+        if not ind:
+            return super()._sd_catatan_publik()
+        if ind.get('tanpa_mode'):
+            return self.env._('Memakai hasil pengukuran terakhir tiap desa/kelurahan dalam '
+                              '12 bulan terakhir sampai bulan tersebut.')
+        return self.env._('Angka kumulatif Januari sampai bulan tersebut pada tahun yang sama.')

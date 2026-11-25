@@ -1,6 +1,6 @@
 {
     'name': 'Satu Data - Kesehatan',
-    'version': '19.0.1.4.0',
+    'version': '19.0.1.5.0',
     'summary': 'Fasilitas kesehatan, wilayah kerja puskesmas, dan sasaran program kesehatan per desa',
     'description': """
 Satu Data: Kesehatan

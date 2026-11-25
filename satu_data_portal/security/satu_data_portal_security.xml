@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Statistik hanya untuk wilayah (company) yang sedang dipilih pengguna. -->
+    <record id="rule_statistik_company" model="ir.rule">
+        <field name="name">Statistik portal: wilayah pengguna</field>
+        <field name="model_id" ref="model_satu_data_portal_statistik"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

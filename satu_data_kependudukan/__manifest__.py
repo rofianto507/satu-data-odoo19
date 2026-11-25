@@ -1,6 +1,6 @@
 {
     'name': 'Satu Data - Kependudukan',
-    'version': '19.0.2.2.0',
+    'version': '19.0.2.3.0',
     'summary': 'Rekap kependudukan per desa/kelurahan dan dashboard peta penduduk',
     'description': """
 Satu Data: Kependudukan
