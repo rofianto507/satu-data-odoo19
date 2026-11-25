@@ -8,4 +8,14 @@
             <attribute name="type">image/png</attribute>
         </xpath>
     </template>
+
+    <!-- Pengumuman di atas header (diatur lewat parameter sistem satu_data_portal.pengumuman). -->
+    <template id="pengumuman_portal" inherit_id="website.layout" name="Satu Data: Pengumuman">
+        <xpath expr="//header" position="before">
+            <t t-set="sd_pengumuman" t-value="website and website.sd_pengumuman()"/>
+            <div t-if="sd_pengumuman" class="sd-pengumuman" role="note">
+                <i class="fa fa-info-circle" aria-hidden="true"/> <span t-esc="sd_pengumuman"/>
+            </div>
+        </xpath>
+    </template>
 </odoo>

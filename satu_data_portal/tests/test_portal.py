@@ -16,8 +16,7 @@ from odoo.addons.satu_data_portal.models.dasbor import kelas_warna, sederhanakan
 API = '/api/satu-data/v1'
 
 
-@tagged('post_install', '-at_install', 'satu_data', 'satu_data_portal')
-class TestPortal(SatuDataCase, HttpCase):
+class PortalBase(SatuDataCase, HttpCase):
     """Portal publik memakai data kependudukan sebagai contoh sektor.
 
     Wilayah A: Kecamatan Satu (Desa Satu 2 km², Kelurahan Dua tanpa luas) dan Kecamatan Dua
@@ -89,6 +88,11 @@ class TestPortal(SatuDataCase, HttpCase):
     def _kode_publik(self, company=None, **kw):
         hasil, _faset = self.env['satu_data.data']._sd_cari_publik(company or self.company_a, **kw)
         return {d.kode for d, _info in hasil if d.name.endswith('Uji Portal')}
+
+
+
+@tagged('post_install', '-at_install', 'satu_data', 'satu_data_portal')
+class TestPortal(PortalBase):
 
     # ── Nilai dari modul sektor ──────────────────────────────────────────────
 
@@ -407,6 +411,7 @@ class TestPortal(SatuDataCase, HttpCase):
         self.assertIn('static/description/icon.png', res.text, 'Ikon aplikasi di hero')
         self.assertIn('class="sd-ilus"', res.text, 'Ilustrasi vektor')
         self.assertIn('data-nilai="3"', res.text, 'Angka kunci siap dihitung naik (3 data uji)')
+        self.assertIn('data-nilai="2"', res.text, 'Jumlah kecamatan wilayah (2 kecamatan uji)')
         self.assertIn('Topik Uji Portal', res.text, 'Kata berganti memakai topik yang punya data')
         self.assertIn('>Masuk<', res.text)
         self.assertNotIn('>Sign in<', res.text)

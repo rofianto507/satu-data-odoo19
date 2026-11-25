@@ -181,6 +181,7 @@ class SatuDataPortal(http.Controller):
             ('Content-Type', jenis),
             ('Content-Disposition', content_disposition(f'{data.kode}.{ekstensi}')),
             ('Cache-Control', 'no-store'),
+            ('X-Content-Type-Options', 'nosniff'),
         ])
 
     # ── Dokumentasi API ──────────────────────────────────────────────────────

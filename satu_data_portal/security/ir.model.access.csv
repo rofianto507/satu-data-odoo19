@@ -2,3 +2,8 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_statistik_walidata,statistik portal walidata,model_satu_data_portal_statistik,satu_data.group_satu_data_walidata,1,0,0,0
 access_statistik_pembina,statistik portal pembina,model_satu_data_portal_statistik,satu_data.group_satu_data_pembina,1,0,0,0
 access_statistik_admin,statistik portal admin,model_satu_data_portal_statistik,satu_data.group_satu_data_admin,1,0,0,1
+access_permintaan_walidata,permintaan data walidata,model_satu_data_permintaan,satu_data.group_satu_data_walidata,1,1,1,0
+access_permintaan_pembina,permintaan data pembina,model_satu_data_permintaan,satu_data.group_satu_data_pembina,1,0,0,0
+access_permintaan_admin,permintaan data admin,model_satu_data_permintaan,satu_data.group_satu_data_admin,1,1,1,1
+access_api_key_walidata,kunci api walidata,model_satu_data_api_key,satu_data.group_satu_data_walidata,1,1,1,0
+access_api_key_admin,kunci api admin,model_satu_data_api_key,satu_data.group_satu_data_admin,1,1,1,1

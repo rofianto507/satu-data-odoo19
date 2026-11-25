@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ── Permintaan Data ─────────────────────────────────────────────────── -->
+    <record id="view_permintaan_list" model="ir.ui.view">
+        <field name="name">satu_data.permintaan.list</field>
+        <field name="model">satu_data.permintaan</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'baru'" decoration-muted="state in ('selesai', 'ditolak')">
+                <field name="name"/>
+                <field name="create_date" string="Diterima"/>
+                <field name="jenis"/>
+                <field name="nama_pemohon"/>
+                <field name="organisasi" optional="show"/>
+                <field name="uraian" optional="show"/>
+                <field name="data_id" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'baru'" decoration-warning="state == 'diproses'"
+                       decoration-success="state == 'selesai'" decoration-danger="state == 'ditolak'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_permintaan_form" model="ir.ui.view">
+        <field name="name">satu_data.permintaan.form</field>
+        <field name="model">satu_data.permintaan</field>
+        <field name="arch" type="xml">
+            <form string="Permintaan Data">
+                <header>
+                    <button name="action_proses" type="object" string="Proses" class="btn-primary"
+                            invisible="state != 'baru'"/>
+                    <button name="action_selesai" type="object" string="Tandai Selesai" class="btn-primary"
+                            invisible="state not in ('baru', 'diproses')"/>
+                    <button name="action_tolak" type="object" string="Tolak"
+                            invisible="state not in ('baru', 'diproses')"/>
+                    <button name="action_buka_kembali" type="object" string="Buka Kembali"
+                            invisible="state not in ('selesai', 'ditolak')"/>
+                    <button name="action_buat_kunci_api" type="object" string="Buat Kunci API"
+                            invisible="jenis != 'kunci_api' or state in ('ditolak',)"/>
+                    <field name="state" widget="statusbar" statusbar_visible="baru,diproses,selesai"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Pemohon">
+                            <field name="nama_pemohon"/>
+                            <field name="pemohon_jenis"/>
+                            <field name="organisasi"/>
+                            <field name="email" widget="email"/>
+                            <field name="telepon" widget="phone"/>
+                        </group>
+                        <group string="Permintaan">
+                            <field name="jenis"/>
+                            <field name="data_id"/>
+                            <field name="instansi_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="tanggal_selesai"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="uraian"/>
+                        <field name="tujuan"/>
+                    </group>
+                    <group string="Tanggapan untuk Pemohon">
+                        <field name="tanggapan" nolabel="1" colspan="2"
+                               placeholder="Dibaca pemohon di halaman status. Jelaskan hasil atau alasan penolakan."/>
+                    </group>
+                    <group string="Kunci API" invisible="not kunci_api_ids">
+                        <field name="kunci_api_ids" nolabel="1" colspan="2" readonly="1">
+                            <list><field name="name"/><field name="prefix"/><field name="active"/></list>
+                        </field>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_permintaan_search" model="ir.ui.view">
+        <field name="name">satu_data.permintaan.search</field>
+        <field name="model">satu_data.permintaan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="nama_pemohon"/>
+                <field name="organisasi"/>
+                <field name="uraian"/>
+                <filter name="perlu_ditangani" string="Perlu Ditangani"
+                        domain="[('state', 'in', ('baru', 'diproses'))]"/>
+                <filter name="baru" string="Baru" domain="[('state', '=', 'baru')]"/>
+                <filter name="selesai" string="Selesai" domain="[('state', '=', 'selesai')]"/>
+                <separator/>
+                <filter name="jenis_data" string="Data" domain="[('jenis', '=', 'data')]"/>
+                <filter name="jenis_kunci" string="Kunci API" domain="[('jenis', '=', 'kunci_api')]"/>
+                <group>
+                    <filter name="group_status" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_jenis" string="Jenis" context="{'group_by': 'jenis'}"/>
+                    <filter name="group_bulan" string="Bulan" context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_permintaan" model="ir.actions.act_window">
+        <field name="name">Permintaan Data</field>
+        <field name="res_model">satu_data.permintaan</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_perlu_ditangani': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada permintaan data dari publik.</p>
+            <p>Permintaan masuk dari formulir di portal publik (halaman /permintaan).</p>
+        </field>
+    </record>
+
+    <!-- ── Kunci API ───────────────────────────────────────────────────────── -->
+    <record id="view_api_key_list" model="ir.ui.view">
+        <field name="name">satu_data.api.key.list</field>
+        <field name="model">satu_data.api.key</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="not active">
+                <field name="name"/>
+                <field name="organisasi" optional="show"/>
+                <field name="prefix"/>
+                <field name="batas_per_menit"/>
+                <field name="jumlah_panggilan"/>
+                <field name="terakhir_dipakai"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_api_key_form" model="ir.ui.view">
+        <field name="name">satu_data.api.key.form</field>
+        <field name="model">satu_data.api.key</field>
+        <field name="arch" type="xml">
+            <form string="Kunci API">
+                <header>
+                    <button name="action_buat_kunci" type="object" class="btn-primary"
+                            string="Buat Kunci" invisible="prefix"/>
+                    <button name="action_buat_kunci" type="object" string="Putar Kunci"
+                            invisible="not prefix"
+                            confirm="Kunci lama langsung tidak berlaku. Lanjutkan?"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Nonaktif" bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="organisasi"/>
+                            <field name="email" widget="email"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="prefix"/>
+                            <field name="batas_per_menit"/>
+                            <field name="jumlah_panggilan"/>
+                            <field name="terakhir_dipakai"/>
+                            <field name="permintaan_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group><field name="catatan"/></group>
+                    <div class="text-muted">
+                        Kunci tidak membuka data tertutup: data yang tampil sama dengan tanpa kunci.
+                        Kunci hanya mengenali pemakai dan memberi batas permintaan yang lebih longgar.
+                        Hanya hash yang disimpan, jadi kunci lengkap tampil sekali saat dibuat.
+                        Pemakaian: header <code>X-API-Key: sdk_…</code> atau <code>Authorization: Bearer sdk_…</code>.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_api_key" model="ir.actions.act_window">
+        <field name="name">Kunci API</field>
+        <field name="res_model">satu_data.api.key</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_permintaan" name="Permintaan Data"
+              parent="satu_data.menu_satu_data_katalog" action="action_permintaan"
+              groups="satu_data.group_satu_data_walidata,satu_data.group_satu_data_pembina"
+              sequence="15"/>
+    <menuitem id="menu_api_key" name="Kunci API"
+              parent="satu_data.menu_satu_data_katalog" action="action_api_key"
+              groups="satu_data.group_satu_data_walidata,satu_data.group_satu_data_admin"
+              sequence="25"/>
+</odoo>

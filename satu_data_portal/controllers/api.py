@@ -20,6 +20,8 @@ def _json(isi, status=200):
     # Header CORS dipasang Odoo dari opsi ``cors`` di rute.
     return request.make_json_response(isi, status=status, headers=[
         ('Cache-Control', 'public, max-age=300'),
+        ('Vary', 'Authorization, X-API-Key'),
+        ('X-Content-Type-Options', 'nosniff'),
     ])
 
 
@@ -28,9 +30,10 @@ def _galat(status, pesan):
 
 
 def rute(path):
-    """Rute GET publik untuk API (CORS terbuka, tanpa sesi tulis)."""
+    """Rute GET publik untuk API (CORS terbuka). Tidak ``readonly``: pemakaian kunci API dicatat
+    dalam transaksi yang sama."""
     return http.route(AWALAN + path, type='http', auth='public', methods=['GET'], cors='*',
-                      csrf=False, website=True, sitemap=False, readonly=True)
+                      csrf=False, website=True, sitemap=False)
 
 
 class SatuDataApi(http.Controller):
@@ -58,12 +61,42 @@ class SatuDataApi(http.Controller):
             'url_nilai': self._url(f'{AWALAN}/data/{data.kode}/nilai'),
         }
 
+    def _kunci_dari_header(self):
+        """Kunci API dari ``X-API-Key`` atau ``Authorization: Bearer``; '' bila tidak ada."""
+        header = request.httprequest.headers
+        kunci = (header.get('X-API-Key') or '').strip()
+        if not kunci:
+            auth = header.get('Authorization') or ''
+            if auth[:7].lower() == 'bearer ':
+                kunci = auth[7:].strip()
+        return kunci
+
     def _batas(self):
+        """Periksa kunci (bila dikirim) dan batas permintaan; kembalikan respons galat atau None.
+
+        Tanpa kunci: batas per IP. Dengan kunci sah: batas milik kunci itu (lebih longgar) dan
+        pemakaiannya dicatat. Kunci yang dikirim tetapi tidak sah ditolak (401), bukan
+        diperlakukan seperti tanpa kunci, agar salah konfigurasi segera ketahuan.
+        """
+        kunci = self._kunci_dari_header()
+        if kunci:
+            rec = request.env['satu_data.api.key']._sd_verifikasi(kunci, self._company())
+            if not rec:
+                respons = _galat(401, 'Kunci API tidak valid atau tidak aktif.')
+                respons.headers['WWW-Authenticate'] = 'Bearer realm="satu-data"'
+                return respons
+            if batas.melebihi_batas(f'kunci:{rec.id}', rec.sudo().batas_per_menit):
+                return self._terlalu_sering()
+            rec._sd_catat_pemakaian()
+            return None
         if batas.melebihi_batas(request.httprequest.remote_addr):
-            respons = _galat(429, 'Terlalu banyak permintaan. Coba lagi sebentar lagi.')
-            respons.headers['Retry-After'] = str(batas.detik_ke_menit_berikutnya())
-            return respons
+            return self._terlalu_sering()
         return None
+
+    def _terlalu_sering(self):
+        respons = _galat(429, 'Terlalu banyak permintaan. Coba lagi sebentar lagi.')
+        respons.headers['Retry-After'] = str(batas.detik_ke_menit_berikutnya())
+        return respons
 
     # ── Daftar data ──────────────────────────────────────────────────────────
 

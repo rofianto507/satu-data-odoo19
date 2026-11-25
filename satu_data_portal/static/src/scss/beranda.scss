@@ -50,6 +50,30 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     from { opacity: 0.25; }
     to   { opacity: 0.95; }
 }
+@keyframes sd-warna-a {
+    from { fill: sd-campur(16%); }
+    to   { fill: var(--o-color-2); }
+}
+@keyframes sd-warna-b {
+    from { fill: sd-campur(16%); }
+    to   { fill: var(--o-color-1); }
+}
+@keyframes sd-warna-c {
+    from { fill: sd-campur(16%); }
+    to   { fill: #c4b5fd; }
+}
+@keyframes sd-hitung {
+    0%     { opacity: 0; transform: translateY(8px) scale(0.7); }
+    1.6%   { opacity: 1; transform: translateY(0) scale(1.18); }
+    3.5%   { opacity: 1; transform: none; }
+    10.4%  { opacity: 1; transform: none; }
+    11.11% { opacity: 0; transform: translateY(-8px) scale(0.8); }
+    100%   { opacity: 0; }
+}
+@keyframes sd-denyut-lencana {
+    0%   { transform: scale(1);   opacity: 0.55; }
+    100% { transform: scale(2);   opacity: 0; }
+}
 @keyframes sd-geser-gradien {
     to { background-position: 200% 0; }
 }
@@ -114,19 +138,23 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
         position: relative;
         overflow: hidden;
         padding: 3.5rem 0 6.5rem;
-        background:
-            radial-gradient(circle at 1px 1px, sd-campur(14%) 1.2px, transparent 1.4px) 0 0 / 26px 26px,
-            linear-gradient(135deg, sd-campur(10%, #fff) 0%, #fff 55%, color-mix(in srgb, #{$sd-teal} 9%, #fff) 100%);
+        background: none;
         border-bottom: 0;
 
         @media (max-width: 991.98px) {
             padding: 2.5rem 0 5.5rem;
         }
     }
+    // Latar (titik, gradien, gumpalan) memudar ke warna halaman di bagian bawah, tanpa tepi keras.
     .sd-hero-latar {
         position: absolute;
         inset: 0;
         pointer-events: none;
+        background:
+            radial-gradient(circle at 1px 1px, sd-campur(14%) 1.2px, transparent 1.4px) 0 0 / 26px 26px,
+            linear-gradient(135deg, sd-campur(10%, #fff) 0%, #fff 55%, color-mix(in srgb, #{$sd-teal} 9%, #fff) 100%);
+        -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
     }
     .sd-blob {
         position: absolute;
@@ -275,8 +303,6 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     .sd-ilus-lencana { font-size: 12px; font-weight: 700; fill: #fff; }
     .sd-ilus-angka { font-size: 17px; font-weight: 800; fill: #fff; }
     .sd-ilus-garis { fill: #e2e8f0; }
-    .sd-ilus-peta { fill: sd-campur(16%); stroke: sd-campur(45%); stroke-width: 1.2; }
-    .sd-ilus-batas { stroke: #fff; stroke-width: 1.4; }
     .sd-ilus-orbit-garis { stroke: sd-campur(40%); stroke-width: 1.4; stroke-dasharray: 3 7; }
     .sd-ilus-orbit-titik { fill: sd-campur(70%); }
     .sd-ilus-paket-hub { fill: var(--o-color-1); }
@@ -312,13 +338,29 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
         animation: sd-putar 26s linear infinite;
     }
 
-    .sd-sel {
-        fill: var(--o-color-1);
-        animation: sd-kedip-sel 2.8s ease-in-out infinite alternate;
-        animation-delay: var(--tunda, 0s);
+    // Peta kecamatan: dasar lavender muda, beberapa kecamatan berganti warna bergiliran.
+    .sd-kec {
+        fill: sd-campur(16%);
+        stroke: #fff;
+        stroke-width: 0.8;
+        stroke-linejoin: round;
     }
-    .sd-sel--2 { fill: $sd-teal; }
-    .sd-sel--3 { fill: #c4b5fd; }
+    .sd-kec--a { animation: sd-warna-a 3.6s ease-in-out infinite alternate; animation-delay: var(--tunda, 0s); }
+    .sd-kec--b { animation: sd-warna-b 4.2s ease-in-out infinite alternate; animation-delay: var(--tunda, 0s); }
+    .sd-kec--c { animation: sd-warna-c 3.2s ease-in-out infinite alternate; animation-delay: var(--tunda, 0s); }
+
+    // Lencana notifikasi: angka naik 1 sampai 9 lalu kembali ke 1 (tiap angka 1,2 detik).
+    .sd-hitung-n {
+        opacity: 0;
+        animation: sd-hitung 10.8s linear infinite;
+        animation-delay: calc(var(--urut) * 1.2s);
+    }
+    .sd-hitung-n--1 { opacity: 1; } // tanpa animasi (kurangi gerakan): angka 1 tetap tampak
+    .sd-lencana-denyut {
+        fill: var(--o-color-2);
+        transform-origin: 0 0;
+        animation: sd-denyut-lencana 1.2s ease-out infinite;
+    }
 
     .sd-batang {
         fill: sd-campur(80%);
@@ -344,49 +386,112 @@ $sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
         z-index: 2;
         margin-top: -3.5rem;
     }
+    // Angka kunci: satu kartu utuh berisi 6 sel. Susunan: 6 sebaris (>= 1200 px), 3 x 2
+    // (tablet), 2 x 3 (ponsel), sehingga selalu terbagi rata. Sekat vertikal tidak menyentuh
+    // tepi atas/bawah kartu; garis antarbaris tidak menyentuh tepi kiri/kanan.
     .sd-angka-kunci {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 0.75rem;
+        grid-template-columns: repeat(2, 1fr);
         margin: 0;
-        padding: 1rem;
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(8px);
+        padding: 0;
+        list-style: none;
+        overflow: hidden;
+        background: #fff;
         border: 1px solid $sd-garis;
-        border-radius: 1rem;
+        border-radius: 1.25rem;
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.1);
 
-        @media (max-width: 991.98px) {
+        > li {
+            position: relative;
+            min-width: 0;
+        }
+        > li::before,
+        > li::after {
+            content: none;
+            position: absolute;
+            z-index: 1;
+            background: $sd-garis;
+        }
+
+        @media (max-width: 575.98px) {
+            > li:nth-child(even)::before { content: ""; left: 0; top: 22%; bottom: 22%; width: 1px; }
+            > li:nth-child(n + 3)::after { content: ""; top: 0; left: 0; right: 0; height: 1px; }
+            > li:nth-child(odd):nth-child(n + 3)::after { left: 1.25rem; }
+            > li:nth-child(even):nth-child(n + 3)::after { right: 1.25rem; }
+        }
+        @media (min-width: 576px) and (max-width: 1199.98px) {
             grid-template-columns: repeat(3, 1fr);
+
+            > li:nth-child(3n + 2)::before,
+            > li:nth-child(3n)::before { content: ""; left: 0; top: 22%; bottom: 22%; width: 1px; }
+            > li:nth-child(n + 4)::after { content: ""; top: 0; left: 0; right: 0; height: 1px; }
+            > li:nth-child(3n + 1):nth-child(n + 4)::after { left: 1.25rem; }
+            > li:nth-child(3n):nth-child(n + 4)::after { right: 1.25rem; }
+        }
+        @media (min-width: 1200px) {
+            grid-template-columns: repeat(6, 1fr);
+
+            > li + li::before { content: ""; left: 0; top: 22%; bottom: 22%; width: 1px; }
+        }
+    }
+    // Sel: ikon + angka + label, rata tengah. Saat disentuh, sel memunculkan warna lembut miliknya.
+    .sd-kpi {
+        --kpi-a: var(--o-color-1);
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: center;
+        column-gap: 0.85rem;
+        align-items: center;
+        height: 100%;
+        padding: 1.15rem 1rem;
+        transition: background 0.25s ease;
+
+        &:hover {
+            background: color-mix(in srgb, var(--kpi-a) 7%, transparent);
         }
         @media (max-width: 575.98px) {
-            grid-template-columns: repeat(2, 1fr);
+            column-gap: 0.7rem;
+            padding: 0.85rem 0.75rem;
         }
+    }
+    .sd-angka-kunci > li:nth-child(2) .sd-kpi { --kpi-a: var(--o-color-2); }
+    .sd-angka-kunci > li:nth-child(3) .sd-kpi { --kpi-a: #7c3aed; }
+    .sd-angka-kunci > li:nth-child(4) .sd-kpi { --kpi-a: #c026d3; }
+    .sd-angka-kunci > li:nth-child(5) .sd-kpi { --kpi-a: #8b5cf6; }
+    .sd-angka-kunci > li:nth-child(6) .sd-kpi { --kpi-a: #9333ea; }
 
-        > div {
-            background: transparent;
-            border: 0;
-            border-radius: 0.5rem;
-            padding: 0.5rem 0.75rem;
-            text-align: center;
-        }
-        dt {
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: $sd-teks-2;
+    // Ikon: latar abu-abu terang yang sama untuk semua; hanya warna glyph yang berbeda.
+    .sd-kpi-ikon {
+        grid-row: 1 / span 2;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 0.9rem;
+        font-size: 1.15rem;
+        color: var(--kpi-a);
+        background: #f1f3f5;
 
-            .fa {
-                color: var(--o-color-1);
-                margin-right: 0.25rem;
-            }
+        @media (max-width: 575.98px) {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
         }
-        dd {
-            font-size: clamp(1.6rem, 3.4vw, 2.2rem);
-            font-weight: 800;
-            margin: 0;
-            color: $sd-tinta;
-            font-variant-numeric: tabular-nums;
-        }
+    }
+    .sd-kpi-angka {
+        align-self: end;
+        font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+        font-weight: 800;
+        line-height: 1.1;
+        color: $sd-tinta;
+        font-variant-numeric: tabular-nums;
+    }
+    .sd-kpi-label {
+        align-self: start;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: $sd-teks-2;
     }
 
     // ── Bagian-bagian ──

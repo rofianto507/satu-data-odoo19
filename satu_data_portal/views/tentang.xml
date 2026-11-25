@@ -142,6 +142,7 @@
                                     <li><a href="/data">Katalog Data</a></li>
                                     <li><a href="/dashboard">Dashboard Tematik</a></li>
                                     <li><a href="/data/api">API Data</a></li>
+                                    <li><a href="/permintaan">Permintaan Data</a></li>
                                     <li><a href="/tentang">Tentang</a></li>
                                 </ul>
                             </div>

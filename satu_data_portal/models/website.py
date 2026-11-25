@@ -18,6 +18,7 @@ PALET_IKON = {
     'o-color-5': '#1e1033',   # gelap (ungu kehitaman)
 }
 IKON_APLIKASI = 'satu_data/static/description/icon.png'
+PARAM_PENGUMUMAN = 'satu_data_portal.pengumuman'
 BERANDA = '/beranda'
 BAHASA = 'id_ID'
 
@@ -31,6 +32,13 @@ class Website(models.Model):
         """Mis. "Kabupaten Jember" (dari company website)."""
         self.ensure_one()
         return self.env['satu_data.data']._sd_nama_wilayah(self.company_id)
+
+    def sd_pengumuman(self):
+        """Teks pengumuman di atas semua halaman portal (parameter sistem
+        ``satu_data_portal.pengumuman``); kosong = tanpa pengumuman. Dipakai, mis., untuk
+        menandai bahwa data masih contoh/uji coba."""
+        teks = (self.env['ir.config_parameter'].sudo().get_param(PARAM_PENGUMUMAN) or '').strip()
+        return teks[:300] or False
 
     def sd_instansi(self, peran):
         """Instansi aktif wilayah website ini dengan peran tertentu (mis. walidata)."""

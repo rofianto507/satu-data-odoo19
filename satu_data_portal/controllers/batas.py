@@ -28,3 +28,22 @@ def melebihi_batas(ip, batas=None):
 
 def detik_ke_menit_berikutnya():
     return 60 - int(time.time()) % 60
+
+
+_jendela = {}
+
+
+def melebihi_batas_jendela(ip, ruang, batas, detik):
+    """Catat satu kejadian dari ``ip`` pada ``ruang`` (mis. "permintaan"); True bila sudah
+    ``batas`` kali atau lebih dalam ``detik`` terakhir (jendela bergeser, di memori worker)."""
+    sekarang = time.time()
+    kunci = (ruang, ip)
+    with _kunci:
+        if len(_jendela) > 10000:
+            _jendela.clear()
+        waktu = [t for t in _jendela.get(kunci, ()) if sekarang - t < detik]
+        melebihi = len(waktu) >= batas
+        if not melebihi:
+            waktu.append(sekarang)
+        _jendela[kunci] = waktu
+    return melebihi

@@ -16,9 +16,14 @@
                                     diterbitkan Walidata.
                                 </p>
                             </div>
-                            <a href="/data/api" class="btn btn-sm btn-outline-secondary">
-                                <i class="fa fa-code" aria-hidden="true"/> API Data
-                            </a>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="/permintaan" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fa fa-comment-o" aria-hidden="true"/> Minta Data
+                                </a>
+                                <a href="/data/api" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fa fa-code" aria-hidden="true"/> API Data
+                                </a>
+                            </div>
                         </div>
                         <form action="/data" method="get" role="search">
                             <t t-foreach="saringan.items()" t-as="f">
@@ -116,6 +121,7 @@
                                 <p t-if="ada_filter" class="mb-0">
                                     Coba kata kunci lain atau <a href="/data">hapus semua saringan</a>.
                                 </p>
+                                <p class="mb-0 mt-1">Data yang dicari belum ada? <a href="/permintaan">Ajukan permintaan data</a>.</p>
                             </div>
 
                             <div t-if="pager['page_count'] > 1" class="d-flex justify-content-center mt-4">
@@ -259,6 +265,10 @@
                                 <h3 class="sd-panel-judul mt-4 mb-2">API</h3>
                                 <p class="small mb-1"><code class="sd-kode-url" t-esc="url_api"/></p>
                                 <p class="small mb-0"><a href="/data/api">Dokumentasi API</a></p>
+                                <p class="small mt-3 mb-0">
+                                    Butuh rincian lain?
+                                    <a t-att-href="'/permintaan?data=%s' % data.kode">Ajukan permintaan terkait data ini</a>.
+                                </p>
                                 <p class="small text-muted mt-4 mb-0">
                                     Dilihat <t t-esc="statistik['kunjungan']"/> kali ·
                                     diunduh <t t-esc="statistik['unduhan']"/> kali
@@ -342,6 +352,20 @@
      "nilai": 1234, "satuan": "Jiwa"}
   ]
 }</code></pre>
+                    </section>
+
+                    <section class="sd-panel mb-4">
+                        <h2 class="sd-panel-judul">Kunci API (opsional)</h2>
+                        <p class="small">Tanpa kunci, API bisa dipakai bebas dengan batas per alamat IP. Instansi atau
+                            aplikasi yang membutuhkan batas lebih longgar dapat meminta kunci lewat
+                            <a href="/permintaan?jenis=kunci_api">formulir permintaan</a>. Kunci tidak membuka data
+                            tertutup: data yang tampil sama dengan tanpa kunci.</p>
+                        <pre class="mb-2"><code>curl -H "X-API-Key: sdk_..." <t t-esc="dasar"/>/data
+curl -H "Authorization: Bearer sdk_..." <t t-esc="dasar"/>/data</code></pre>
+                        <ul class="small mb-0">
+                            <li>Kirim kunci dari server Anda, jangan menaruhnya di kode yang berjalan di peramban pengunjung.</li>
+                            <li>Kunci yang dikirim tetapi tidak sah dijawab <code>401</code>.</li>
+                        </ul>
                     </section>
 
                     <section class="sd-panel">

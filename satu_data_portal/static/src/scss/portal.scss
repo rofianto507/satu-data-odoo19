@@ -220,58 +220,6 @@ $sd-latar: #f8fafc;
     }
 
     // ── Beranda ──
-    .sd-hero {
-        background: linear-gradient(135deg, #eff6ff 0%, #fff 60%);
-        border-bottom: 1px solid $sd-garis;
-    }
-    .sd-hero-logo {
-        height: 56px;
-        width: auto;
-    }
-    .sd-hero-label {
-        font-size: 0.8125rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: $sd-biru;
-    }
-    .sd-hero-judul {
-        font-size: clamp(1.75rem, 4vw, 2.5rem);
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-    }
-    .sd-hero-teks {
-        font-size: 1.0625rem;
-        color: $sd-teks-2;
-        max-width: 56ch;
-    }
-    .sd-hero-cari {
-        max-width: 40rem;
-    }
-    .sd-angka-kunci {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-        gap: 0.75rem;
-        margin: 0;
-
-        > div {
-            background: #fff;
-            border: 1px solid $sd-garis;
-            border-radius: 0.5rem;
-            padding: 0.875rem 1rem;
-        }
-        dt {
-            font-size: 0.8125rem;
-            font-weight: 500;
-            color: $sd-teks-2;
-        }
-        dd {
-            font-size: 1.625rem;
-            font-weight: 700;
-            margin: 0;
-            font-variant-numeric: tabular-nums;
-        }
-    }
     .sd-bagian-judul {
         font-size: 1.25rem;
         font-weight: 700;
@@ -475,4 +423,28 @@ $sd-latar: #f8fafc;
             white-space: pre-line;
         }
     }
+}
+
+// Kolom jebakan robot di formulir: di luar layar, tidak terlihat dan tidak bisa difokus manusia.
+.sd-madu {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+// Teks bebas dari pengguna: pertahankan baris baru, tanpa HTML.
+.sd-pra {
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+// Pengumuman di atas header (mis. penanda data contoh).
+.sd-pengumuman {
+    padding: 0.4rem 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #78350f;
+    background: #fef3c7;
+    border-bottom: 1px solid #fde68a;
 }

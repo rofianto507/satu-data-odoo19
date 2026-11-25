@@ -1,6 +1,6 @@
 {
     'name': 'Satu Data: Portal Publik',
-    'version': '19.0.1.4.0',
+    'version': '19.0.1.5.0',
     'summary': 'Portal Satu Data untuk publik: katalog, halaman data, unduhan, dan API baca',
     'description': """
 Portal Publik Satu Data
@@ -16,6 +16,12 @@ Tahap penyebarluasan Satu Data Indonesia (Perpres 39/2019) di website Odoo, tanp
   CORS terbuka, batas permintaan per IP; dokumentasi di ``/data/api``.
 * Statistik kunjungan dan unduhan per data per hari (angka agregat, tanpa data pengunjung)
   untuk urutan "Populer" dan menu Statistik Portal bagi Walidata.
+* Formulir Permintaan Data (/permintaan) dengan pengaman berlapis (CSRF, kolom jebakan, tanda waktu
+  bertanda tangan, batas per IP) dan halaman status berbasis token acak; ditangani Walidata di
+  menu Tata Kelola.
+* Kunci API opsional untuk instansi lain (hanya hash yang disimpan, batas permintaan lebih
+  longgar; tidak membuka data tertutup).
+* Pengumuman di atas portal lewat parameter sistem ``satu_data_portal.pengumuman``.
 * Cache nilai per data per periode; dibersihkan saat laporan terbit/ditarik atau wilayah
   berubah.
 * Beranda portal beranimasi (hero dengan ilustrasi vektor, angka kunci berhitung naik, cara
@@ -36,11 +42,14 @@ tingkat penyajiannya kab/kota), tanpa data per orang. Nilai dihitung oleh modul 
     'data': [
         'security/ir.model.access.csv',
         'security/satu_data_portal_security.xml',
+        'data/sequence.xml',
         'data/website_menu.xml',
         'views/templates.xml',
         'views/beranda.xml',
         'views/tentang.xml',
         'views/ikon.xml',
+        'views/permintaan.xml',
+        'views/permintaan_views.xml',
         'views/statistik_views.xml',
     ],
     'assets': {

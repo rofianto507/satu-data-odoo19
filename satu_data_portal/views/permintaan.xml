@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Formulir permintaan data ─────────────────────────────────────────── -->
+    <template id="permintaan_form" name="Satu Data: Formulir Permintaan">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Permintaan Data</t>
+            <div id="wrap" class="sd-portal">
+                <section class="sd-portal-kepala">
+                    <div class="container py-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-2">
+                                <li class="breadcrumb-item"><a href="/data">Katalog Data</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Permintaan Data</li>
+                            </ol>
+                        </nav>
+                        <h1 class="h2 mb-2">Permintaan Data</h1>
+                        <p class="sd-definisi mb-0">
+                            Tidak menemukan data yang Anda cari, atau butuh kunci API? Sampaikan di sini.
+                            Walidata akan menanggapi permintaan Anda; pantau statusnya lewat tautan yang
+                            diberikan setelah formulir dikirim.
+                        </p>
+                    </div>
+                </section>
+
+                <div class="container py-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <form action="/permintaan" method="post" class="sd-panel sd-form" novalidate="novalidate">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="dibuka" t-att-value="dibuka"/>
+                                <input type="hidden" name="data" t-att-value="data.kode if data else ''"/>
+
+                                <div t-if="galat.get('_umum')" class="alert alert-danger" role="alert" t-esc="galat['_umum']"/>
+                                <div t-elif="galat" class="alert alert-danger" role="alert">
+                                    Periksa kembali isian yang ditandai di bawah.
+                                </div>
+                                <div t-if="data" class="alert alert-info d-flex align-items-start gap-2" role="note">
+                                    <i class="fa fa-info-circle mt-1" aria-hidden="true"/>
+                                    <span>Permintaan ini terkait data <strong t-esc="data.name"/>.</span>
+                                </div>
+
+                                <!-- Kolom jebakan robot: tidak terlihat manusia -->
+                                <div class="sd-madu" aria-hidden="true">
+                                    <label for="situs_web">Situs web (jangan diisi)</label>
+                                    <input type="text" name="situs_web" id="situs_web" tabindex="-1" autocomplete="off"/>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="jenis" class="form-label">Jenis permintaan <span class="text-danger">*</span></label>
+                                        <select name="jenis" id="jenis" t-attf-class="form-select #{'is-invalid' if galat.get('jenis') else ''}" required="required">
+                                            <option t-foreach="jenis_daftar" t-as="j" t-att-value="j[0]"
+                                                    t-att-selected="nilai.get('jenis') == j[0]" t-esc="j[1]"/>
+                                        </select>
+                                        <div t-if="galat.get('jenis')" class="invalid-feedback d-block" t-esc="galat['jenis']"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pemohon_jenis" class="form-label">Anda sebagai <span class="text-danger">*</span></label>
+                                        <select name="pemohon_jenis" id="pemohon_jenis" t-attf-class="form-select #{'is-invalid' if galat.get('pemohon_jenis') else ''}" required="required">
+                                            <option t-foreach="pemohon_daftar" t-as="p" t-att-value="p[0]"
+                                                    t-att-selected="nilai.get('pemohon_jenis') == p[0]" t-esc="p[1]"/>
+                                        </select>
+                                        <div t-if="galat.get('pemohon_jenis')" class="invalid-feedback d-block" t-esc="galat['pemohon_jenis']"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="nama_pemohon" class="form-label">Nama <span class="text-danger">*</span></label>
+                                        <input type="text" name="nama_pemohon" id="nama_pemohon" required="required"
+                                               t-att-maxlength="maks['nama']" autocomplete="name"
+                                               t-attf-class="form-control #{'is-invalid' if galat.get('nama_pemohon') else ''}"
+                                               t-att-value="nilai.get('nama_pemohon')"/>
+                                        <div t-if="galat.get('nama_pemohon')" class="invalid-feedback d-block" t-esc="galat['nama_pemohon']"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="organisasi" class="form-label">Organisasi/instansi</label>
+                                        <input type="text" name="organisasi" id="organisasi"
+                                               t-att-maxlength="maks['organisasi']" autocomplete="organization"
+                                               t-attf-class="form-control #{'is-invalid' if galat.get('organisasi') else ''}"
+                                               t-att-value="nilai.get('organisasi')"/>
+                                        <div t-if="galat.get('organisasi')" class="invalid-feedback d-block" t-esc="galat['organisasi']"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                        <input type="email" name="email" id="email" required="required"
+                                               t-att-maxlength="maks['email']" autocomplete="email"
+                                               t-attf-class="form-control #{'is-invalid' if galat.get('email') else ''}"
+                                               t-att-value="nilai.get('email')"/>
+                                        <div t-if="galat.get('email')" class="invalid-feedback d-block" t-esc="galat['email']"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="telepon" class="form-label">Telepon</label>
+                                        <input type="tel" name="telepon" id="telepon"
+                                               t-att-maxlength="maks['telepon']" autocomplete="tel"
+                                               t-attf-class="form-control #{'is-invalid' if galat.get('telepon') else ''}"
+                                               t-att-value="nilai.get('telepon')"/>
+                                        <div t-if="galat.get('telepon')" class="invalid-feedback d-block" t-esc="galat['telepon']"/>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="uraian" class="form-label">Uraian permintaan <span class="text-danger">*</span></label>
+                                        <textarea name="uraian" id="uraian" rows="4" required="required"
+                                                  t-att-maxlength="maks['uraian']"
+                                                  t-attf-class="form-control #{'is-invalid' if galat.get('uraian') else ''}"
+                                                  placeholder="Data apa yang Anda butuhkan: cakupan wilayah, periode, dan rincian yang diharapkan."><t t-esc="nilai.get('uraian') or ''"/></textarea>
+                                        <div t-if="galat.get('uraian')" class="invalid-feedback d-block" t-esc="galat['uraian']"/>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="tujuan" class="form-label">Tujuan penggunaan <span class="text-danger">*</span></label>
+                                        <textarea name="tujuan" id="tujuan" rows="3" required="required"
+                                                  t-att-maxlength="maks['tujuan']"
+                                                  t-attf-class="form-control #{'is-invalid' if galat.get('tujuan') else ''}"
+                                                  placeholder="Mis. penelitian, perencanaan program, aplikasi, atau pemberitaan."><t t-esc="nilai.get('tujuan') or ''"/></textarea>
+                                        <div t-if="galat.get('tujuan')" class="invalid-feedback d-block" t-esc="galat['tujuan']"/>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="setuju" id="setuju" value="1"
+                                                   t-attf-class="form-check-input #{'is-invalid' if galat.get('setuju') else ''}"
+                                                   t-att-checked="nilai.get('setuju')"/>
+                                            <label for="setuju" class="form-check-label small">
+                                                Saya setuju data kontak di atas dipakai Walidata hanya untuk menanggapi
+                                                permintaan ini. Data kontak tidak ditampilkan di portal.
+                                            </label>
+                                        </div>
+                                        <div t-if="galat.get('setuju')" class="invalid-feedback d-block" t-esc="galat['setuju']"/>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg sd-tombol-kilau">
+                                        <i class="fa fa-paper-plane" aria-hidden="true"/> Kirim Permintaan
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Halaman status permintaan ────────────────────────────────────────── -->
+    <template id="permintaan_status" name="Satu Data: Status Permintaan">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Status Permintaan</t>
+            <t t-set="head">
+                <meta name="robots" content="noindex, nofollow"/>
+            </t>
+            <div id="wrap" class="sd-portal">
+                <section class="sd-portal-kepala">
+                    <div class="container py-4">
+                        <h1 class="h2 mb-1">Status Permintaan</h1>
+                        <p class="text-muted mb-0">Nomor <strong t-esc="rec.name"/> · diterima <span t-esc="tanggal"/></p>
+                    </div>
+                </section>
+                <div class="container py-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="sd-panel">
+                                <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                                    <span t-attf-class="badge fs-6 text-bg-#{'info' if rec.state == 'baru' else 'warning' if rec.state == 'diproses' else 'success' if rec.state == 'selesai' else 'danger'}"
+                                          t-esc="status_label"/>
+                                    <span class="text-muted" t-esc="jenis_label"/>
+                                    <span t-if="tanggal_selesai" class="text-muted">· ditutup <t t-esc="tanggal_selesai"/></span>
+                                </div>
+                                <h2 class="sd-panel-judul">Permintaan Anda</h2>
+                                <p class="sd-pra" t-esc="rec.uraian"/>
+                                <t t-if="rec.tanggapan">
+                                    <h2 class="sd-panel-judul mt-4">Tanggapan Walidata</h2>
+                                    <p class="sd-pra" t-esc="rec.tanggapan"/>
+                                </t>
+                                <p t-else="" class="text-muted mt-3 mb-0">
+                                    Permintaan Anda sedang ditinjau. Halaman ini diperbarui saat Walidata menanggapi.
+                                </p>
+                                <hr/>
+                                <p class="small text-muted mb-0">
+                                    Simpan alamat halaman ini (tautannya rahasia) untuk memantau permintaan Anda.
+                                    Siapa pun yang memegang tautan ini dapat melihat halaman ini.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Terima kasih (tanpa rincian) ─────────────────────────────────────── -->
+    <template id="permintaan_terima_kasih" name="Satu Data: Terima Kasih">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Terima Kasih</t>
+            <div id="wrap" class="sd-portal">
+                <div class="container py-5">
+                    <div class="sd-kosong">
+                        <i class="fa fa-check-circle fa-2x mb-2 d-block" aria-hidden="true"/>
+                        <p class="mb-1">Terima kasih. Permintaan Anda sudah kami terima.</p>
+                        <p class="mb-0"><a href="/data">Kembali ke katalog</a></p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

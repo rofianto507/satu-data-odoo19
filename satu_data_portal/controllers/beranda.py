@@ -45,6 +45,8 @@ class SatuDataBeranda(http.Controller):
             'data': len(hasil),
             'produsen': len(faset['instansi']),
             'topik': len(faset['topik']),
+            'kecamatan': request.env['satu_data.kecamatan'].sudo().search_count(
+                [('company_id', '=', company.id)]),
             **statistik,
         }
         # Topik yang punya data publik: kata yang berganti di bawah judul hero.

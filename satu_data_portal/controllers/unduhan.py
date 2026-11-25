@@ -27,12 +27,20 @@ FORMAT = {
 }
 
 
+def aman_csv(nilai):
+    """Cegah injeksi rumus: Excel/Sheets menjalankan sel teks yang diawali = + - @ (atau tab/CR).
+    Teks semacam itu diawali tanda petik. Angka dibiarkan (nilai negatif tetap angka)."""
+    if isinstance(nilai, str) and nilai[:1] in ('=', '+', '-', '@', '\t', '\r'):
+        return "'" + nilai
+    return nilai
+
+
 def isi_csv(baris):
     buf = io.StringIO()
     tulis = csv.writer(buf, lineterminator='\n')
     tulis.writerow([k for k, _l in KOLOM])
     for b in baris:
-        tulis.writerow(['' if b[k] is None else b[k] for k, _l in KOLOM])
+        tulis.writerow(['' if b[k] is None else aman_csv(b[k]) for k, _l in KOLOM])
     # BOM agar Excel membuka UTF-8 (nama wilayah ber-aksen) dengan benar.
     return ('﻿' + buf.getvalue()).encode('utf-8')
 
