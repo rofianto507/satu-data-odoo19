@@ -4,9 +4,9 @@ import { loadJS } from "@web/core/assets";
 
 // Apache ECharts dari modul inti (salinan lokal, lisensi Apache 2.0).
 const URL_ECHARTS = "/satu_data/static/lib/echarts/echarts.min.js";
-// Warna utama website (bisa diubah Admin di penyunting website); cadangan biru bila tak terbaca.
+// Warna utama website (Color 1 pada palet website; Admin dapat mengubahnya di penyunting website); cadangan biru bila tak terbaca.
 function warnaUtama() {
-    const w = getComputedStyle(document.documentElement).getPropertyValue("--bs-primary").trim();
+    const w = getComputedStyle(document.documentElement).getPropertyValue("--o-color-1").trim();
     return w || "#1d4ed8";
 }
 function warnaTipis(hex, alfa) {

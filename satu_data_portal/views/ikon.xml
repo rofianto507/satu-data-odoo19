@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Favicon backend dan halaman login: ikon aplikasi Satu Data, bukan logo Odoo.
+         Halaman website tetap memakai favicon website (x_icon diisi oleh website.layout). -->
+    <template id="favicon_satu_data" inherit_id="web.layout" name="Satu Data: Favicon">
+        <xpath expr="//link[@rel='shortcut icon']" position="attributes">
+            <attribute name="t-att-href">x_icon or '/satu_data_portal/static/description/icon.png'</attribute>
+            <attribute name="type">image/png</attribute>
+        </xpath>
+    </template>
+</odoo>

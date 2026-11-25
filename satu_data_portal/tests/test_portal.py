@@ -404,6 +404,10 @@ class TestPortal(SatuDataCase, HttpCase):
         self.assertIn('Penduduk Uji Portal', res.text)
         self.assertIn(f'/dashboard/{self.topik.id}', res.text)
         self.assertIn('Katalog Data', res.text, 'Footer portal')
+        self.assertIn('static/description/icon.png', res.text, 'Ikon aplikasi di hero')
+        self.assertIn('class="sd-ilus"', res.text, 'Ilustrasi vektor')
+        self.assertIn('data-nilai="3"', res.text, 'Angka kunci siap dihitung naik (3 data uji)')
+        self.assertIn('Topik Uji Portal', res.text, 'Kata berganti memakai topik yang punya data')
         self.assertIn('>Masuk<', res.text)
         self.assertNotIn('>Sign in<', res.text)
 

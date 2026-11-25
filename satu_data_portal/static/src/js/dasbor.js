@@ -9,9 +9,9 @@ const URL_ECHARTS = "/satu_data/static/lib/echarts/echarts.min.js";
 const WARNA_TEKS = "#4b5563";
 const WARNA_GARIS = "#e5e7eb";
 const WARNA_BATAS = "#8b93a1";
-// Warna utama website (bisa diubah Admin di penyunting website); cadangan biru bila tak terbaca.
+// Warna utama website (Color 1 pada palet website; Admin dapat mengubahnya di penyunting website); cadangan biru bila tak terbaca.
 function warnaUtama() {
-    const w = getComputedStyle(document.documentElement).getPropertyValue("--bs-primary").trim();
+    const w = getComputedStyle(document.documentElement).getPropertyValue("--o-color-1").trim();
     return w || "#1d4ed8";
 }
 function warnaTipis(hex, alfa) {

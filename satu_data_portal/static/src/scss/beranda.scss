@@ -1,0 +1,664 @@
+// Beranda portal Satu Data: hero beranimasi, ilustrasi vektor, dan bagian-bagian landing page.
+// Aksen mengikuti warna utama website (--o-color-1); teal dipakai sebagai pasangan gradien.
+$sd-teal: #0d9488;
+$sd-tinta: #0f172a;
+$sd-teks-2: #4b5563;
+$sd-garis: #e5e7eb;
+$sd-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+@function sd-campur($persen, $dasar: transparent) {
+    @return color-mix(in srgb, var(--o-color-1) #{$persen}, #{$dasar});
+}
+
+// ── Keyframes ───────────────────────────────────────────────────────────────
+@keyframes sd-naik {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes sd-masuk-ilus {
+    from { opacity: 0; transform: translateX(28px) scale(0.96); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes sd-melayang {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(40px, -30px, 0) scale(1.12); }
+}
+@keyframes sd-apung {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
+@keyframes sd-denyut {
+    0%   { transform: scale(1);   opacity: 0.35; }
+    100% { transform: scale(2.1); opacity: 0; }
+}
+@keyframes sd-putar {
+    to { transform: rotate(360deg); }
+}
+@keyframes sd-alir {
+    to { stroke-dashoffset: -28; }
+}
+@keyframes sd-batang {
+    0%   { transform: scaleY(0.3); }
+    100% { transform: scaleY(1); }
+}
+@keyframes sd-gambar-garis {
+    0%   { stroke-dashoffset: 140; }
+    55%, 100% { stroke-dashoffset: 0; }
+}
+@keyframes sd-kedip-sel {
+    from { opacity: 0.25; }
+    to   { opacity: 0.95; }
+}
+@keyframes sd-geser-gradien {
+    to { background-position: 200% 0; }
+}
+// Geser bolak-balik (tanpa pengulangan ubin) untuk gradien yang tidak simetris.
+@keyframes sd-geser-bolak {
+    from { background-position: 0% 0; }
+    to   { background-position: 100% 0; }
+}
+@keyframes sd-kilau {
+    from { transform: translateX(-120%) skewX(-18deg); }
+    to   { transform: translateX(220%) skewX(-18deg); }
+}
+@keyframes sd-pop {
+    from { transform: scale(0.4); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+.sd-beranda {
+    // ── Muncul saat halaman dimuat (CSS murni, tanpa JS) ──
+    .sd-masuk {
+        animation: sd-naik 0.75s $sd-ease both;
+        animation-delay: var(--tunda, 0s);
+    }
+    .sd-masuk--ilus {
+        animation-name: sd-masuk-ilus;
+        animation-duration: 0.95s;
+    }
+
+    // ── Muncul saat digulir (JS menambah .sd-siap dan .sd-terlihat) ──
+    &.sd-siap .sd-reveal {
+        opacity: 0;
+        transform: translateY(26px);
+        transition: opacity 0.7s $sd-ease, transform 0.7s $sd-ease;
+
+        &.sd-terlihat {
+            opacity: 1;
+            transform: none;
+        }
+    }
+    &.sd-siap .sd-reveal-grup {
+        // Grup memunculkan anak-anaknya bergiliran, bukan dirinya sendiri.
+        opacity: 1;
+        transform: none;
+        transition: none;
+
+        > .sd-reveal-anak,
+        > * > .sd-reveal-anak {
+            opacity: 0;
+            transform: translateY(26px) scale(0.97);
+            transition: opacity 0.6s $sd-ease, transform 0.6s $sd-ease;
+            transition-delay: var(--tunda, 0s);
+        }
+        &.sd-terlihat > .sd-reveal-anak,
+        &.sd-terlihat > * > .sd-reveal-anak {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    // ── Hero ──
+    .sd-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 3.5rem 0 6.5rem;
+        background:
+            radial-gradient(circle at 1px 1px, sd-campur(14%) 1.2px, transparent 1.4px) 0 0 / 26px 26px,
+            linear-gradient(135deg, sd-campur(9%, #fff) 0%, #fff 55%, color-mix(in srgb, #{$sd-teal} 8%, #fff) 100%);
+        border-bottom: 0;
+
+        @media (max-width: 991.98px) {
+            padding: 2.5rem 0 5.5rem;
+        }
+    }
+    .sd-hero-latar {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+    .sd-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.55;
+        animation: sd-melayang 14s ease-in-out infinite alternate;
+    }
+    .sd-blob--1 { width: 360px; height: 360px; left: -80px; top: -100px; background: sd-campur(38%); }
+    .sd-blob--2 { width: 300px; height: 300px; right: 6%; top: 30%; background: color-mix(in srgb, #{$sd-teal} 34%, transparent); animation-duration: 18s; animation-delay: -4s; }
+    .sd-blob--3 { width: 240px; height: 240px; left: 38%; bottom: -120px; background: rgba(245, 158, 11, 0.3); animation-duration: 16s; animation-delay: -8s; }
+
+    .sd-merek {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+    // Ikon aplikasi (cincin ungu); ikonnya transparan, jadi cukup diberi bayangan lembut.
+    .sd-merek-logo {
+        width: 60px;
+        height: 60px;
+        filter: drop-shadow(0 8px 14px sd-campur(30%));
+        animation: sd-apung 6s ease-in-out infinite;
+    }
+    .sd-merek-teks {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+
+        strong {
+            font-size: 1.25rem;
+            color: $sd-tinta;
+        }
+        small {
+            color: $sd-teks-2;
+            font-size: 0.8125rem;
+        }
+    }
+    .sd-merek-lambang {
+        height: 44px;
+        width: auto;
+        margin-left: auto;
+        padding-left: 0.75rem;
+        border-left: 1px solid $sd-garis;
+    }
+
+    .sd-hero-judul {
+        font-size: clamp(2.1rem, 5vw, 3.4rem);
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        color: $sd-tinta;
+        margin-bottom: 0.75rem;
+    }
+    .sd-gradien {
+        display: inline-block;
+        background: linear-gradient(90deg, var(--o-color-1), #{$sd-teal}, var(--o-color-1));
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: var(--o-color-1);
+        animation: sd-geser-gradien 6s linear infinite;
+    }
+    .sd-hero-putar {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: $sd-tinta;
+        margin-bottom: 0.5rem;
+        min-height: 1.6em;
+    }
+    .sd-kata {
+        display: inline-block;
+        color: var(--o-color-1);
+        border-bottom: 3px solid sd-campur(35%);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+
+        &.sd-kata--keluar {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+    }
+    .sd-hero-teks {
+        font-size: 1.0625rem;
+        color: $sd-teks-2;
+        max-width: 52ch;
+        margin-bottom: 1.5rem;
+    }
+    .sd-hero-cari {
+        max-width: 36rem;
+
+        .form-control {
+            border-radius: 0.75rem 0 0 0.75rem;
+            border-color: $sd-garis;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+
+            &:focus {
+                border-color: var(--o-color-1);
+                box-shadow: 0 0 0 0.25rem sd-campur(18%);
+            }
+        }
+        .btn {
+            border-radius: 0 0.75rem 0.75rem 0;
+            padding-inline: 1.5rem;
+        }
+    }
+    .sd-hero-coba {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        margin: 0.9rem 0 0;
+        font-size: 0.875rem;
+        color: $sd-teks-2;
+
+        a {
+            padding: 0.15rem 0.7rem;
+            border-radius: 2rem;
+            background: #fff;
+            border: 1px solid $sd-garis;
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.2s ease;
+
+            &:hover,
+            &:focus-visible {
+                color: var(--o-color-1);
+                border-color: sd-campur(45%);
+                transform: translateY(-2px);
+            }
+        }
+    }
+
+    // ── Ilustrasi ──
+    .sd-hero-ilus {
+        max-width: 640px;
+        margin-inline: auto;
+    }
+    .sd-ilus {
+        display: block;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        font-family: inherit;
+    }
+    .sd-ilus-latar { fill: sd-campur(8%); }
+    .sd-ilus-titik { fill: sd-campur(30%); }
+    .sd-ilus-titik--2 { fill: rgba(245, 158, 11, 0.45); }
+    .sd-ilus-judul { font-size: 14px; font-weight: 700; fill: $sd-tinta; }
+    .sd-ilus-kecil { font-size: 12px; font-weight: 600; fill: $sd-tinta; }
+    .sd-ilus-lencana { font-size: 12px; font-weight: 700; fill: #fff; }
+    .sd-ilus-angka { font-size: 17px; font-weight: 800; fill: #fff; }
+    .sd-ilus-garis { fill: #e2e8f0; }
+    .sd-ilus-peta { fill: sd-campur(16%); stroke: sd-campur(45%); stroke-width: 1.2; }
+    .sd-ilus-batas { stroke: #fff; stroke-width: 1.4; }
+    .sd-ilus-orbit-garis { stroke: sd-campur(40%); stroke-width: 1.4; stroke-dasharray: 3 7; }
+    .sd-ilus-orbit-titik { fill: sd-campur(70%); }
+    .sd-ilus-paket-hub { fill: var(--o-color-1); }
+    .sd-ilus-hub { fill: var(--o-color-1); }
+    // Kilau tipis di sisi atas-kiri agar pusat data tampak bervolume.
+    .sd-ilus-hub-kilau { fill: rgba(255, 255, 255, 0.14); clip-path: ellipse(60% 42% at 35% 25%); }
+
+    .sd-ilus-alir {
+        stroke-dasharray: 6 8;
+        opacity: 0.55;
+        animation: sd-alir 1.1s linear infinite;
+    }
+    .sd-ilus-alir--hub {
+        stroke: var(--o-color-1);
+        stroke-width: 2.6;
+        opacity: 0.8;
+    }
+
+    .sd-apung {
+        animation: sd-apung 6s ease-in-out infinite;
+        animation-delay: var(--tunda, 0s);
+    }
+    .sd-apung--pelan { animation-duration: 8s; }
+
+    .sd-denyut {
+        fill: sd-campur(40%);
+        transform-origin: 0 0;
+        animation: sd-denyut 3.2s ease-out infinite;
+    }
+    .sd-denyut--2 { animation-delay: -1.6s; }
+    .sd-orbit {
+        transform-origin: 0 0;
+        animation: sd-putar 26s linear infinite;
+    }
+
+    .sd-sel {
+        fill: var(--o-color-1);
+        animation: sd-kedip-sel 2.8s ease-in-out infinite alternate;
+        animation-delay: var(--tunda, 0s);
+    }
+    .sd-sel--2 { fill: $sd-teal; }
+    .sd-sel--3 { fill: #f59e0b; }
+
+    .sd-batang {
+        fill: sd-campur(80%);
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+        animation: sd-batang 2.4s ease-in-out infinite alternate;
+        animation-delay: var(--tunda, 0s);
+    }
+    .sd-batang--2 { fill: $sd-teal; }
+    .sd-ilus-garis-data {
+        fill: none;
+        stroke: #f59e0b;
+        stroke-width: 2.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 140;
+        animation: sd-gambar-garis 4s ease-in-out infinite alternate;
+    }
+
+    // ── Strip angka (menimpa bagian bawah hero) ──
+    .sd-strip {
+        position: relative;
+        z-index: 2;
+        margin-top: -3.5rem;
+    }
+    .sd-angka-kunci {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.75rem;
+        margin: 0;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(8px);
+        border: 1px solid $sd-garis;
+        border-radius: 1rem;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.1);
+
+        @media (max-width: 991.98px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 575.98px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        > div {
+            background: transparent;
+            border: 0;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            text-align: center;
+        }
+        dt {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: $sd-teks-2;
+
+            .fa {
+                color: var(--o-color-1);
+                margin-right: 0.25rem;
+            }
+        }
+        dd {
+            font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+            font-weight: 800;
+            margin: 0;
+            color: $sd-tinta;
+            font-variant-numeric: tabular-nums;
+        }
+    }
+
+    // ── Bagian-bagian ──
+    .sd-bagian {
+        padding-block: 4.25rem;
+
+        @media (max-width: 767.98px) {
+            padding-block: 3rem;
+        }
+    }
+    .sd-bagian-label {
+        display: inline-block;
+        margin-bottom: 0.4rem;
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--o-color-1);
+    }
+    .sd-bagian-judul--besar {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        margin-bottom: 2rem;
+    }
+
+    .sd-kartu-fitur {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        height: 100%;
+        padding: 1.5rem;
+        background: #fff;
+        border: 1px solid $sd-garis;
+        border-radius: 1rem;
+        color: inherit;
+        text-decoration: none;
+        overflow: hidden;
+        transition: transform 0.3s $sd-ease, box-shadow 0.3s $sd-ease, border-color 0.3s ease;
+
+        &::after {
+            content: "";
+            position: absolute;
+            right: -40px;
+            top: -40px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: sd-campur(9%);
+            transition: transform 0.5s $sd-ease;
+        }
+        strong {
+            font-size: 1.0625rem;
+            color: $sd-tinta;
+        }
+        > span:not(.sd-kartu-fitur-ikon) {
+            font-size: 0.9375rem;
+            color: $sd-teks-2;
+            flex: 1;
+        }
+        em {
+            font-style: normal;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--o-color-1);
+
+            .fa {
+                margin-left: 0.25rem;
+                transition: transform 0.25s ease;
+            }
+        }
+        &:hover,
+        &:focus-visible {
+            transform: translateY(-6px);
+            border-color: sd-campur(45%);
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.1);
+
+            &::after { transform: scale(1.8); }
+            em .fa { transform: translateX(5px); }
+            .sd-kartu-fitur-ikon { transform: rotate(-8deg) scale(1.08); }
+        }
+    }
+    .sd-kartu-fitur-ikon {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 0.875rem;
+        margin-bottom: 0.4rem;
+        font-size: 1.3rem;
+        color: #fff;
+        background: linear-gradient(135deg, var(--o-color-1), #{sd-campur(60%, #0f172a)});
+        box-shadow: 0 8px 18px sd-campur(30%);
+        transition: transform 0.3s $sd-ease;
+    }
+    .sd-kartu-fitur--2 .sd-kartu-fitur-ikon { background: linear-gradient(135deg, #{$sd-teal}, #0f766e); box-shadow: 0 8px 18px rgba(13, 148, 136, 0.3); }
+    .sd-kartu-fitur--3 .sd-kartu-fitur-ikon { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 8px 18px rgba(217, 119, 6, 0.3); }
+    .sd-kartu-fitur--4 .sd-kartu-fitur-ikon { background: linear-gradient(135deg, #6366f1, #4338ca); box-shadow: 0 8px 18px rgba(99, 102, 241, 0.3); }
+
+    .sd-kartu-tema {
+        transition: transform 0.3s $sd-ease, box-shadow 0.3s $sd-ease, border-color 0.3s ease;
+
+        &:hover,
+        &:focus-visible {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+
+            .sd-kartu-tema-ikon {
+                transform: scale(1.12) rotate(-6deg);
+            }
+        }
+    }
+    .sd-kartu-tema-ikon {
+        transition: transform 0.3s $sd-ease;
+    }
+
+    // ── Alur ──
+    .sd-langkah {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        // Garis penghubung: dasar abu-abu + isian yang terisi saat terlihat.
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            top: 1.75rem;
+            left: 12.5%;
+            right: 12.5%;
+            height: 3px;
+            border-radius: 3px;
+        }
+        &::before { background: $sd-garis; }
+        &::after {
+            background: linear-gradient(90deg, var(--o-color-1), #{$sd-teal});
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 1.6s $sd-ease 0.3s;
+        }
+        &.sd-terlihat::after { transform: scaleX(1); }
+
+        li {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 0.25rem;
+
+            strong { color: $sd-tinta; }
+            > span:not(.sd-langkah-bulat) {
+                font-size: 0.875rem;
+                color: $sd-teks-2;
+                max-width: 22ch;
+            }
+        }
+        @media (max-width: 767.98px) {
+            grid-template-columns: 1fr;
+            &::before,
+            &::after { display: none; }
+        }
+    }
+    .sd-langkah-bulat {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 3.5rem;
+        height: 3.5rem;
+        margin-bottom: 0.5rem;
+        border-radius: 50%;
+        font-size: 1.3rem;
+        color: var(--o-color-1);
+        background: #fff;
+        border: 3px solid var(--o-color-1);
+        box-shadow: 0 0 0 6px sd-campur(10%, #fff);
+    }
+    &.sd-siap .sd-langkah.sd-terlihat .sd-langkah-bulat {
+        animation: sd-pop 0.5s $sd-ease both;
+        animation-delay: var(--tunda, 0s);
+    }
+
+    // ── Ajakan ──
+    .sd-ajakan {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.25rem;
+        padding: 2.25rem 2.5rem;
+        border-radius: 1.25rem;
+        color: #fff;
+        background: linear-gradient(120deg, var(--o-color-1), #{sd-campur(55%, #0f172a)}, #{$sd-teal});
+        background-size: 200% 100%;
+        animation: sd-geser-bolak 12s ease-in-out infinite alternate;
+        box-shadow: 0 24px 48px sd-campur(28%);
+
+        p { opacity: 0.92; }
+        .btn-outline-light {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.75);
+            font-weight: 600;
+
+            &:hover,
+            &:focus-visible {
+                background: #fff;
+                color: $sd-tinta;
+            }
+        }
+    }
+    .sd-ajakan-judul {
+        font-size: clamp(1.35rem, 3vw, 1.85rem);
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 0.4rem;
+    }
+    .sd-ajakan-bulat {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        animation: sd-apung 9s ease-in-out infinite;
+    }
+    .sd-ajakan-bulat--1 { width: 220px; height: 220px; right: -60px; top: -90px; }
+    .sd-ajakan-bulat--2 { width: 130px; height: 130px; left: 38%; bottom: -70px; animation-delay: -4s; }
+
+    // ── Tombol dengan kilau ──
+    .sd-tombol-kilau {
+        position: relative;
+        overflow: hidden;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 40%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+            transform: translateX(-120%) skewX(-18deg);
+        }
+        &:hover::after,
+        &:focus-visible::after {
+            animation: sd-kilau 0.9s ease;
+        }
+    }
+}
+
+// ── Pengguna yang mengurangi gerakan: tanpa animasi, semua isi langsung tampil ──
+@media (prefers-reduced-motion: reduce) {
+    .sd-beranda,
+    .sd-beranda * {
+        animation: none !important;
+        transition: none !important;
+    }
+    .sd-beranda .sd-paket { display: none; }
+    .sd-beranda.sd-siap .sd-reveal,
+    .sd-beranda.sd-siap .sd-reveal-grup > .sd-reveal-anak,
+    .sd-beranda.sd-siap .sd-reveal-grup > * > .sd-reveal-anak {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .sd-beranda .sd-langkah::after { transform: scaleX(1); }
+}

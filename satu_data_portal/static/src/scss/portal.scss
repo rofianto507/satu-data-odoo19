@@ -6,9 +6,9 @@
     line-height: 1.4;
 }
 // Aksen mengikuti warna utama website (diatur di penyunting website), bukan warna tetap.
-$sd-biru: var(--bs-primary);
+$sd-biru: var(--o-color-1);
 @function sd-tint($persen) {
-    @return color-mix(in srgb, var(--bs-primary) #{$persen}, transparent);
+    @return color-mix(in srgb, var(--o-color-1) #{$persen}, transparent);
 }
 $sd-teks-2: #4b5563;
 $sd-garis: #e5e7eb;

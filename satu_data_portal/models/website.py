@@ -1,10 +1,14 @@
+import base64
 import logging
 
 from odoo import api, models
+from odoo.tools import file_open
 
 _logger = logging.getLogger(__name__)
 
 PARAM_DISIAPKAN = 'satu_data_portal.website_disiapkan'
+PARAM_FAVICON = 'satu_data_portal.favicon_disiapkan'
+IKON_APLIKASI = 'satu_data/static/description/icon.png'
 BERANDA = '/beranda'
 BAHASA = 'id_ID'
 
@@ -25,6 +29,17 @@ class Website(models.Model):
         return self.env['satu_data.instansi'].sudo().search([
             ('company_id', '=', self.company_id.id), ('peran', '=', peran)])
 
+    @api.model
+    def _sd_siapkan_favicon(self):
+        """Favicon website = ikon aplikasi Satu Data (bukan logo Odoo); sekali saja."""
+        param = self.env['ir.config_parameter'].sudo()
+        if param.get_param(PARAM_FAVICON):
+            return
+        with file_open(IKON_APLIKASI, 'rb') as f:
+            ikon = base64.b64encode(f.read())
+        self.sudo().search([]).write({'favicon': ikon})
+        param.set_param(PARAM_FAVICON, '1')
+
     # ── Penyiapan sekali saat modul dipasang ─────────────────────────────────
 
     @api.model
@@ -36,6 +51,7 @@ class Website(models.Model):
         saat modul diperbarui, agar pengaturan Admin sesudahnya tidak tertimpa.
         """
         param = self.env['ir.config_parameter'].sudo()
+        self._sd_siapkan_favicon()
         if param.get_param(PARAM_DISIAPKAN):
             return
         websites = self.sudo().search([])

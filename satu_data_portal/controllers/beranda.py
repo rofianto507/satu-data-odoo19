@@ -41,15 +41,21 @@ class SatuDataBeranda(http.Controller):
         populer = sorted((di for di in hasil if skor.get(di[0].id)),
                          key=lambda di: skor[di[0].id], reverse=True)[:JUMLAH_SOROTAN]
         statistik = request.env['satu_data.portal.statistik']._sd_total(company)
+        angka = {
+            'data': len(hasil),
+            'produsen': len(faset['instansi']),
+            'topik': len(faset['topik']),
+            **statistik,
+        }
+        # Topik yang punya data publik: kata yang berganti di bawah judul hero.
+        kata = [t.name for t in sorted(faset['topik'], key=lambda t: (t.sequence, t.name))]
         return request.render('satu_data_portal.beranda', {
             'nama_wilayah': Data._sd_nama_wilayah(company),
             'logo': f'/logo.png?company={company.id}' if company.sudo().logo else False,
-            'angka': {k: format_angka(v) for k, v in {
-                'data': len(hasil),
-                'produsen': len(faset['instansi']),
-                'topik': len(faset['topik']),
-                **statistik,
-            }.items()},
+            'angka': {k: format_angka(v) for k, v in angka.items()},
+            'angka_mentah': angka,
+            'kata': kata,
+            'kata_json': json.dumps(kata),
             'tema': Data._sd_tema_publik(company),
             'terbaru': [{'data': d, 'terakhir': tanggal_id(i['terakhir'])}
                         for d, i in hasil[:JUMLAH_SOROTAN]],

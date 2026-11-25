@@ -1,6 +1,6 @@
 {
     'name': 'Satu Data: Portal Publik',
-    'version': '19.0.1.2.1',
+    'version': '19.0.1.3.1',
     'summary': 'Portal Satu Data untuk publik: katalog, halaman data, unduhan, dan API baca',
     'description': """
 Portal Publik Satu Data
@@ -18,7 +18,8 @@ Tahap penyebarluasan Satu Data Indonesia (Perpres 39/2019) di website Odoo, tanp
   untuk urutan "Populer" dan menu Statistik Portal bagi Walidata.
 * Cache nilai per data per periode; dibersihkan saat laporan terbit/ditarik atau wilayah
   berubah.
-* Beranda portal (pencarian, angka kunci, data terbaru/populer, Produsen Data), dashboard
+* Beranda portal beranimasi (hero dengan ilustrasi vektor, angka kunci berhitung naik, cara
+  memakai data, alur kerja, data terbaru/populer, Produsen Data), dashboard
   tematik per topik (peta choropleth kecamatan, peringkat, tren), halaman Tentang (prinsip,
   alur, penyelenggara, tanya-jawab), serta footer dan menu berbahasa Indonesia.
 * Saat dipasang: bahasa Indonesia menjadi bahasa website, beranda diarahkan ke portal, menu
@@ -39,13 +40,16 @@ tingkat penyajiannya kab/kota), tanpa data per orang. Nilai dihitung oleh modul 
         'views/templates.xml',
         'views/beranda.xml',
         'views/tentang.xml',
+        'views/ikon.xml',
         'views/statistik_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [
             'satu_data_portal/static/src/scss/portal.scss',
+            'satu_data_portal/static/src/scss/beranda.scss',
             'satu_data_portal/static/src/js/grafik_data.js',
             'satu_data_portal/static/src/js/dasbor.js',
+            'satu_data_portal/static/src/js/beranda.js',
         ],
     },
     'installable': True,

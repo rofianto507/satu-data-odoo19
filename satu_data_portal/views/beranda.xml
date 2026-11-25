@@ -5,7 +5,7 @@
     <template id="kartu_tema" name="Satu Data: Kartu Dashboard Tematik">
         <div class="row g-3">
             <t t-foreach="tema" t-as="t">
-                <div t-if="t['jumlah_peta']" class="col-sm-6 col-lg-4">
+                <div t-if="t['jumlah_peta']" class="col-sm-6 col-lg-4 sd-reveal-anak">
                     <a t-att-href="'/dashboard/%s' % t['topik'].id" class="sd-kartu-tema">
                         <span class="sd-kartu-tema-ikon" aria-hidden="true">
                             <i t-attf-class="fa #{t['topik'].ikon or 'fa-bar-chart'}"/>
@@ -20,81 +20,322 @@
         </div>
     </template>
 
+    <!-- ── Ilustrasi hero: data dari OPD → satu pusat data → portal publik ─────── -->
+    <template id="ilustrasi_hero" name="Satu Data: Ilustrasi Hero">
+        <svg class="sd-ilus" viewBox="0 0 620 410" role="img"
+             aria-labelledby="sd-ilus-judul sd-ilus-uraian" preserveAspectRatio="xMidYMid meet">
+            <title id="sd-ilus-judul">Ilustrasi Satu Data</title>
+            <desc id="sd-ilus-uraian">Data dari berbagai perangkat daerah (kesehatan, pendidikan, kependudukan, dan lainnya) mengalir ke satu pusat data, diperiksa Walidata, lalu tampil di portal publik berupa peta dan grafik.</desc>
+            <defs>
+                                <filter id="sd-bayang" x="-20%" y="-20%" width="140%" height="150%">
+                    <feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#0f172a" flood-opacity="0.13"/>
+                </filter>
+                <!-- ikon (viewBox 24) -->
+                <symbol id="sd-i-hati" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+                <symbol id="sd-i-sekolah" viewBox="0 0 24 24"><path fill="currentColor" d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></symbol>
+                <symbol id="sd-i-warga" viewBox="0 0 24 24"><path fill="currentColor" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></symbol>
+                <symbol id="sd-i-tambah" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></symbol>
+                <symbol id="sd-i-centang" viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></symbol>
+            </defs>
+
+            <!-- latar lembut -->
+            <ellipse class="sd-ilus-latar" cx="310" cy="205" rx="298" ry="196"/>
+            <circle class="sd-apung sd-ilus-titik" cx="196" cy="24" r="5" style="--tunda: -1s"/>
+            <circle class="sd-apung sd-ilus-titik sd-ilus-titik--2" cx="604" cy="42" r="7" style="--tunda: -3s"/>
+            <circle class="sd-apung sd-ilus-titik" cx="24" cy="388" r="6" style="--tunda: -2s"/>
+            <circle class="sd-apung sd-ilus-titik sd-ilus-titik--2" cx="410" cy="392" r="5" style="--tunda: -4s"/>
+
+            <!-- penghubung dari sumber data ke pusat -->
+            <g fill="none" stroke-width="2.2" stroke-linecap="round">
+                <path class="sd-ilus-alir" style="stroke: #e11d48" d="M160,69 C230,69 214,150 268,176"/>
+                <path class="sd-ilus-alir" style="stroke: #d97706" d="M160,157 C215,157 220,190 261,193"/>
+                <path class="sd-ilus-alir" style="stroke: #0d9488" d="M160,245 C215,245 220,212 261,209"/>
+                <path class="sd-ilus-alir" style="stroke: #6366f1" d="M160,333 C230,333 214,252 268,226"/>
+                <path class="sd-ilus-alir sd-ilus-alir--hub" d="M362,201 L420,201"/>
+            </g>
+
+            <!-- paket data yang bergerak -->
+            <g class="sd-paket">
+                <circle r="4.5" fill="#e11d48"><animateMotion dur="3.4s" repeatCount="indefinite" path="M160,69 C230,69 214,150 268,176"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.85;1" dur="3.4s" repeatCount="indefinite"/></circle>
+                <circle r="4.5" fill="#d97706"><animateMotion dur="3s" begin="-1s" repeatCount="indefinite" path="M160,157 C215,157 220,190 261,193"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.85;1" dur="3s" begin="-1s" repeatCount="indefinite"/></circle>
+                <circle r="4.5" fill="#0d9488"><animateMotion dur="3.2s" begin="-2s" repeatCount="indefinite" path="M160,245 C215,245 220,212 261,209"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.85;1" dur="3.2s" begin="-2s" repeatCount="indefinite"/></circle>
+                <circle r="4.5" fill="#6366f1"><animateMotion dur="3.6s" begin="-0.5s" repeatCount="indefinite" path="M160,333 C230,333 214,252 268,226"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.85;1" dur="3.6s" begin="-0.5s" repeatCount="indefinite"/></circle>
+                <circle r="4.5" class="sd-ilus-paket-hub"><animateMotion dur="1.8s" repeatCount="indefinite" path="M362,201 L420,201"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.8;1" dur="1.8s" repeatCount="indefinite"/></circle>
+                <circle r="4.5" class="sd-ilus-paket-hub"><animateMotion dur="1.8s" begin="-0.9s" repeatCount="indefinite" path="M362,201 L420,201"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.8;1" dur="1.8s" begin="-0.9s" repeatCount="indefinite"/></circle>
+            </g>
+
+            <!-- pusat data -->
+            <g transform="translate(310,201)">
+                <circle class="sd-denyut" r="50"/>
+                <circle class="sd-denyut sd-denyut--2" r="50"/>
+                <g class="sd-orbit">
+                    <circle r="76" fill="none" class="sd-ilus-orbit-garis"/>
+                    <circle cx="76" cy="0" r="5.5" fill="#f59e0b"/>
+                    <circle cx="-76" cy="0" r="4" class="sd-ilus-orbit-titik"/>
+                </g>
+                <circle r="50" class="sd-ilus-hub" filter="url(#sd-bayang)"/>
+                <circle r="50" class="sd-ilus-hub-kilau"/>
+                <g fill="#fff" transform="translate(0,-3)">
+                    <ellipse cx="0" cy="-15" rx="22" ry="8"/>
+                    <path d="M-22,-15 v13 c0,4.4 9.8,8 22,8 s22,-3.6 22,-8 v-13 c0,4.4 -9.8,8 -22,8 s-22,-3.6 -22,-8z" opacity=".92"/>
+                    <path d="M-22,0 v13 c0,4.4 9.8,8 22,8 s22,-3.6 22,-8 v-13 c0,4.4 -9.8,8 -22,8 s-22,-3.6 -22,-8z" opacity=".75"/>
+                </g>
+                <g transform="translate(36,-38)">
+                    <circle r="14" fill="#f59e0b" stroke="#fff" stroke-width="3"/>
+                    <text y="5.5" text-anchor="middle" class="sd-ilus-angka">1</text>
+                </g>
+            </g>
+
+            <!-- diperiksa Walidata -->
+            <g transform="translate(246,268)">
+                <g class="sd-apung" style="--tunda: -2s">
+                    <rect width="128" height="28" rx="14" fill="#fff" stroke="#e5e7eb" filter="url(#sd-bayang)"/>
+                    <circle cx="15" cy="14" r="9" fill="#16a34a"/>
+                    <use href="#sd-i-centang" x="9" y="8" width="12" height="12" style="color: #fff"/>
+                    <text x="31" y="18.5" class="sd-ilus-kecil">Diperiksa Walidata</text>
+                </g>
+            </g>
+
+            <!-- portal publik -->
+            <g transform="translate(420,76)">
+                <g class="sd-apung sd-apung--pelan" style="--tunda: -1.5s">
+                    <rect width="190" height="250" rx="14" fill="#fff" stroke="#e5e7eb" filter="url(#sd-bayang)"/>
+                    <path d="M0,14 a14,14 0 0 1 14,-14 h162 a14,14 0 0 1 14,14 v12 h-190z" fill="#f1f5f9"/>
+                    <circle cx="14" cy="13" r="3.2" fill="#fb7185"/><circle cx="25" cy="13" r="3.2" fill="#fbbf24"/><circle cx="36" cy="13" r="3.2" fill="#34d399"/>
+                    <rect x="52" y="7" width="126" height="12" rx="6" fill="#e2e8f0"/>
+                    <rect x="16" y="42" width="112" height="9" rx="4.5" fill="#0f172a" opacity=".82"/>
+                    <rect x="16" y="58" width="150" height="6" rx="3" fill="#cbd5e1"/>
+                    <!-- peta kecamatan -->
+                    <g transform="translate(0,6)">
+                        <path class="sd-ilus-peta" d="M20,120 C22,96 48,86 76,88 C100,78 140,82 166,96 C178,106 170,132 150,142 C130,156 96,150 78,156 C52,162 26,148 20,120Z"/>
+                        <path class="sd-sel" style="--tunda: 0s" d="M76,88 C100,78 120,80 130,92 L112,112 L84,104Z"/>
+                        <path class="sd-sel sd-sel--2" style="--tunda: -1.2s" d="M130,92 C150,86 160,92 166,96 C176,108 170,128 150,140 L128,116 L112,112Z"/>
+                        <path class="sd-sel sd-sel--3" style="--tunda: -2.1s" d="M20,120 C22,100 40,90 58,89 L84,104 L70,130 L32,140Z"/>
+                        <path fill="none" class="sd-ilus-batas" d="M84,104 L112,112 L128,116 L150,140 M84,104 L70,130 L78,156 M112,112 L98,150"/>
+                    </g>
+                    <!-- grafik batang dan garis -->
+                    <g transform="translate(0,236)">
+                        <rect class="sd-batang" style="--tunda: 0s"    x="18" y="-34" width="11" height="34" rx="2"/>
+                        <rect class="sd-batang sd-batang--2" style="--tunda: -0.6s" x="34" y="-52" width="11" height="52" rx="2"/>
+                        <rect class="sd-batang" style="--tunda: -1.2s" x="50" y="-42" width="11" height="42" rx="2"/>
+                        <rect class="sd-batang sd-batang--2" style="--tunda: -1.8s" x="66" y="-62" width="11" height="62" rx="2"/>
+                        <rect class="sd-batang" style="--tunda: -2.4s" x="82" y="-48" width="11" height="48" rx="2"/>
+                        <path class="sd-ilus-garis-data" d="M108,-8 L122,-26 L136,-18 L152,-44 L172,-54"/>
+                        <line x1="14" y1="0" x2="176" y2="0" stroke="#e2e8f0"/>
+                    </g>
+                </g>
+                <g class="sd-apung" style="--tunda: -3s" transform="translate(106,-14)">
+                    <rect width="96" height="28" rx="14" fill="#16a34a" filter="url(#sd-bayang)"/>
+                    <text x="48" y="18.5" text-anchor="middle" class="sd-ilus-lencana">Data terbuka</text>
+                </g>
+            </g>
+
+            <!-- sumber data: perangkat daerah -->
+            <g transform="translate(10,40)"><g class="sd-apung" style="--tunda: 0s">
+                <rect width="150" height="58" rx="12" fill="#fff" stroke="#e5e7eb" filter="url(#sd-bayang)"/>
+                <circle cx="30" cy="29" r="17" fill="#e11d48" opacity=".13"/>
+                <use href="#sd-i-hati" x="19" y="18" width="22" height="22" style="color: #e11d48"/>
+                <text x="56" y="27" class="sd-ilus-judul">Kesehatan</text>
+                <rect x="56" y="35" width="68" height="6" rx="3" class="sd-ilus-garis"/>
+            </g></g>
+            <g transform="translate(10,128)"><g class="sd-apung" style="--tunda: -1.4s">
+                <rect width="150" height="58" rx="12" fill="#fff" stroke="#e5e7eb" filter="url(#sd-bayang)"/>
+                <circle cx="30" cy="29" r="17" fill="#d97706" opacity=".14"/>
+                <use href="#sd-i-sekolah" x="19" y="18" width="22" height="22" style="color: #d97706"/>
+                <text x="56" y="27" class="sd-ilus-judul">Pendidikan</text>
+                <rect x="56" y="35" width="76" height="6" rx="3" class="sd-ilus-garis"/>
+            </g></g>
+            <g transform="translate(10,216)"><g class="sd-apung" style="--tunda: -2.6s">
+                <rect width="150" height="58" rx="12" fill="#fff" stroke="#e5e7eb" filter="url(#sd-bayang)"/>
+                <circle cx="30" cy="29" r="17" fill="#0d9488" opacity=".13"/>
+                <use href="#sd-i-warga" x="19" y="18" width="22" height="22" style="color: #0d9488"/>
+                <text x="56" y="27" class="sd-ilus-judul">Kependudukan</text>
+                <rect x="56" y="35" width="60" height="6" rx="3" class="sd-ilus-garis"/>
+            </g></g>
+            <g transform="translate(10,304)"><g class="sd-apung" style="--tunda: -3.8s">
+                <rect width="150" height="58" rx="12" fill="#fff" stroke="#e5e7eb" stroke-dasharray="4 4" filter="url(#sd-bayang)"/>
+                <circle cx="30" cy="29" r="17" fill="#6366f1" opacity=".13"/>
+                <use href="#sd-i-tambah" x="19" y="18" width="22" height="22" style="color: #6366f1"/>
+                <text x="56" y="27" class="sd-ilus-judul">OPD lainnya</text>
+                <rect x="56" y="35" width="52" height="6" rx="3" class="sd-ilus-garis"/>
+            </g></g>
+        </svg>
+    </template>
+
     <!-- ── Beranda ─────────────────────────────────────────────────────────── -->
     <template id="beranda" name="Satu Data: Beranda">
         <t t-call="website.layout">
             <t t-set="additional_title">Beranda</t>
-            <div id="wrap" class="sd-portal">
+            <div id="wrap" class="sd-portal sd-beranda">
+
+                <!-- Hero -->
                 <section class="sd-hero">
-                    <div class="container py-5">
-                        <div class="row align-items-center g-4">
-                            <div class="col-lg-7">
-                                <div class="d-flex align-items-center gap-3 mb-3">
-                                    <img t-if="logo" t-att-src="logo" alt="" class="sd-hero-logo"/>
-                                    <span class="sd-hero-label">Portal Satu Data</span>
+                    <div class="sd-hero-latar" aria-hidden="true">
+                        <span class="sd-blob sd-blob--1"/><span class="sd-blob sd-blob--2"/><span class="sd-blob sd-blob--3"/>
+                    </div>
+                    <div class="container position-relative">
+                        <div class="row align-items-center g-4 g-xl-5">
+                            <div class="col-lg-6">
+                                <div class="sd-merek sd-masuk">
+                                    <img src="/satu_data_portal/static/description/icon.png" alt="" class="sd-merek-logo"/>
+                                    <span class="sd-merek-teks">
+                                        <strong>Satu Data</strong>
+                                        <small>Portal data <t t-esc="nama_wilayah"/></small>
+                                    </span>
+                                    <img t-if="logo" t-att-src="logo" alt="" class="sd-merek-lambang"/>
                                 </div>
-                                <h1 class="sd-hero-judul">Satu Data <t t-esc="nama_wilayah"/></h1>
-                                <p class="sd-hero-teks">
+                                <h1 class="sd-hero-judul sd-masuk" style="--tunda: .1s">
+                                    Satu Data <span class="sd-gradien" t-esc="nama_wilayah"/>
+                                </h1>
+                                <p class="sd-hero-putar sd-masuk" style="--tunda: .2s">
+                                    Temukan data <span class="sd-kata" t-att-data-kata="kata_json" t-esc="kata[0] if kata else 'sektoral'"/>
+                                </p>
+                                <p class="sd-hero-teks sd-masuk" style="--tunda: .3s">
                                     Data sektoral perangkat daerah yang sudah diperiksa Walidata,
                                     terbuka untuk dilihat, diunduh, dan dipakai ulang.
                                 </p>
-                                <form action="/data" method="get" role="search" class="sd-hero-cari">
+                                <form action="/data" method="get" role="search" class="sd-hero-cari sd-masuk" style="--tunda: .4s">
                                     <div class="input-group input-group-lg">
                                         <input type="search" name="q" class="form-control" maxlength="100"
                                                aria-label="Cari data"
                                                placeholder="Cari data, mis. stunting, penduduk, sekolah"/>
-                                        <button class="btn btn-primary" type="submit">
+                                        <button class="btn btn-primary sd-tombol-kilau" type="submit">
                                             <i class="fa fa-search" aria-hidden="true"/> Cari
                                         </button>
                                     </div>
                                 </form>
+                                <p class="sd-hero-coba sd-masuk" style="--tunda: .5s">
+                                    <span>Coba:</span>
+                                    <a href="/data?q=stunting">stunting</a>
+                                    <a href="/data?q=penduduk">penduduk</a>
+                                    <a href="/data?q=partisipasi">partisipasi sekolah</a>
+                                    <a href="/data?q=imunisasi">imunisasi</a>
+                                </p>
                             </div>
-                            <div class="col-lg-5">
-                                <dl class="sd-angka-kunci">
-                                    <div>
-                                        <dt>Data</dt>
-                                        <dd t-esc="angka['data']"/>
-                                    </div>
-                                    <div>
-                                        <dt>Produsen Data</dt>
-                                        <dd t-esc="angka['produsen']"/>
-                                    </div>
-                                    <div>
-                                        <dt>Topik</dt>
-                                        <dd t-esc="angka['topik']"/>
-                                    </div>
-                                    <div>
-                                        <dt>Kunjungan</dt>
-                                        <dd t-esc="angka['kunjungan']"/>
-                                    </div>
-                                    <div>
-                                        <dt>Unduhan</dt>
-                                        <dd t-esc="angka['unduhan']"/>
-                                    </div>
-                                </dl>
+                            <div class="col-lg-6">
+                                <div class="sd-hero-ilus sd-masuk sd-masuk--ilus" style="--tunda: .25s" aria-hidden="false">
+                                    <t t-call="satu_data_portal.ilustrasi_hero"/>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                <!-- Angka kunci (tumpang tindih dengan hero) -->
+                <section class="sd-strip" aria-label="Angka kunci portal">
+                    <div class="container">
+                        <dl class="sd-angka-kunci sd-reveal sd-reveal-grup">
+                            <div class="sd-reveal-anak"><dt><i class="fa fa-database" aria-hidden="true"/> Data</dt>
+                                <dd class="sd-hitung" t-att-data-nilai="angka_mentah['data']" t-esc="angka['data']"/></div>
+                            <div class="sd-reveal-anak"><dt><i class="fa fa-building-o" aria-hidden="true"/> Produsen Data</dt>
+                                <dd class="sd-hitung" t-att-data-nilai="angka_mentah['produsen']" t-esc="angka['produsen']"/></div>
+                            <div class="sd-reveal-anak"><dt><i class="fa fa-tags" aria-hidden="true"/> Topik</dt>
+                                <dd class="sd-hitung" t-att-data-nilai="angka_mentah['topik']" t-esc="angka['topik']"/></div>
+                            <div class="sd-reveal-anak"><dt><i class="fa fa-eye" aria-hidden="true"/> Kunjungan</dt>
+                                <dd class="sd-hitung" t-att-data-nilai="angka_mentah['kunjungan']" t-esc="angka['kunjungan']"/></div>
+                            <div class="sd-reveal-anak"><dt><i class="fa fa-download" aria-hidden="true"/> Unduhan</dt>
+                                <dd class="sd-hitung" t-att-data-nilai="angka_mentah['unduhan']" t-esc="angka['unduhan']"/></div>
+                        </dl>
                     </div>
                 </section>
 
                 <div class="oe_structure" id="oe_structure_sd_beranda_atas"/>
 
-                <section class="container py-5" aria-labelledby="judul-tema">
-                    <div class="d-flex justify-content-between align-items-end mb-3 gap-2">
-                        <div>
-                            <h2 id="judul-tema" class="sd-bagian-judul">Dashboard Tematik</h2>
-                            <p class="text-muted mb-0">Peta dan grafik per kecamatan menurut topik.</p>
-                        </div>
-                        <a href="/dashboard" class="btn btn-sm btn-outline-primary">Semua dashboard</a>
+                <!-- Cara memakai data -->
+                <section class="container sd-bagian" aria-labelledby="judul-fitur">
+                    <div class="text-center sd-reveal">
+                        <p class="sd-bagian-label">Satu pintu</p>
+                        <h2 id="judul-fitur" class="sd-bagian-judul sd-bagian-judul--besar">Empat cara memakai data</h2>
                     </div>
-                    <t t-call="satu_data_portal.kartu_tema"/>
+                    <div class="row g-3 sd-reveal sd-reveal-grup">
+                        <div class="col-sm-6 col-lg-3 sd-reveal-anak">
+                            <a href="/data" class="sd-kartu-fitur">
+                                <span class="sd-kartu-fitur-ikon" aria-hidden="true"><i class="fa fa-search"/></span>
+                                <strong>Katalog Data</strong>
+                                <span>Cari, saring menurut Produsen Data, topik, dan tahun, lalu buka tabel serta metadatanya.</span>
+                                <em>Jelajahi katalog <i class="fa fa-arrow-right" aria-hidden="true"/></em>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3 sd-reveal-anak">
+                            <a href="/dashboard" class="sd-kartu-fitur sd-kartu-fitur--2">
+                                <span class="sd-kartu-fitur-ikon" aria-hidden="true"><i class="fa fa-map-o"/></span>
+                                <strong>Dashboard Tematik</strong>
+                                <span>Lihat sebaran data per kecamatan di peta, peringkat, dan perkembangannya.</span>
+                                <em>Buka dashboard <i class="fa fa-arrow-right" aria-hidden="true"/></em>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3 sd-reveal-anak">
+                            <a href="/data" class="sd-kartu-fitur sd-kartu-fitur--3">
+                                <span class="sd-kartu-fitur-ikon" aria-hidden="true"><i class="fa fa-download"/></span>
+                                <strong>Unduh Data</strong>
+                                <span>Setiap data bisa diunduh dalam format Excel, CSV, dan JSON beserta metadatanya.</span>
+                                <em>Pilih data <i class="fa fa-arrow-right" aria-hidden="true"/></em>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3 sd-reveal-anak">
+                            <a href="/data/api" class="sd-kartu-fitur sd-kartu-fitur--4">
+                                <span class="sd-kartu-fitur-ikon" aria-hidden="true"><i class="fa fa-code"/></span>
+                                <strong>API Terbuka</strong>
+                                <span>Ambil data lewat API JSON tanpa login untuk aplikasi dan laporan Anda.</span>
+                                <em>Baca dokumentasi <i class="fa fa-arrow-right" aria-hidden="true"/></em>
+                            </a>
+                        </div>
+                    </div>
                 </section>
 
-                <section class="sd-bagian-latar py-5">
+                <!-- Dashboard tematik -->
+                <section class="sd-bagian-latar sd-bagian" aria-labelledby="judul-tema">
+                    <div class="container">
+                        <div class="d-flex justify-content-between align-items-end mb-3 gap-2 sd-reveal">
+                            <div>
+                                <p class="sd-bagian-label">Dashboard</p>
+                                <h2 id="judul-tema" class="sd-bagian-judul mb-1">Dashboard Tematik</h2>
+                                <p class="text-muted mb-0">Peta dan grafik per kecamatan menurut topik.</p>
+                            </div>
+                            <a href="/dashboard" class="btn btn-sm btn-outline-primary">Semua dashboard</a>
+                        </div>
+                        <div class="sd-reveal sd-reveal-grup">
+                            <t t-call="satu_data_portal.kartu_tema"/>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Alur penyelenggaraan -->
+                <section class="container sd-bagian" aria-labelledby="judul-alur-beranda">
+                    <div class="text-center sd-reveal">
+                        <p class="sd-bagian-label">Cara kerja</p>
+                        <h2 id="judul-alur-beranda" class="sd-bagian-judul sd-bagian-judul--besar">Dari perangkat daerah sampai ke Anda</h2>
+                    </div>
+                    <ol class="sd-langkah sd-reveal sd-reveal-grup">
+                        <li class="sd-reveal-anak">
+                            <span class="sd-langkah-bulat"><i class="fa fa-calendar-check-o" aria-hidden="true"/></span>
+                            <strong>Perencanaan</strong>
+                            <span>Daftar Data dan jadwal pemutakhiran disepakati dalam Forum Satu Data.</span>
+                        </li>
+                        <li class="sd-reveal-anak">
+                            <span class="sd-langkah-bulat"><i class="fa fa-pencil-square-o" aria-hidden="true"/></span>
+                            <strong>Pengumpulan</strong>
+                            <span>Produsen Data mengisi data sesuai standar dan metadata.</span>
+                        </li>
+                        <li class="sd-reveal-anak">
+                            <span class="sd-langkah-bulat"><i class="fa fa-check-circle-o" aria-hidden="true"/></span>
+                            <strong>Pemeriksaan</strong>
+                            <span>Walidata memeriksa kesesuaian data sebelum diterbitkan.</span>
+                        </li>
+                        <li class="sd-reveal-anak">
+                            <span class="sd-langkah-bulat"><i class="fa fa-globe" aria-hidden="true"/></span>
+                            <strong>Penyebarluasan</strong>
+                            <span>Data terbit dibuka untuk publik di portal ini.</span>
+                        </li>
+                    </ol>
+                </section>
+
+                <!-- Data terbaru dan populer -->
+                <section class="sd-bagian-latar sd-bagian">
                     <div class="container">
                         <div class="row g-4">
-                            <div class="col-lg-6" aria-labelledby="judul-terbaru">
-                                <h2 id="judul-terbaru" class="sd-bagian-judul">Data Terbaru</h2>
+                            <div class="col-lg-6 sd-reveal" aria-labelledby="judul-terbaru">
+                                <h2 id="judul-terbaru" class="sd-bagian-judul"><i class="fa fa-clock-o text-primary me-2" aria-hidden="true"/>Data Terbaru</h2>
                                 <ul class="sd-daftar-ringkas">
                                     <li t-foreach="terbaru" t-as="item">
                                         <a t-att-href="'/data/%s' % item['data'].kode" t-esc="item['data'].name"/>
@@ -106,8 +347,8 @@
                                 </ul>
                                 <a href="/data" class="small">Lihat semua data →</a>
                             </div>
-                            <div class="col-lg-6" aria-labelledby="judul-populer">
-                                <h2 id="judul-populer" class="sd-bagian-judul">Data Populer</h2>
+                            <div class="col-lg-6 sd-reveal" aria-labelledby="judul-populer">
+                                <h2 id="judul-populer" class="sd-bagian-judul"><i class="fa fa-fire text-primary me-2" aria-hidden="true"/>Data Populer</h2>
                                 <ul t-if="populer" class="sd-daftar-ringkas">
                                     <li t-foreach="populer" t-as="item">
                                         <a t-att-href="'/data/%s' % item['data'].kode" t-esc="item['data'].name"/>
@@ -124,21 +365,26 @@
                     </div>
                 </section>
 
-                <section class="container py-5" aria-labelledby="judul-produsen">
-                    <h2 id="judul-produsen" class="sd-bagian-judul">Produsen Data</h2>
-                    <div class="d-flex flex-wrap gap-2">
+                <!-- Produsen Data dan ajakan -->
+                <section class="container sd-bagian" aria-labelledby="judul-produsen">
+                    <h2 id="judul-produsen" class="sd-bagian-judul sd-reveal">Produsen Data</h2>
+                    <div class="d-flex flex-wrap gap-2 sd-reveal sd-reveal-grup">
                         <a t-foreach="produsen" t-as="p" t-att-href="'/data?instansi=%s' % p[0].id"
-                           class="sd-chip">
+                           class="sd-chip sd-reveal-anak">
                             <t t-esc="p[0].name"/> <span class="sd-chip-jumlah" t-esc="p[1]"/>
                         </a>
                     </div>
-                    <div class="sd-ajakan-api mt-5">
-                        <div>
-                            <h2 class="h5 mb-1">Butuh data untuk aplikasi Anda?</h2>
-                            <p class="mb-0 text-muted">Semua data di portal ini tersedia lewat API JSON tanpa login,
-                                serta unduhan CSV dan Excel.</p>
+                    <div class="sd-ajakan sd-reveal mt-5">
+                        <span class="sd-ajakan-bulat sd-ajakan-bulat--1" aria-hidden="true"/>
+                        <span class="sd-ajakan-bulat sd-ajakan-bulat--2" aria-hidden="true"/>
+                        <div class="position-relative">
+                            <h2 class="sd-ajakan-judul">Mulai jelajahi data <t t-esc="nama_wilayah"/></h2>
+                            <p class="mb-0">Data terbuka, terverifikasi, dan siap dipakai untuk riset, perencanaan, dan aplikasi Anda.</p>
                         </div>
-                        <a href="/data/api" class="btn btn-primary"><i class="fa fa-code" aria-hidden="true"/> Dokumentasi API</a>
+                        <div class="d-flex flex-wrap gap-2 position-relative">
+                            <a href="/data" class="btn btn-light btn-lg sd-tombol-kilau">Katalog Data</a>
+                            <a href="/data/api" class="btn btn-outline-light btn-lg">Dokumentasi API</a>
+                        </div>
                     </div>
                 </section>
 
