@@ -1,6 +1,6 @@
 {
     'name': 'Satu Data: Portal Publik',
-    'version': '19.0.1.5.0',
+    'version': '19.0.1.5.2',
     'summary': 'Portal Satu Data untuk publik: katalog, halaman data, unduhan, dan API baca',
     'description': """
 Portal Publik Satu Data

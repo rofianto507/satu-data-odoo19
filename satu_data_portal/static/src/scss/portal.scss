@@ -448,3 +448,151 @@ $sd-latar: #f8fafc;
     background: #fef3c7;
     border-bottom: 1px solid #fde68a;
 }
+
+// ── Navbar portal: lebih hidup dan senada dengan tema ───────────────────────────
+// Bagian header berada di luar .sd-portal, jadi aturannya global. Warna mengikuti palet website
+// (--o-color-1 primer, --o-color-2 sekunder).
+header#top {
+    nav.navbar.o_main_nav,
+    nav.navbar {
+        position: relative;
+        isolation: isolate;
+        background: transparent !important;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+        box-shadow: 0 6px 22px rgba(15, 23, 42, 0.05);
+        padding-block: 0.5rem;
+
+        // Latar kaca buram di lapisan sendiri. Jangan taruh backdrop-filter pada navbar itu
+        // sendiri: itu membuat panel menu ponsel (position: fixed) terikat ke navbar dan
+        // melebarkan halaman.
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.88);
+            -webkit-backdrop-filter: saturate(1.5) blur(12px);
+            backdrop-filter: saturate(1.5) blur(12px);
+        }
+
+        // Garis aksen tipis di dasar navbar, memudar di kedua ujung.
+        &::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 -1px 0;
+            height: 2px;
+            pointer-events: none;
+            background: linear-gradient(90deg, transparent 0%, var(--o-color-1) 22%, var(--o-color-2) 78%, transparent 100%);
+            opacity: 0.85;
+        }
+    }
+
+    // Merek: logo + nama aplikasi dan wilayah
+    .navbar-brand.logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin-right: 1.25rem !important;
+    }
+    .sd-nav-merek {
+        display: inline-flex;
+        flex-direction: column;
+        line-height: 1.15;
+        padding-left: 0.75rem;
+        border-left: 1px solid rgba(15, 23, 42, 0.12);
+
+        strong {
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            color: #0f172a;
+        }
+        small {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: #64748b;
+        }
+        @media (max-width: 575.98px) {
+            small { display: none; }
+        }
+    }
+
+    // Tautan menu: pil lembut; yang aktif berlatar tint warna utama
+    #top_menu {
+        gap: 0.25rem;
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-weight: 600;
+            color: #475569;
+            transition: background 0.2s ease, color 0.2s ease;
+
+            &:hover,
+            &:focus-visible {
+                color: var(--o-color-1);
+                background: color-mix(in srgb, var(--o-color-1) 8%, transparent);
+            }
+            &.active {
+                color: var(--o-color-1);
+                background: color-mix(in srgb, var(--o-color-1) 12%, transparent);
+            }
+        }
+    }
+
+    // Tombol cari dan akun
+    .navbar-nav .btn.o_navlink_background {
+        background: #f1f3f5;
+        transition: background 0.2s ease, color 0.2s ease;
+
+        &:hover {
+            color: var(--o-color-1) !important;
+            background: color-mix(in srgb, var(--o-color-1) 12%, transparent);
+        }
+    }
+    .navbar-nav .nav-link.dropdown-toggle {
+        padding: 0.4rem 0.9rem;
+        border-radius: 999px;
+        font-weight: 600;
+        background: #f1f3f5;
+
+        &:hover {
+            color: var(--o-color-1);
+            background: color-mix(in srgb, var(--o-color-1) 10%, transparent);
+        }
+    }
+    // Tombol "Masuk" untuk pengunjung
+    .navbar-nav li.o_no_autohide_item > a.nav-link:not(.dropdown-toggle),
+    .navbar-nav li > a.nav-link[href^="/web/login"] {
+        padding: 0.45rem 1.15rem;
+        border-radius: 999px;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, var(--o-color-1), color-mix(in srgb, var(--o-color-1) 70%, var(--o-color-2)));
+        box-shadow: 0 6px 14px color-mix(in srgb, var(--o-color-1) 28%, transparent);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 9px 18px color-mix(in srgb, var(--o-color-1) 34%, transparent);
+        }
+    }
+}
+
+// Ponsel: panel menu yang terbuka ikut bergaya
+@media (max-width: 991.98px) {
+    header#top .o_navbar_mobile .nav-link {
+        border-radius: 0.75rem;
+        padding: 0.7rem 1rem;
+        font-weight: 600;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    header#top * {
+        transition: none !important;
+    }
+}

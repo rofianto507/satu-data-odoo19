@@ -16,7 +16,7 @@
                                     diterbitkan Walidata.
                                 </p>
                             </div>
-                            <div class="d-flex flex-wrap gap-2">
+                            <div class="d-flex flex-wrap gap-2 mb-3">
                                 <a href="/permintaan" class="btn btn-sm btn-outline-secondary">
                                     <i class="fa fa-comment-o" aria-hidden="true"/> Minta Data
                                 </a>

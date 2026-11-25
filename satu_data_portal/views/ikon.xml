@@ -18,4 +18,14 @@
             </div>
         </xpath>
     </template>
+
+    <!-- Merek di navbar: nama aplikasi dan wilayah di samping logo. -->
+    <template id="merek_navbar" inherit_id="website.option_header_brand_logo" name="Satu Data: Merek Navbar">
+        <xpath expr="//a[@data-name='Navbar Logo']" position="inside">
+            <span class="sd-nav-merek">
+                <strong>Satu Data</strong>
+                <small t-esc="website.sd_nama_wilayah()"/>
+            </span>
+        </xpath>
+    </template>
 </odoo>
