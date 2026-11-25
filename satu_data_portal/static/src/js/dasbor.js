@@ -9,8 +9,26 @@ const URL_ECHARTS = "/satu_data/static/lib/echarts/echarts.min.js";
 const WARNA_TEKS = "#4b5563";
 const WARNA_GARIS = "#e5e7eb";
 const WARNA_BATAS = "#8b93a1";
-const WARNA_UTAMA = "#1d4ed8";
+// Warna utama website (bisa diubah Admin di penyunting website); cadangan biru bila tak terbaca.
+function warnaUtama() {
+    const w = getComputedStyle(document.documentElement).getPropertyValue("--bs-primary").trim();
+    return w || "#1d4ed8";
+}
+function warnaTipis(hex, alfa) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex);
+    if (!m) {
+        return "rgba(29, 78, 216, " + alfa + ")";
+    }
+    const n = parseInt(m[1], 16);
+    return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${alfa})`;
+}
+const WARNA_UTAMA = warnaUtama();
 const TINGGI_BATANG = 20;
+
+// "Januari 2025" -> "Jan 2025" agar label sumbu tidak saling menimpa di panel sempit.
+function labelSingkat(label) {
+    return /^[A-Za-z]{4,} \d{4}$/.test(label) ? label.replace(/^([A-Za-z]{3})\w*/, "$1") : label;
+}
 
 function escapeHtml(teks) {
     const el = document.createElement("span");
@@ -209,9 +227,11 @@ export class DasborPublik extends Interaction {
         const sebelum = i > 0 ? nilai[i - 1] : null;
         if (nilai[i] !== null && sebelum !== null && sebelum !== undefined) {
             const selisih = nilai[i] - sebelum;
-            const arahTeks = selisih > 0 ? "naik" : selisih < 0 ? "turun" : "tetap";
+            const arahTeks = selisih > 0 ? "naik" : "turun";
             const baik = d.arah === "netral" || selisih === 0 ? null : (selisih > 0) === (d.arah === "naik");
-            elUbah.textContent = `${arahTeks} ${this.fmt.format(Math.abs(selisih))} dari ${d.periode[i - 1]}`;
+            elUbah.textContent = selisih === 0
+                ? `Tidak berubah dari ${d.periode[i - 1]}`
+                : `${arahTeks[0].toUpperCase()}${arahTeks.slice(1)} ${this.fmt.format(Math.abs(selisih))} dari ${d.periode[i - 1]}`;
             elUbah.className = `small mb-0 sd-dasbor-kpi-ubah ${baik === null ? "text-muted" : baik ? "text-success" : "text-danger"}`;
         } else {
             elUbah.textContent = "";
@@ -241,16 +261,31 @@ export class DasborPublik extends Interaction {
 
     _grafikTren() {
         const d = this.data;
+        // Satu seri per tahun bila data bulanan/triwulanan (kumulatif per tahun): garis
+        // putus saat tahun berganti. Selain itu satu seri.
+        const kelompok = d.putus_tahun ? [...new Set(d.tahun)] : [null];
+        const seri = kelompok.map((tahun) => ({
+            type: d.periode.length > 2 ? "line" : "bar",
+            data: d.total.nilai.map((v, j) => ({
+                value: tahun === null || d.tahun[j] === tahun ? v : null,
+                symbolSize: j === this.indeks ? 11 : 6,
+                itemStyle: { color: WARNA_UTAMA },
+            })),
+            connectNulls: false,
+            barMaxWidth: 48,
+            lineStyle: { width: 2.5, color: WARNA_UTAMA },
+            areaStyle: d.periode.length > 2 ? { color: warnaTipis(WARNA_UTAMA, 0.08) } : undefined,
+        }));
         this.tren.setOption(
             {
                 animation: false,
                 textStyle: { fontFamily: "inherit" },
-                grid: { left: 8, right: 12, top: 16, bottom: 8, containLabel: true },
+                grid: { left: 8, right: 28, top: 16, bottom: 8, containLabel: true },
                 tooltip: { trigger: "axis", valueFormatter: (v) => this._teks(v) },
                 xAxis: {
                     type: "category",
                     data: d.periode,
-                    axisLabel: { color: WARNA_TEKS, hideOverlap: true },
+                    axisLabel: { color: WARNA_TEKS, hideOverlap: true, formatter: labelSingkat },
                     axisLine: { lineStyle: { color: WARNA_GARIS } },
                 },
                 yAxis: {
@@ -258,19 +293,7 @@ export class DasborPublik extends Interaction {
                     axisLabel: { color: WARNA_TEKS, formatter: (v) => this.fmt.format(v) },
                     splitLine: { lineStyle: { color: WARNA_GARIS } },
                 },
-                series: [
-                    {
-                        type: d.periode.length > 2 ? "line" : "bar",
-                        data: d.total.nilai.map((v, j) => ({
-                            value: v,
-                            symbolSize: j === this.indeks ? 11 : 6,
-                            itemStyle: { color: WARNA_UTAMA },
-                        })),
-                        barMaxWidth: 48,
-                        lineStyle: { width: 2.5, color: WARNA_UTAMA },
-                        areaStyle: d.periode.length > 2 ? { color: "rgba(29, 78, 216, 0.08)" } : undefined,
-                    },
-                ],
+                series: seri,
             },
             true
         );

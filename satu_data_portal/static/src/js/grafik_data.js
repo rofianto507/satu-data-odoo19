@@ -4,10 +4,28 @@ import { loadJS } from "@web/core/assets";
 
 // Apache ECharts dari modul inti (salinan lokal, lisensi Apache 2.0).
 const URL_ECHARTS = "/satu_data/static/lib/echarts/echarts.min.js";
-const WARNA_UTAMA = "#1d4ed8";
+// Warna utama website (bisa diubah Admin di penyunting website); cadangan biru bila tak terbaca.
+function warnaUtama() {
+    const w = getComputedStyle(document.documentElement).getPropertyValue("--bs-primary").trim();
+    return w || "#1d4ed8";
+}
+function warnaTipis(hex, alfa) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex);
+    if (!m) {
+        return "rgba(29, 78, 216, " + alfa + ")";
+    }
+    const n = parseInt(m[1], 16);
+    return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${alfa})`;
+}
+const WARNA_UTAMA = warnaUtama();
 const WARNA_TEKS = "#4b5563";
 const WARNA_GARIS = "#e5e7eb";
 const TINGGI_BATANG = 20;
+
+// "Januari 2025" -> "Jan 2025" agar label sumbu tidak saling menimpa.
+function labelSingkat(label) {
+    return /^[A-Za-z]{4,} \d{4}$/.test(label) ? label.replace(/^([A-Za-z]{3})\w*/, "$1") : label;
+}
 
 /**
  * Grafik halaman data publik: tren kab/kota per periode dan sebaran per kecamatan.
@@ -46,12 +64,12 @@ export class GrafikData extends Interaction {
         const elTren = this.el.querySelector('[data-jenis="tren"]');
         if (elTren && data.periode?.length) {
             this._gambar(elTren, {
-                grid: { left: 8, right: 16, top: 24, bottom: 8, containLabel: true },
+                grid: { left: 8, right: 28, top: 24, bottom: 8, containLabel: true },
                 tooltip: { trigger: "axis", valueFormatter: teks },
                 xAxis: {
                     type: "category",
                     data: data.periode,
-                    axisLabel: { color: WARNA_TEKS, hideOverlap: true },
+                    axisLabel: { color: WARNA_TEKS, hideOverlap: true, formatter: labelSingkat },
                     axisLine: { lineStyle: { color: WARNA_GARIS } },
                 },
                 yAxis: {
@@ -68,7 +86,7 @@ export class GrafikData extends Interaction {
                               symbolSize: 7,
                               lineStyle: { width: 2.5, color: WARNA_UTAMA },
                               itemStyle: { color: WARNA_UTAMA },
-                              areaStyle: { color: "rgba(29, 78, 216, 0.08)" },
+                              areaStyle: { color: warnaTipis(WARNA_UTAMA, 0.08) },
                           }
                         : {
                               name: data.nama_total,

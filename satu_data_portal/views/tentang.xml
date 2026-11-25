@@ -24,25 +24,25 @@
                         <h2 id="judul-prinsip" class="sd-bagian-judul">Prinsip Satu Data</h2>
                         <div class="row g-3">
                             <div class="col-sm-6 col-lg-3">
-                                <div class="sd-panel">
+                                <div class="sd-panel h-100">
                                     <h3 class="sd-panel-judul">Standar Data</h3>
                                     <p class="small mb-0">Konsep, definisi, klasifikasi, ukuran, dan satuan yang sama untuk setiap data.</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3">
-                                <div class="sd-panel">
+                                <div class="sd-panel h-100">
                                     <h3 class="sd-panel-judul">Metadata</h3>
                                     <p class="small mb-0">Keterangan tentang data: siapa produsennya, cara menghitung, frekuensi, dan sumber acuannya.</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3">
-                                <div class="sd-panel">
+                                <div class="sd-panel h-100">
                                     <h3 class="sd-panel-judul">Interoperabilitas</h3>
                                     <p class="small mb-0">Data dapat dibagipakaikan antarsistem: tersedia dalam CSV, Excel, JSON, dan API.</p>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-lg-3">
-                                <div class="sd-panel">
+                                <div class="sd-panel h-100">
                                     <h3 class="sd-panel-judul">Kode Referensi</h3>
                                     <p class="small mb-0">Memakai kode baku yang sama, misalnya kode wilayah Kemendagri untuk kecamatan.</p>
                                 </div>
@@ -64,7 +64,7 @@
                         <h2 id="judul-penyelenggara" class="sd-bagian-judul">Penyelenggara</h2>
                         <div class="row g-3">
                             <div t-foreach="penyelenggara" t-as="kel" class="col-md-6">
-                                <div class="sd-panel">
+                                <div class="sd-panel h-100">
                                     <h3 class="sd-panel-judul" t-esc="kel['peran']"/>
                                     <ul class="list-unstyled mb-0">
                                         <li t-foreach="kel['instansi']" t-as="i" class="d-flex justify-content-between gap-2 py-1">

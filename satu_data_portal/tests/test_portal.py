@@ -374,6 +374,10 @@ class TestPortal(SatuDataCase, HttpCase):
         self.assertEqual(isi['total']['nilai'], [200, 340])
         self.assertEqual(isi['wilayah'][str(self.kec_2.id)]['nilai'], [None, 20])
         self.assertEqual(isi['arah'], 'netral')
+        self.assertEqual(isi['tahun'], [2094, 2095])
+        self.assertFalse(isi['putus_tahun'], 'Semesteran: garis tren tidak dipisah per tahun')
+        self.d_penduduk.frekuensi = 'bulanan'
+        self.assertTrue(self.d_penduduk._sd_dasbor_publik()['putus_tahun'])
         self.assertEqual(len(isi['kelas']), 2, 'Kelas warna per periode')
         kab = self.d_perempuan._sd_dasbor_publik()
         self.assertFalse(kab['rinci'])

@@ -54,7 +54,17 @@ class Website(models.Model):
                 vals['homepage_url'] = BERANDA
             if (website.name or '').startswith('My Website'):
                 vals['name'] = f'Satu Data {website.sd_nama_wilayah()}'
+            # Logo kab/kota di header (bukan "Your Logo").
+            if website.company_id.logo:
+                vals['logo'] = website.company_id.logo
             website.write(vals)
+
+        # Header bawaan memuat nomor telepon contoh dan tombol "Hubungi Kami"; portal
+        # tidak memakai keduanya (Admin dapat mengaktifkannya lagi di penyunting website).
+        for xmlid in ('website.header_text_element', 'website.header_call_to_action'):
+            view = self.env.ref(xmlid, raise_if_not_found=False)
+            if view:
+                view.sudo().active = False
 
         Menu = self.env['website.menu'].sudo()
         Menu.search([('url', '=', '/contactus')]).unlink()

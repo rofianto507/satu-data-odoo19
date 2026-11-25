@@ -82,7 +82,8 @@ class SatuDataBeranda(http.Controller):
         hasil, _faset = Data._sd_cari_publik(company, topik=topik.id, urut='abjad')
         if not hasil:
             raise request.not_found()
-        pilihan = [d for d, _i in hasil]
+        # Urutan Daftar Data (sektor, urutan, nama): mis. SPM kesehatan lebih dulu dari DBD.
+        pilihan = sorted((d for d, _i in hasil), key=lambda d: (d.sektor or '', d.sequence, d.name))
         terpilih = next((d for d in pilihan if d.kode == data), None) or next(
             (d for d in pilihan if d.jenis == 'indikator' and d.tingkat_penyajian != 'kabupaten'),
             pilihan[0])

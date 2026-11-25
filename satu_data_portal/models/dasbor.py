@@ -7,6 +7,8 @@ import math
 
 from odoo import api, models, tools
 
+from .daftar_data import FREKUENSI_PER_TAHUN
+
 # Palet 5 kelas (ColorBrewer). naik: makin tinggi makin baik; turun: makin tinggi makin buruk;
 # netral: jumlah/besaran tanpa arah baik-buruk.
 PALET = {
@@ -156,6 +158,10 @@ class SatuDataData(models.Model):
             'produsen': self.instansi_id.name or '',
             'url': f'/data/{self.kode}',
             'periode': [p['label'] for p in tabel['periode']],
+            'tahun': [p['tahun'] for p in tabel['periode']],
+            # Data bulanan/triwulanan sering kumulatif per tahun: garis tren dipisah per tahun
+            # agar tidak tampak "turun" saat tahun berganti.
+            'putus_tahun': self.frekuensi in FREKUENSI_PER_TAHUN,
             'total': {'nama': total['nama'], 'nilai': total['nilai']},
             'wilayah': {str(b['id']): {'nama': b['nama'], 'nilai': b['nilai']} for b in kecamatan},
             'kelas': kelas,
