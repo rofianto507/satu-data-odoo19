@@ -307,3 +307,12 @@ class SatuDataData(models.Model):
         """Catatan cara membaca angka (mis. kumulatif), ditampilkan bersama tabel."""
         self.ensure_one()
         return False
+
+    def _sd_gaya_publik(self):
+        """Gaya peta publik: ``{'arah': 'naik'|'turun'|False, 'batas': [4 angka]|False}``.
+
+        ``arah`` naik = makin tinggi makin baik, turun = makin tinggi makin buruk, False =
+        netral. ``batas`` = batas kelas tetap (target/standar); tanpa itu dipakai kuantil.
+        """
+        self.ensure_one()
+        return {'arah': False, 'batas': False}

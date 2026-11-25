@@ -6,4 +6,19 @@
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence" type="int">20</field>
     </record>
+    <record id="menu_dashboard" model="website.menu">
+        <field name="name">Dashboard</field>
+        <field name="url">/dashboard</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">30</field>
+    </record>
+    <record id="menu_tentang" model="website.menu">
+        <field name="name">Tentang</field>
+        <field name="url">/tentang</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">40</field>
+    </record>
+
+    <!-- Bahasa Indonesia, nama website, beranda portal, dan menu (sekali saja). -->
+    <function model="website" name="_sd_siapkan_portal"/>
 </odoo>

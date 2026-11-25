@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Kartu topik untuk dashboard tematik (dipakai beranda dan /dashboard) -->
+    <template id="kartu_tema" name="Satu Data: Kartu Dashboard Tematik">
+        <div class="row g-3">
+            <t t-foreach="tema" t-as="t">
+                <div t-if="t['jumlah_peta']" class="col-sm-6 col-lg-4">
+                    <a t-att-href="'/dashboard/%s' % t['topik'].id" class="sd-kartu-tema">
+                        <span class="sd-kartu-tema-ikon" aria-hidden="true">
+                            <i t-attf-class="fa #{t['topik'].ikon or 'fa-bar-chart'}"/>
+                        </span>
+                        <span>
+                            <span class="sd-kartu-tema-nama" t-esc="t['topik'].name"/>
+                            <span class="sd-kartu-tema-jumlah"><t t-esc="t['jumlah_peta']"/> data di peta</span>
+                        </span>
+                    </a>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <!-- ── Beranda ─────────────────────────────────────────────────────────── -->
+    <template id="beranda" name="Satu Data: Beranda">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Beranda</t>
+            <div id="wrap" class="sd-portal">
+                <section class="sd-hero">
+                    <div class="container py-5">
+                        <div class="row align-items-center g-4">
+                            <div class="col-lg-7">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <img t-if="logo" t-att-src="logo" alt="" class="sd-hero-logo"/>
+                                    <span class="sd-hero-label">Portal Satu Data</span>
+                                </div>
+                                <h1 class="sd-hero-judul">Satu Data <t t-esc="nama_wilayah"/></h1>
+                                <p class="sd-hero-teks">
+                                    Data sektoral perangkat daerah yang sudah diperiksa Walidata,
+                                    terbuka untuk dilihat, diunduh, dan dipakai ulang.
+                                </p>
+                                <form action="/data" method="get" role="search" class="sd-hero-cari">
+                                    <div class="input-group input-group-lg">
+                                        <input type="search" name="q" class="form-control" maxlength="100"
+                                               aria-label="Cari data"
+                                               placeholder="Cari data, mis. stunting, penduduk, sekolah"/>
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fa fa-search" aria-hidden="true"/> Cari
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-lg-5">
+                                <dl class="sd-angka-kunci">
+                                    <div>
+                                        <dt>Data</dt>
+                                        <dd t-esc="angka['data']"/>
+                                    </div>
+                                    <div>
+                                        <dt>Produsen Data</dt>
+                                        <dd t-esc="angka['produsen']"/>
+                                    </div>
+                                    <div>
+                                        <dt>Topik</dt>
+                                        <dd t-esc="angka['topik']"/>
+                                    </div>
+                                    <div>
+                                        <dt>Kunjungan</dt>
+                                        <dd t-esc="angka['kunjungan']"/>
+                                    </div>
+                                    <div>
+                                        <dt>Unduhan</dt>
+                                        <dd t-esc="angka['unduhan']"/>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="oe_structure" id="oe_structure_sd_beranda_atas"/>
+
+                <section class="container py-5" aria-labelledby="judul-tema">
+                    <div class="d-flex justify-content-between align-items-end mb-3 gap-2">
+                        <div>
+                            <h2 id="judul-tema" class="sd-bagian-judul">Dashboard Tematik</h2>
+                            <p class="text-muted mb-0">Peta dan grafik per kecamatan menurut topik.</p>
+                        </div>
+                        <a href="/dashboard" class="btn btn-sm btn-outline-primary">Semua dashboard</a>
+                    </div>
+                    <t t-call="satu_data_portal.kartu_tema"/>
+                </section>
+
+                <section class="sd-bagian-latar py-5">
+                    <div class="container">
+                        <div class="row g-4">
+                            <div class="col-lg-6" aria-labelledby="judul-terbaru">
+                                <h2 id="judul-terbaru" class="sd-bagian-judul">Data Terbaru</h2>
+                                <ul class="sd-daftar-ringkas">
+                                    <li t-foreach="terbaru" t-as="item">
+                                        <a t-att-href="'/data/%s' % item['data'].kode" t-esc="item['data'].name"/>
+                                        <span class="text-muted small">
+                                            <t t-esc="item['data'].instansi_id.singkatan or item['data'].instansi_id.name"/>
+                                            <t t-if="item['terakhir']"> · <t t-esc="item['terakhir']"/></t>
+                                        </span>
+                                    </li>
+                                </ul>
+                                <a href="/data" class="small">Lihat semua data →</a>
+                            </div>
+                            <div class="col-lg-6" aria-labelledby="judul-populer">
+                                <h2 id="judul-populer" class="sd-bagian-judul">Data Populer</h2>
+                                <ul t-if="populer" class="sd-daftar-ringkas">
+                                    <li t-foreach="populer" t-as="item">
+                                        <a t-att-href="'/data/%s' % item['data'].kode" t-esc="item['data'].name"/>
+                                        <span class="text-muted small">
+                                            <i class="fa fa-eye" aria-hidden="true"/> <t t-esc="item['skor']"/>
+                                            <span class="visually-hidden">kunjungan dan unduhan</span>
+                                        </span>
+                                    </li>
+                                </ul>
+                                <p t-else="" class="text-muted">Belum ada cukup kunjungan untuk menyusun data populer.</p>
+                                <a href="/data?urut=populer" class="small">Urutkan katalog menurut popularitas →</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="container py-5" aria-labelledby="judul-produsen">
+                    <h2 id="judul-produsen" class="sd-bagian-judul">Produsen Data</h2>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a t-foreach="produsen" t-as="p" t-att-href="'/data?instansi=%s' % p[0].id"
+                           class="sd-chip">
+                            <t t-esc="p[0].name"/> <span class="sd-chip-jumlah" t-esc="p[1]"/>
+                        </a>
+                    </div>
+                    <div class="sd-ajakan-api mt-5">
+                        <div>
+                            <h2 class="h5 mb-1">Butuh data untuk aplikasi Anda?</h2>
+                            <p class="mb-0 text-muted">Semua data di portal ini tersedia lewat API JSON tanpa login,
+                                serta unduhan CSV dan Excel.</p>
+                        </div>
+                        <a href="/data/api" class="btn btn-primary"><i class="fa fa-code" aria-hidden="true"/> Dokumentasi API</a>
+                    </div>
+                </section>
+
+                <div class="oe_structure" id="oe_structure_sd_beranda_bawah"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Daftar dashboard tematik ─────────────────────────────────────────── -->
+    <template id="daftar_dashboard" name="Satu Data: Dashboard Tematik">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Dashboard Tematik</t>
+            <div id="wrap" class="sd-portal">
+                <section class="sd-portal-kepala">
+                    <div class="container py-4">
+                        <h1 class="h2 mb-1">Dashboard Tematik</h1>
+                        <p class="text-muted mb-0">
+                            Peta dan grafik data <t t-esc="nama_wilayah"/> per kecamatan, dikelompokkan menurut topik.
+                        </p>
+                    </div>
+                </section>
+                <div class="container py-4">
+                    <t t-call="satu_data_portal.kartu_tema"/>
+                    <div t-if="not ada_peta" class="sd-kosong">
+                        Belum ada data terbit yang bisa dipetakan.
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Satu dashboard tematik ───────────────────────────────────────────── -->
+    <template id="dashboard" name="Satu Data: Dashboard Topik">
+        <t t-call="website.layout">
+            <t t-set="additional_title" t-value="'Dashboard %s' % topik.name"/>
+            <div id="wrap" class="sd-portal sd-dasbor-halaman" t-att-data-konfigurasi="konfigurasi"
+                 t-att-data-kode="terpilih.kode">
+                <section class="sd-portal-kepala">
+                    <div class="container py-4">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-2">
+                                <li class="breadcrumb-item"><a href="/dashboard">Dashboard Tematik</a></li>
+                                <li class="breadcrumb-item active" aria-current="page" t-esc="topik.name"/>
+                            </ol>
+                        </nav>
+                        <h1 class="h2 mb-3">
+                            <i t-attf-class="fa #{topik.ikon or 'fa-bar-chart'} me-2 text-primary" aria-hidden="true"/>
+                            <t t-esc="topik.name"/>
+                        </h1>
+                        <div class="row g-2 sd-dasbor-pilihan">
+                            <div class="col-md-8">
+                                <label for="sd-pilih-data" class="form-label small mb-1">Data</label>
+                                <select id="sd-pilih-data" class="form-select">
+                                    <optgroup t-foreach="kelompok" t-as="k" t-att-label="k[0]">
+                                        <option t-foreach="k[1]" t-as="d" t-att-value="d.kode"
+                                                t-att-selected="d == terpilih" t-esc="d.name"/>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="sd-pilih-periode" class="form-label small mb-1">Periode</label>
+                                <select id="sd-pilih-periode" class="form-select" disabled="disabled"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="container py-4 sd-dasbor">
+                    <div class="sd-dasbor-status" role="status" aria-live="polite"/>
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <div class="sd-panel">
+                                <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
+                                    <div>
+                                        <h2 class="sd-panel-judul mb-0 sd-dasbor-judul"/>
+                                        <p class="small text-muted mb-0 sd-dasbor-catatan"/>
+                                    </div>
+                                    <a class="small sd-dasbor-tautan" href="#">Tabel, metadata, dan unduhan →</a>
+                                </div>
+                                <div class="sd-dasbor-peta" role="img" aria-label="Peta kecamatan"/>
+                                <div class="sd-dasbor-legenda mt-2" aria-label="Legenda peta"/>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="sd-panel mb-4">
+                                <p class="small text-muted mb-1 sd-dasbor-kpi-label"/>
+                                <p class="sd-dasbor-kpi mb-1"/>
+                                <p class="small mb-0 sd-dasbor-kpi-ubah"/>
+                            </div>
+                            <div class="sd-panel">
+                                <h2 class="sd-panel-judul">Perkembangan</h2>
+                                <div class="sd-grafik sd-dasbor-tren" role="img" aria-label="Grafik perkembangan"/>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="sd-panel">
+                                <h2 class="sd-panel-judul">Peringkat Kecamatan</h2>
+                                <div class="sd-grafik sd-dasbor-peringkat" role="img" aria-label="Grafik peringkat kecamatan"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div t-if="tema_lain" class="mt-5">
+                        <h2 class="sd-bagian-judul">Dashboard lain</h2>
+                        <t t-call="satu_data_portal.kartu_tema">
+                            <t t-set="tema" t-value="tema_lain"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

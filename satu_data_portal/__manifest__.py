@@ -1,6 +1,6 @@
 {
     'name': 'Satu Data: Portal Publik',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.2.0',
     'summary': 'Portal Satu Data untuk publik: katalog, halaman data, unduhan, dan API baca',
     'description': """
 Portal Publik Satu Data
@@ -18,6 +18,11 @@ Tahap penyebarluasan Satu Data Indonesia (Perpres 39/2019) di website Odoo, tanp
   untuk urutan "Populer" dan menu Statistik Portal bagi Walidata.
 * Cache nilai per data per periode; dibersihkan saat laporan terbit/ditarik atau wilayah
   berubah.
+* Beranda portal (pencarian, angka kunci, data terbaru/populer, Produsen Data), dashboard
+  tematik per topik (peta choropleth kecamatan, peringkat, tren), halaman Tentang (prinsip,
+  alur, penyelenggara, tanya-jawab), serta footer dan menu berbahasa Indonesia.
+* Saat dipasang: bahasa Indonesia menjadi bahasa website, beranda diarahkan ke portal, menu
+  "Contact us" dihapus (sekali saja; tidak menimpa pengaturan Admin sesudahnya).
 
 Hanya data yang sudah diterbitkan Walidata, berstatus akses "Terbuka", dan tidak
 dihentikan. Angka disajikan paling rendah per kecamatan (atau hanya kab/kota bila
@@ -25,19 +30,22 @@ tingkat penyajiannya kab/kota), tanpa data per orang. Nilai dihitung oleh modul 
 (kait ``_sd_nilai_publik``) sehingga sama dengan dashboard internal.
 """,
     'category': 'Website',
-    'depends': ['satu_data', 'website'],
+    'depends': ['satu_data', 'website', 'portal'],
     'external_dependencies': {'python': ['xlsxwriter']},
     'data': [
         'security/ir.model.access.csv',
         'security/satu_data_portal_security.xml',
         'data/website_menu.xml',
         'views/templates.xml',
+        'views/beranda.xml',
+        'views/tentang.xml',
         'views/statistik_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [
             'satu_data_portal/static/src/scss/portal.scss',
             'satu_data_portal/static/src/js/grafik_data.js',
+            'satu_data_portal/static/src/js/dasbor.js',
         ],
     },
     'installable': True,

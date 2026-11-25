@@ -149,6 +149,12 @@ class SatuDataData(models.Model):
                                           self.company_id)
         return self._sd_nilai_per_kecamatan(dasar, lambda angka: nilai_indikator(ind, angka))
 
+    def _sd_gaya_publik(self):
+        ind = self._sd_indikator_pendidikan()
+        if not ind:
+            return super()._sd_gaya_publik()
+        return {'arah': ind['arah'], 'batas': ind.get('batas') or False}
+
     def _sd_catatan_publik(self):
         ind = self._sd_indikator_pendidikan()
         if not ind:

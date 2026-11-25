@@ -1,4 +1,10 @@
 // Portal publik Satu Data: tampilan ringan di atas tema website.
+
+// Tooltip peta dashboard (Leaflet menaruhnya di dalam peta, tetap di bawah .sd-portal).
+.leaflet-tooltip.sd-tooltip {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
 $sd-biru: #1d4ed8;
 $sd-teks-2: #4b5563;
 $sd-garis: #e5e7eb;
@@ -208,6 +214,251 @@ $sd-latar: #f8fafc;
         font-size: 0.8125rem;
         white-space: pre-wrap;
         word-break: break-all;
+    }
+
+    // ── Beranda ──
+    .sd-hero {
+        background: linear-gradient(135deg, #eff6ff 0%, #fff 60%);
+        border-bottom: 1px solid $sd-garis;
+    }
+    .sd-hero-logo {
+        height: 56px;
+        width: auto;
+    }
+    .sd-hero-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: $sd-biru;
+    }
+    .sd-hero-judul {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+    .sd-hero-teks {
+        font-size: 1.0625rem;
+        color: $sd-teks-2;
+        max-width: 56ch;
+    }
+    .sd-hero-cari {
+        max-width: 40rem;
+    }
+    .sd-angka-kunci {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+        gap: 0.75rem;
+        margin: 0;
+
+        > div {
+            background: #fff;
+            border: 1px solid $sd-garis;
+            border-radius: 0.5rem;
+            padding: 0.875rem 1rem;
+        }
+        dt {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: $sd-teks-2;
+        }
+        dd {
+            font-size: 1.625rem;
+            font-weight: 700;
+            margin: 0;
+            font-variant-numeric: tabular-nums;
+        }
+    }
+    .sd-bagian-judul {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+    .sd-bagian-latar {
+        background: #fff;
+        border-top: 1px solid $sd-garis;
+        border-bottom: 1px solid $sd-garis;
+    }
+    .sd-kartu-tema {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        height: 100%;
+        background: #fff;
+        border: 1px solid $sd-garis;
+        border-radius: 0.5rem;
+        padding: 1rem 1.25rem;
+        color: inherit;
+        text-decoration: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+
+        &:hover,
+        &:focus-visible {
+            border-color: rgba($sd-biru, 0.5);
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+        }
+    }
+    .sd-kartu-tema-ikon {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 0.5rem;
+        background: rgba($sd-biru, 0.08);
+        color: $sd-biru;
+        font-size: 1.25rem;
+    }
+    .sd-kartu-tema-nama {
+        display: block;
+        font-weight: 600;
+    }
+    .sd-kartu-tema-jumlah {
+        display: block;
+        font-size: 0.875rem;
+        color: $sd-teks-2;
+    }
+    .sd-daftar-ringkas {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 0.75rem;
+
+        li {
+            display: flex;
+            flex-direction: column;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid $sd-garis;
+        }
+        a {
+            font-weight: 500;
+        }
+    }
+    .sd-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.75rem;
+        border: 1px solid $sd-garis;
+        border-radius: 2rem;
+        background: #fff;
+        color: inherit;
+        text-decoration: none;
+        font-size: 0.9375rem;
+
+        &:hover,
+        &:focus-visible {
+            border-color: rgba($sd-biru, 0.5);
+            color: $sd-biru;
+        }
+    }
+    .sd-chip-jumlah {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: $sd-teks-2;
+    }
+    .sd-ajakan-api {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        background: #fff;
+        border: 1px solid $sd-garis;
+        border-left: 4px solid $sd-biru;
+        border-radius: 0.5rem;
+        padding: 1.25rem 1.5rem;
+    }
+
+    // ── Dashboard tematik ──
+    .sd-dasbor-status {
+        background: #fff;
+        border: 1px solid $sd-garis;
+        border-radius: 0.375rem;
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 1rem;
+        color: $sd-teks-2;
+    }
+    .sd-dasbor-peta {
+        height: 520px;
+        border-radius: 0.375rem;
+        background: #f1f5f9;
+        z-index: 0;
+
+        @media (max-width: 767.98px) {
+            height: 380px;
+        }
+    }
+    .sd-tile-abu {
+        filter: grayscale(1) brightness(1.05);
+    }
+    .sd-dasbor-legenda {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 1rem;
+        font-size: 0.8125rem;
+        color: $sd-teks-2;
+    }
+    .sd-legenda-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+    .sd-legenda-warna {
+        width: 0.875rem;
+        height: 0.875rem;
+        border-radius: 2px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+
+        &.sd-legenda-warna--kosong {
+            border-style: dashed;
+        }
+    }
+    .sd-dasbor-kpi {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.2;
+        font-variant-numeric: tabular-nums;
+    }
+
+    // ── Tentang ──
+    .sd-alur {
+        counter-reset: alur;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+        gap: 0.75rem;
+
+        li {
+            counter-increment: alur;
+            background: #fff;
+            border: 1px solid $sd-garis;
+            border-radius: 0.5rem;
+            padding: 1rem 1.25rem;
+
+            &::before {
+                content: counter(alur);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 1.75rem;
+                height: 1.75rem;
+                border-radius: 50%;
+                background: $sd-biru;
+                color: #fff;
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+            strong {
+                display: block;
+            }
+            span {
+                font-size: 0.875rem;
+                color: $sd-teks-2;
+            }
+        }
     }
 
     .sd-metadata {

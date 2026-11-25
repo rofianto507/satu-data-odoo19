@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="tentang" name="Satu Data: Tentang">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Tentang Satu Data</t>
+            <div id="wrap" class="sd-portal">
+                <section class="sd-portal-kepala">
+                    <div class="container py-4">
+                        <h1 class="h2 mb-2">Tentang Satu Data <t t-esc="nama_wilayah"/></h1>
+                        <p class="sd-definisi mb-0">
+                            Satu Data adalah tata kelola data pemerintah agar data yang dihasilkan perangkat
+                            daerah akurat, mutakhir, terpadu, dapat dipertanggungjawabkan, serta mudah diakses
+                            dan dibagipakaikan. Penyelenggaraannya mengacu pada Peraturan Presiden Nomor 39
+                            Tahun 2019 tentang Satu Data Indonesia.
+                        </p>
+                    </div>
+                </section>
+
+                <div class="oe_structure" id="oe_structure_sd_tentang_atas"/>
+
+                <div class="container py-4">
+                    <section class="mb-5" aria-labelledby="judul-prinsip">
+                        <h2 id="judul-prinsip" class="sd-bagian-judul">Prinsip Satu Data</h2>
+                        <div class="row g-3">
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="sd-panel">
+                                    <h3 class="sd-panel-judul">Standar Data</h3>
+                                    <p class="small mb-0">Konsep, definisi, klasifikasi, ukuran, dan satuan yang sama untuk setiap data.</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="sd-panel">
+                                    <h3 class="sd-panel-judul">Metadata</h3>
+                                    <p class="small mb-0">Keterangan tentang data: siapa produsennya, cara menghitung, frekuensi, dan sumber acuannya.</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="sd-panel">
+                                    <h3 class="sd-panel-judul">Interoperabilitas</h3>
+                                    <p class="small mb-0">Data dapat dibagipakaikan antarsistem: tersedia dalam CSV, Excel, JSON, dan API.</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="sd-panel">
+                                    <h3 class="sd-panel-judul">Kode Referensi</h3>
+                                    <p class="small mb-0">Memakai kode baku yang sama, misalnya kode wilayah Kemendagri untuk kecamatan.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="mb-5" aria-labelledby="judul-alur">
+                        <h2 id="judul-alur" class="sd-bagian-judul">Alur Penyelenggaraan</h2>
+                        <ol class="sd-alur">
+                            <li><strong>Perencanaan</strong><span>Daftar Data disepakati dalam Forum Satu Data, termasuk jadwal pemutakhirannya.</span></li>
+                            <li><strong>Pengumpulan</strong><span>Produsen Data (perangkat daerah) mengisi data sesuai standar dan metadata.</span></li>
+                            <li><strong>Pemeriksaan</strong><span>Walidata memeriksa kesesuaian data dengan prinsip Satu Data sebelum diterbitkan.</span></li>
+                            <li><strong>Penyebarluasan</strong><span>Data yang terbit dibuka melalui portal ini: katalog, dashboard, unduhan, dan API.</span></li>
+                        </ol>
+                    </section>
+
+                    <section t-if="penyelenggara" class="mb-5" aria-labelledby="judul-penyelenggara">
+                        <h2 id="judul-penyelenggara" class="sd-bagian-judul">Penyelenggara</h2>
+                        <div class="row g-3">
+                            <div t-foreach="penyelenggara" t-as="kel" class="col-md-6">
+                                <div class="sd-panel">
+                                    <h3 class="sd-panel-judul" t-esc="kel['peran']"/>
+                                    <ul class="list-unstyled mb-0">
+                                        <li t-foreach="kel['instansi']" t-as="i" class="d-flex justify-content-between gap-2 py-1">
+                                            <span t-esc="i['rec'].name"/>
+                                            <a t-if="i['jumlah']" class="small text-nowrap"
+                                               t-att-href="'/data?instansi=%s' % i['rec'].id"><t t-esc="i['jumlah']"/> data</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="mb-5" aria-labelledby="judul-tanya">
+                        <h2 id="judul-tanya" class="sd-bagian-judul">Pertanyaan Umum</h2>
+                        <div class="accordion" id="sd-tanya">
+                            <t t-foreach="[
+                                ('Dari mana data di portal ini berasal?', 'Data diisi oleh Produsen Data, yaitu perangkat daerah yang menghasilkan data itu, lalu diperiksa Walidata. Hanya data yang sudah diterbitkan Walidata yang tampil di portal.'),
+                                ('Mengapa angka hanya dirinci sampai kecamatan?', 'Portal publik menyajikan angka paling rinci per kecamatan agar aman dan sebanding antarwilayah. Rincian lebih lanjut dapat diminta kepada Walidata sesuai ketentuan.'),
+                                ('Mengapa ada data yang tidak tampil?', 'Data berstatus akses terbatas (misalnya sebagian data kesehatan yang sensitif) atau yang belum diterbitkan Walidata tidak ditampilkan.'),
+                                ('Bolehkah data ini dipakai ulang?', 'Boleh. Cantumkan sumbernya: nama Produsen Data dan portal Satu Data ini.'),
+                                ('Bagaimana mengambil data lewat program?', 'Gunakan API JSON tanpa login atau unduhan CSV, Excel, dan JSON di setiap halaman data. Lihat halaman Dokumentasi API.'),
+                            ]" t-as="tanya">
+                                <div class="accordion-item">
+                                    <h3 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                                t-attf-data-bs-target="#sd-tanya-{{ tanya_index }}"
+                                                aria-expanded="false" t-attf-aria-controls="sd-tanya-{{ tanya_index }}"
+                                                t-esc="tanya[0]"/>
+                                    </h3>
+                                    <div t-attf-id="sd-tanya-{{ tanya_index }}" class="accordion-collapse collapse" data-bs-parent="#sd-tanya">
+                                        <div class="accordion-body" t-esc="tanya[1]"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </section>
+
+                    <section t-if="walidata" class="sd-ajakan-api" aria-labelledby="judul-kontak">
+                        <div>
+                            <h2 id="judul-kontak" class="h5 mb-1">Tidak menemukan data yang dicari?</h2>
+                            <p class="mb-0 text-muted">
+                                Hubungi Walidata, <t t-esc="walidata.name"/>.
+                                <t t-if="walidata.email"> Surel: <a t-att-href="'mailto:%s' % walidata.email" t-esc="walidata.email"/>.</t>
+                                <t t-if="walidata.telepon"> Telepon: <t t-esc="walidata.telepon"/>.</t>
+                            </p>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="oe_structure" id="oe_structure_sd_tentang_bawah"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- ── Footer dan hak cipta portal ──────────────────────────────────────── -->
+    <template id="footer_portal" inherit_id="website.footer_custom" name="Satu Data: Footer Portal">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+                <section class="s_text_block pt40 pb16" data-snippet="s_text_block" data-name="Container">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-5 pt24 pb24">
+                                <h5>Satu Data <t t-esc="website.sd_nama_wilayah()"/></h5>
+                                <p class="mb-0">
+                                    Portal data sektoral perangkat daerah yang sudah diperiksa Walidata,
+                                    terbuka untuk dilihat, diunduh, dan dipakai ulang. Diselenggarakan
+                                    mengacu pada Peraturan Presiden Nomor 39 Tahun 2019 tentang Satu Data Indonesia.
+                                </p>
+                            </div>
+                            <div class="col-lg-3 pt24 pb24">
+                                <h5>Tautan</h5>
+                                <ul class="list-unstyled">
+                                    <li><a href="/">Beranda</a></li>
+                                    <li><a href="/data">Katalog Data</a></li>
+                                    <li><a href="/dashboard">Dashboard Tematik</a></li>
+                                    <li><a href="/data/api">API Data</a></li>
+                                    <li><a href="/tentang">Tentang</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 pt24 pb24">
+                                <t t-set="walidata" t-value="website.sd_instansi('walidata')[:1]"/>
+                                <h5>Walidata</h5>
+                                <ul t-if="walidata" class="list-unstyled">
+                                    <li t-esc="walidata.name"/>
+                                    <li t-if="walidata.email">
+                                        <i class="fa fa-envelope fa-fw me-2" aria-hidden="true"/>
+                                        <a t-att-href="'mailto:%s' % walidata.email" t-esc="walidata.email"/>
+                                    </li>
+                                    <li t-if="walidata.telepon">
+                                        <i class="fa fa-phone fa-fw me-2" aria-hidden="true"/><t t-esc="walidata.telepon"/>
+                                    </li>
+                                </ul>
+                                <p t-else="" class="mb-0">Pengelola data di lingkungan pemerintah daerah.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Terjemahan resmi Odoo membiarkan "Sign in" dalam bahasa Inggris. -->
+    <template id="tombol_masuk" inherit_id="portal.user_sign_in" name="Satu Data: Tombol Masuk">
+        <xpath expr="//li/a" position="replace">
+            <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Masuk<span t-if="request.session.get('profile_session')" class="text-danger fa fa-circle"/></a>
+        </xpath>
+    </template>
+
+    <template id="footer_hak_cipta" inherit_id="website.layout" name="Satu Data: Hak Cipta Footer"
+              priority="99">
+        <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <span class="o_footer_copyright_name me-2 small">© Satu Data <t t-esc="website.sd_nama_wilayah()"/></span>
+        </xpath>
+    </template>
+
+</odoo>

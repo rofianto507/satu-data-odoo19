@@ -11,6 +11,7 @@ from odoo.tests import HttpCase, tagged
 from odoo.addons.satu_data.tests.common import SatuDataCase
 from odoo.addons.satu_data_portal.controllers import batas
 from odoo.addons.satu_data_portal.models.daftar_data import desimal_dari, format_angka
+from odoo.addons.satu_data_portal.models.dasbor import kelas_warna, sederhanakan_geometri
 
 API = '/api/satu-data/v1'
 
@@ -53,13 +54,14 @@ class TestPortal(SatuDataCase, HttpCase):
                 cls.laporan |= lap
 
         Data = cls.env['satu_data.data']
+        cls.topik = cls.env['satu_data.topik'].create({'name': 'Topik Uji Portal', 'ikon': 'fa-users'})
 
         def data(kode, nama, company=None, instansi=None, **kw):
             return Data.create(dict({
                 'kode': kode, 'name': nama, 'sektor': 'kependudukan', 'frekuensi': 'semesteran',
                 'company_id': (company or cls.company_a).id,
                 'instansi_id': (instansi or cls.dukcapil_a).id,
-                'definisi': f'Definisi {nama}.', 'satuan': 'Jiwa',
+                'definisi': f'Definisi {nama}.', 'satuan': 'Jiwa', 'topik_id': cls.topik.id,
             }, **kw))
 
         cls.d_penduduk = data('kependudukan.jumlah_penduduk', 'Penduduk Uji Portal')
@@ -341,6 +343,94 @@ class TestPortal(SatuDataCase, HttpCase):
         self.desa_2.luas_km2 = 1.0
         self.env['satu_data.kependudukan'].flush_model()
         self.assertEqual(kec_1(), 106.7, '320 jiwa / 3 km² setelah luas diisi')
+
+    # ── Dashboard tematik ────────────────────────────────────────────────────
+
+    def test_kelas_warna(self):
+        tetap = kelas_warna([10, 90], 'naik', [25, 50, 75, 100])
+        self.assertEqual([(k['bawah'], k['atas']) for k in tetap],
+                         [(None, 25), (25, 50), (50, 75), (75, 100), (100, None)])
+        self.assertEqual(tetap[0]['warna'], '#d7191c', 'Arah naik: nilai rendah merah')
+        kuantil = kelas_warna([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 'netral')
+        self.assertEqual([k['atas'] for k in kuantil], [2, 4, 6, 8, None])
+        sedikit = kelas_warna([None, 50], False)
+        self.assertEqual([k['atas'] for k in sedikit], [10, 20, 30, 40, None],
+                         'Nilai terlalu sedikit: interval sama sampai nilai terbesar')
+
+    def test_sederhanakan_geometri(self):
+        # Persegi dengan titik-titik segaris di tiap sisi: cukup 5 titik (4 sudut + penutup).
+        sisi = [[110 + i * 0.001, -7.0] for i in range(11)]
+        cincin = (sisi + [[110.01, -7 + i * 0.001] for i in range(1, 11)]
+                  + [[110.01 - i * 0.001, -6.99] for i in range(1, 11)]
+                  + [[110.0, -6.99 - i * 0.001] for i in range(1, 11)])
+        hasil = sederhanakan_geometri({'type': 'Polygon', 'coordinates': [cincin]})
+        self.assertEqual(len(hasil['coordinates'][0]), 5)
+        self.assertEqual(hasil['coordinates'][0][0], hasil['coordinates'][0][-1])
+        self.assertIsNone(sederhanakan_geometri(None))
+
+    def test_dasbor_publik(self):
+        isi = self.d_penduduk._sd_dasbor_publik()
+        self.assertEqual(isi['periode'], [self.periode['2024_2'].name, self.periode['2025_1'].name])
+        self.assertEqual(isi['total']['nilai'], [200, 340])
+        self.assertEqual(isi['wilayah'][str(self.kec_2.id)]['nilai'], [None, 20])
+        self.assertEqual(isi['arah'], 'netral')
+        self.assertEqual(len(isi['kelas']), 2, 'Kelas warna per periode')
+        kab = self.d_perempuan._sd_dasbor_publik()
+        self.assertFalse(kab['rinci'])
+        self.assertEqual(kab['wilayah'], {}, 'Tingkat kab/kota: tidak ada nilai kecamatan')
+
+    def test_peta_publik_dan_cache(self):
+        Kec = self.env['satu_data.kecamatan']
+        peta = Kec._sd_peta_publik(self.company_a.id)
+        self.assertEqual({f['properties']['kode'] for f in peta['features']}, {'K1', 'K2'})
+        self.kec_2.name = 'Kecamatan Dua Baru'
+        peta = Kec._sd_peta_publik(self.company_a.id)
+        self.assertIn('Kecamatan Dua Baru', [f['properties']['nama'] for f in peta['features']],
+                      'Cache dibersihkan saat kecamatan berubah')
+
+    def test_tema_publik(self):
+        tema = self.env['satu_data.data']._sd_tema_publik(self.company_a)
+        self.assertEqual([(t['topik'], t['jumlah'], t['jumlah_peta']) for t in tema],
+                         [(self.topik, 3, 2)], 'Data tingkat kab/kota tidak dihitung di peta')
+
+    def test_http_beranda_dashboard_tentang(self):
+        res = self.url_open('/beranda')
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('Satu Data Kota Wilayah Tes A', res.text)
+        self.assertIn('Penduduk Uji Portal', res.text)
+        self.assertIn(f'/dashboard/{self.topik.id}', res.text)
+        self.assertIn('Katalog Data', res.text, 'Footer portal')
+        self.assertIn('>Masuk<', res.text)
+        self.assertNotIn('>Sign in<', res.text)
+
+        res = self.url_open('/dashboard')
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('Topik Uji Portal', res.text)
+
+        res = self.url_open(f'/dashboard/{self.topik.id}?data=kependudukan.kepadatan')
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('data-kode="kependudukan.kepadatan"', res.text)
+        self.assertNotIn('KK Terbatas Uji Portal', res.text)
+        res = self.url_open(f'/dashboard/{self.topik.id}?data=kependudukan.jumlah_kk')
+        self.assertIn('data-kode="kependudukan.kepadatan"', res.text,
+                      'Data terbatas tidak bisa dipilih; kembali ke indikator pertama (abjad)')
+        self.assertEqual(self.url_open('/dashboard/999999').status_code, 404)
+
+        res = self.url_open('/dashboard/peta.json')
+        self.assertEqual(len(res.json()['features']), 2)
+        res = self.url_open('/dashboard/data/kependudukan.jumlah_penduduk.json')
+        self.assertEqual(res.json()['total']['nilai'], [200, 340])
+        self.assertEqual(self.url_open('/dashboard/data/kependudukan.jumlah_kk.json').status_code, 404)
+
+        res = self.url_open('/tentang')
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('Dinas Kependudukan Uji A', res.text)
+        self.assertIn('Prinsip Satu Data', res.text)
+
+    def test_website_nama_wilayah(self):
+        self.assertEqual(self.website_a.sd_nama_wilayah(), 'Kota Wilayah Tes A')
+        self.assertFalse(self.website_a.sd_instansi('walidata'))
+        self.assertEqual(self.website_a.sd_instansi('produsen'), self.dukcapil_a)
 
     def test_cache_dipakai(self):
         periode = self.periode['2025_1']

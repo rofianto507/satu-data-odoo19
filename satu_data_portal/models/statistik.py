@@ -47,6 +47,13 @@ class SatuDataPortalStatistik(models.Model):
         self.invalidate_model(['kunjungan', 'unduhan'])
 
     @api.model
+    def _sd_total(self, company):
+        """Total kunjungan dan unduhan seluruh data publik satu wilayah."""
+        (kunjungan, unduhan), = self.sudo()._read_group(
+            [('company_id', '=', company.id)], [], ['kunjungan:sum', 'unduhan:sum'])
+        return {'kunjungan': kunjungan or 0, 'unduhan': unduhan or 0}
+
+    @api.model
     def _sd_jumlah(self, data):
         """Total kunjungan dan unduhan sepanjang waktu untuk satu data."""
         (kunjungan, unduhan), = self.sudo()._read_group(
